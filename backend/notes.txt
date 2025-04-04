@@ -1,0 +1,2 @@
+before deploying :
+in utils/validationUtils/remove the // for the steg email verif
