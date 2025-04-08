@@ -1,0 +1,75 @@
+.navbar{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 var(--spacing-large);
+    font-family: Arial, Helvetica, sans-serif; 
+    background-color: var(--primary-color);
+    z-index: 1000;
+}
+
+.navbar-left{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: var(--spacing-small);
+}
+
+.navbar-left p{
+    color: var(--text-light);
+    font-weight: 500;
+    font-size: var(--font-size-normal);
+}
+
+.navbar-left img{
+    width: 40px;
+    height: 40px;
+}
+
+.navbar-right{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: var(--spacing-medium);
+    justify-content: flex-end;
+}
+
+.navbar-right a{
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: var(--font-size-normal);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    transition: color var(--transition-speed) ease-in-out;
+}
+
+.horline{
+    height: 60%;
+    width: 1px;
+    background-color: var(--divider-color);
+    margin-left: var(--spacing-medium);
+}
+
+.navbar-right a:hover{
+    color: var(--accent-color);
+}
+
+@media screen and (max-width: 576px) {
+    .navbar-left p {
+        display: none; 
+    }
+    
+    .horline {
+        margin-left: var(--spacing-small);
+    }
+}
+
+.wpage-content{
+    margin-top: 60px;
+}

@@ -1,0 +1,48 @@
+*{
+    margin : 0px ; 
+    padding :0px ; 
+}
+:root {
+   
+    --font-size-small: 14px;
+    --font-size-normal: 16px;
+    --font-size-large: 18px;
+    --spacing-small: 10px;
+    --spacing-medium: 20px;
+    --spacing-large: 50px;
+    
+   
+    --primary-color: #1e3a8a;
+    --accent-color: #60a5fa;
+    --text-light: #f8fafc;
+    --text-muted: #e2e8f0;
+    --divider-color: #64748b;
+    
+    
+    --border-radius: 4px;
+    --transition-speed: 0.3s;
+  }
+  
+
+  @media screen and (max-width: 768px) {
+    :root {
+      --font-size-small: 12px;
+      --font-size-normal: 14px;
+      --font-size-large: 16px;
+      --spacing-small: 8px;
+      --spacing-medium: 15px;
+      --spacing-large: 30px;
+    }
+  }
+  
+ 
+  @media screen and (max-width: 576px) {
+    :root {
+      --font-size-small: 11px;
+      --font-size-normal: 13px;
+      --font-size-large: 15px;
+      --spacing-small: 5px;
+      --spacing-medium: 10px;
+      --spacing-large: 20px;
+    }
+  }
