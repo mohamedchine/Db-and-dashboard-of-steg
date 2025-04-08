@@ -5,9 +5,11 @@ const db   = require('./config/db')
 const AuthRouter = require('./routes/AuthRoutes');
 const UnitsRouter = require('./routes/unitsRoute');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const app = express();
 db.execute('select 1 ').then(()=>{ //select is just to check if the connection is good
-    console.log('connected to db')
+    console.log('connected to db');
+    app.use(cors());
     app.use(cookieParser());
     app.use(express.json());
     app.use('/auth/',AuthRouter);
@@ -20,10 +22,3 @@ db.execute('select 1 ').then(()=>{ //select is just to check if the connection i
     })
 
 }).catch((e)=>console.log(e.message))
-
-
-
-
-
-
-
