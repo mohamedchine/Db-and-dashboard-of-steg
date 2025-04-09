@@ -4,14 +4,14 @@ const db = require('../config/db');
 const {verifyjwt ,genjwt } = require('../utils/jwtUtils');
 const { hashPassword, comparepassword } = require('../utils/hashingUtils');
 const { gen_email_verification_Link,sendmail } = require('../utils/mailUtils');
-
+const { findUserByEmail } = require('../utils/dbUtils');
 const registerCtrl = async(req,res)=>{
     
     //data validation
     const {error} = validateRegister(req.body);
     if(error){
         return res.status(400).json({
-            error : error.details[0].message
+            message : error.details[0].message
         })
     }
   
@@ -63,126 +63,95 @@ const verifyAccountCtrl = async (req, res) => {
     if (!token) return res.status(404);
 
     const payload = verifyjwt(token);
-    if (!payload) return res.status(401).json({ message: "Invalid or expired link" });
+    if (!payload) {
+        //jwt.verify return null if its tampered with or expired
+        return res.status(401).send(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Error</title>
+                <script>
+                    alert("Invalid or expired link (login to be able to resend a verification link)");
+                </script>
+            </head>
+            <body>
+                
+            </body>
+            </html>
+        `);
+    }
 
     const { email, id } = payload;
+    const accountTypes = ['central', 'groupement', 'direction'];
 
-
-    const [centralUpdateResult] = await db.execute(
-        "UPDATE central_accounts SET is_verified = 1 WHERE steg_email = ? AND id = ?",
-        [email, id]
-    );
-
-    if (centralUpdateResult.affectedRows === 0) {
-
-        const [groupementUpdateResult] = await db.execute(
-            "UPDATE groupement_accounts SET is_verified = 1 WHERE steg_email = ? AND id = ?",
+    for (const type of accountTypes) {
+        const [updateResult] = await db.execute(
+            `UPDATE ${type}_accounts SET is_verified = 1 WHERE steg_email = ? AND id = ?`,
             [email, id]
         );
 
-        if (groupementUpdateResult.affectedRows === 0) {
-
-            const [directionUpdateResult] = await db.execute(
-                "UPDATE direction_accounts SET is_verified = 1 WHERE steg_email = ? AND id = ?",
-                [email, id]
-            );
-
-            if (directionUpdateResult.affectedRows === 0) {
-                return res.status(404);
-            }
+        if (updateResult.affectedRows > 0) {
+            return res.status(201).send(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Verification</title>
+                    <script>
+                        alert("Account verified successfully 🎉 , now you can login");
+                    </script>
+                </head>
+                <body>
+                    
+                </body>
+                </html>
+            `);
         }
     }
-
-    res.status(201).json({ message: "Account verified successfully" });
+    //in case the user isnt found in the db and the verification token has been generated correctly somehow
+    return res.status(404) ; 
 };
+
+
 
 
 //rate limit recaptcha
 const loginCtrl = async (req, res) => {
- 
-        const { error } = validatelogin(req.body);
-        if (error) {
-            return res.status(400).json({ error: error.details[0].message });
-        }
-        const [directionempl] = await db.execute("select * from direction_accounts where steg_email = ?" , [req.body.steg_email])
-        
-        if (directionempl.length > 0) {
-            const user = directionempl[0];
+    //data validation
+    const { error } = validatelogin(req.body);
+    if (error) {
+        return res.status(400).json({ error: error.details[0].message });
+    }
+     
+    //checking if the user exist in the db
+    const {user , role} = await findUserByEmail(req.body.steg_email);
+    if (!user) {
+        return res.status(401).json({ error: "Incorrect email" });
+    }
 
-            const passwordMatch = await comparepassword(user.password, req.body.password);
-            if (!passwordMatch) {
-                return res.status(401).json({ message: "Incorrect password" });
-            }
-            if (!user.is_verified) {
-                return res.status(403).json({ message: "You have to verify your account before logging in." });
-            }
-          
-            
-                   
-            const token = genjwt( { id: user.id, steg_email: user.steg_email, role: "direction_employee"  },
-            "7d" )
+    const passwordMatch = await comparepassword(user.password, req.body.password);
+    if (!passwordMatch) {
+        return res.status(401).json({ message: "Incorrect password" });
+    }
 
-            res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "Strict" });
+    if (!user.is_verified) {
+       const verificationLink = gen_email_verification_Link(user.steg_email, user.id);
+       await sendmail(user.steg_email, "Email Verification", `Click <a href="${verificationLink}">here</a> to verify your email`);
+       return res.status(401).json({ message: "Account not verified, check your email for verification link" });
 
-            return res.status(200).json({ message: "Logged in successfully", user });
-        }
+    }
 
+    const token = genjwt({ id: user.id, steg_email: user.steg_email, role }, "7d");
+    res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "Strict" });
 
-        const [centralEmployee] = await db.execute(
-            "SELECT * FROM central_accounts WHERE steg_email = ?", 
-            [req.body.steg_email]
-        );
-
-        if (centralEmployee.length > 0) {
-            const user = centralEmployee[0];
-
-            const passwordMatch = await comparepassword(user.password, req.body.password);
-            if (!passwordMatch) {
-                return res.status(401).json({ message: "Incorrect password" });
-            }
-            if (!user.is_verified) {
-                return res.status(403).json({ message: "You have to verify your account before logging in." });
-            }
-          
-            
-                   
-            const token = genjwt( { id: user.id, steg_email: user.steg_email, role: "central_employee" },
-            "7d" )
-
-            res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "Strict" });
-
-            return res.status(200).json({ message: "Logged in successfully", user });
-        }
-
-        const [groupementEmployee] = await db.execute(
-            "SELECT * FROM groupement_accounts WHERE steg_email = ?", 
-            [req.body.steg_email]
-        );
-
-        if (groupementEmployee.length === 0) {
-            return res.status(401).json({ error: "Incorrect email" });
-        }
-
-        const user = groupementEmployee[0];
-
-        const passwordMatch = await comparepassword(user.password, req.body.password);
-        if (!passwordMatch) {
-            return res.status(401).json({ message: "Incorrect password" });
-        }
-        if (!user.is_verified) {
-            return res.status(403).json({ message: "You have to verify your account before logging in." });
-        }
-        
-       
-        const token = genjwt( { id: user.id, steg_email: user.steg_email, role: "groupement_employee" },
-            "7d" )
-
-        res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "Strict" });
-
-        return res.status(200).json({ message: "Logged in successfully", user });
-
- 
+    return res.status(200).json({ message: "Logged in successfully", user });
 };
 
 
-module.exports={registerCtrl,verifyAccountCtrl , loginCtrl} ;
+const logoutCtrl = (req, res) => {
+    res.clearCookie('token', { httpOnly: true, secure: true, sameSite: 'Strict' });
+
+    return res.status(200).json({ message: "Logged out successfully" });
+};
+
+
+module.exports={registerCtrl,verifyAccountCtrl , loginCtrl , logoutCtrl } ;

@@ -12,8 +12,8 @@ db.execute('select 1 ').then(()=>{ //select is just to check if the connection i
     app.use(cors());
     app.use(cookieParser());
     app.use(express.json());
-    app.use('/auth/',AuthRouter);
-    app.use('/units/',UnitsRouter);
+    app.use('/auth',AuthRouter);
+    app.use('/units',UnitsRouter);
     app.all('*',(req,res)=>{
         res.status(404).json({message : 'not found'})
     })

@@ -1,0 +1,25 @@
+{
+  data: {    // ✅ Actual API data
+    id: 1,
+    name: "Leanne Graham",
+    email: "Sincere@april.biz"
+  },
+  status: 200,  // HTTP status code
+  statusText: "OK",
+  headers: {
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "max-age=43200"
+  },
+  config: { /* Request details (URL, headers, etc.) */ },
+  request: { /* Original HTTP request object */ }
+}
+{
+  // The failed response is nested under .response
+  response: {
+    data: { /* Error details from server */ },  // ← What you usually check
+    status: 404,
+    headers: { /* ... */ }
+  },
+  message: "Request failed with status code 404",
+  config: { /* ... */ }
+}

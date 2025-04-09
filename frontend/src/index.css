@@ -2,6 +2,22 @@
     margin : 0px ; 
     padding :0px ; 
 }
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+  
+ 
+}
+#root{
+  height: 100%;
+   
+}
+.App{
+  height: 100%;
+  
+}
 :root {
    
     --font-size-small: 14px;

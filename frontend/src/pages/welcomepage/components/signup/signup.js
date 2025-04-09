@@ -1,28 +1,104 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import "./signup.css";
+import axios from "axios";
+import {toast} from "react-toastify";
 const Signup = () => {
-    var unittypes = ["central" ,"groupement","direction"];
-    const [fn, setfn] = useState("");
-    const [email, setemail] = useState("");
-    const [password, setpassword] = useState("");
-    const [unit, setunit] = useState("");
-    const [specify, setspecify] = useState("");
+        var unittypes = ["central" ,"groupement","direction"];
+        const [centrals ,setcentrals] = useState(null);
+        const [groups , setgroups] = useState(null);
+        const [fn, setfn] = useState("");
+        const [email, setemail] = useState("");
+        const [password, setpassword] = useState("");
+        const [unit, setunit] = useState("");
+        const [unitid, setunitid] = useState(null);
+        const [showspecify , setshowspecify]=useState(false) ;    
+// to put the centralid in the specify 
+    const handleonchangespecify = (e)=>{
+        if(e.target.value=="default"){
+            setunitid(null);
+        }
+        else{
+            setunitid(e.target.value);
+        }
+    
+    }
+
+    //show or hide the select {unit}
+    const handlesomeanimation = (e)=>{
+        setunitid(null);  //change it to null when we change the unit type
+        if(e.target.value=="unit-default" || e.target.value=="direction"){
+            setshowspecify(false)
+            setunit("");
+        }
+        else{
+            setunit(e.target.value);
+            setshowspecify(true)
+        }
+    }
+
+    //fetch units from server
+    useEffect(() => {
+         const fetchunits = async()=>{
+            const response = await axios.get("http://localhost:3004/units/");
+          setcentrals(response.data.centrals);
+            setgroups(response.data.groups);
+         }
+         fetchunits();
+    },[]);
+    
+    //do the actual registration
+    const handleRegister = async()=>{
+            const user = {
+                fullname: fn,
+                steg_email: email,
+                password: password,
+                unit: unit,
+                unitid: unitid
+            }
+           
+            try{
+                const response  = await axios.post("http://localhost:3004/auth/register",user,  {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }) ;
+                console.log(response.data) //into toast 
+            }catch(e){
+                
+                console.log("Error: "+ e.response.data.message);
+            }
+            
+    }
     return ( 
         <div className="signup">
-             <input type="text"  placeholder=" FullName"  className="fname" />
-             <input type="text"  placeholder="Steg email "  className="se" />
-             <input type="password" className="pas" placeholder="Password" />
-             <select className="unit">
-                 <option value="unit">Select unit type</option>   
+             <input type="text"  placeholder=" FullName"  className="fname" value = {fn} onChange={(e)=>setfn(e.target.value)} />
+             <input type="text"  placeholder="Steg email "  className="se"  value = {email} onChange={(e)=>setemail(e.target.value)} />
+             <input type="password" className="pas" placeholder="Password"  value = {password} onChange={(e)=>setpassword(e.target.value)} />
+             <select className="unit" onChange={(e) => handlesomeanimation(e)}>
+                 <option value="unit-default">Select unit type</option>   
                     {unittypes.map((unit) => (
                         <option value={unit} >
                             {unit}
                         </option>
                     ))}
              </select>
-             <select className="specify unit">
-               select {unit}
-
-             </select>
+             {showspecify && <select className="specify unit" onChange={(e)=> {handleonchangespecify(e)}} >
+               <option value="default">select {unit}</option>
+                 {unit=="central" && centrals.map((central) => (
+                        <option value={central.central_id} >
+                            {central.name}
+                        </option>
+                    ))}
+                    
+                 {unit=="groupement" && groups.map((group) => (
+                        <option value={group.groupement_id} >
+                            {group.name}
+                        </option>
+                    ))}
+                        
+             </select>}
+             <button  onClick={()=>handleRegister()} > Register </button>
+             
         </div>
      );
 }
