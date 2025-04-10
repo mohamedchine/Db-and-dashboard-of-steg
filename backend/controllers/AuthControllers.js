@@ -36,7 +36,7 @@ const registerCtrl = async(req,res)=>{
          
     //check if the user email exist in the stegdb(the email was giving from the steg or not) 
     const isemailgfs = await db.execute("select * from "+unit+"_employee_emails where employee_email = ?  and "+unit+"_id =? " ,[steg_email,unitid]);
-    if(isemailgfs[0].length ==0) return res.status(400).json({message : "we couldn't find the email u provided inside the  "+unit_exist[0][0]["name"]+" contact the hr in ur "+unit+" to add it if u want"}) ;
+    if(isemailgfs[0].length ==0) return res.status(403).json({message : "we couldn't find the email u provided inside the  "+unit_exist[0][0]["name"]+" contact the hr in ur "+unit+" to add it if u want"}) ;
   
     
     
@@ -60,11 +60,11 @@ const registerCtrl = async(req,res)=>{
 
 const verifyAccountCtrl = async (req, res) => {
     const { token } = req.query;
-    if (!token) return res.status(404);
+    if (!token) return res.status(403);
 
     const payload = verifyjwt(token);
     if (!payload) {
-        //jwt.verify return null if its tampered with or expired
+        // jwt.verify returns null if it's tampered with or expired
         return res.status(401).send(`
             <!DOCTYPE html>
             <html>
@@ -85,13 +85,35 @@ const verifyAccountCtrl = async (req, res) => {
     const accountTypes = ['central', 'groupement', 'direction'];
 
     for (const type of accountTypes) {
-        const [updateResult] = await db.execute(
-            `UPDATE ${type}_accounts SET is_verified = 1 WHERE steg_email = ? AND id = ?`,
+        // Check if the account is already verified
+        const [checkResult] = await db.execute(
+            `SELECT is_verified FROM ${type}_accounts WHERE steg_email = ? AND id = ?`,
             [email, id]
         );
 
-        if (updateResult.affectedRows > 0) {
-            return res.status(201).send(`
+        if (checkResult[0].is_verified) {
+            return res.status(200).send(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Already Verified</title>
+                    <script>
+                        alert("Account is already verified. You can login now.");
+                    </script>
+                </head>
+                <body>
+                    
+                </body>
+                </html>
+            `);
+        }
+
+        // update the is_verified status
+         await db.execute(
+            `UPDATE ${type}_accounts SET is_verified = 1 WHERE steg_email = ? AND id = ?`,
+            [email, id]
+        );
+         return res.status(201).send(`
                 <!DOCTYPE html>
                 <html>
                 <head>
@@ -105,11 +127,11 @@ const verifyAccountCtrl = async (req, res) => {
                 </body>
                 </html>
             `);
-        }
     }
-    //in case the user isnt found in the db and the verification token has been generated correctly somehow
-    return res.status(404) ; 
+
+
 };
+
 
 
 
