@@ -43,7 +43,7 @@
     transition: color var(--transition-speed) ease-in-out;
 }
 
-.horline{
+.navbar .horline{
     height: 60%;
     width: 1px;
     background-color: var(--divider-color);

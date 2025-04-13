@@ -29,7 +29,7 @@ const registerCtrl = async(req,res)=>{
     );
     
     if (user_exist.length > 0) {
-        return res.status(400).json({ message: "An account with that email already exists" });
+        return res.status(400).json({ message: "An account with that email already exists " });
     }
     // in here we gotta somework to do if the user unverified we gotta check if he has an account or not
      
@@ -51,7 +51,7 @@ const registerCtrl = async(req,res)=>{
     //generate and send a mail verification link to the user
     const verificationLink =  gen_email_verification_Link(steg_email ,result[0].insertId)  ; 
     await sendmail(steg_email , 'Email Verification' , 'click  <a href ='+ verificationLink+' > here   </a> to verify your email ') ;  
-    return res.status(201).json({message : "we've sent you a verification link to your email"});
+    return res.status(201).json({message : "Registration successfuly ! we've sent a verification link to your email"});
 
 }
 
@@ -141,13 +141,13 @@ const loginCtrl = async (req, res) => {
     //data validation
     const { error } = validatelogin(req.body);
     if (error) {
-        return res.status(400).json({ error: error.details[0].message });
+        return res.status(400).json({ message: error.details[0].message });
     }
      
     //checking if the user exist in the db
-    const {user , role} = await findUserByEmail(req.body.steg_email);
+    const {user , unittype} = await findUserByEmail(req.body.steg_email);
     if (!user) {
-        return res.status(401).json({ error: "Incorrect email" });
+        return res.status(401).json({ message: "Incorrect email" });
     }
 
     const passwordMatch = await comparepassword(user.password, req.body.password);
@@ -158,19 +158,19 @@ const loginCtrl = async (req, res) => {
     if (!user.is_verified) {
        const verificationLink = gen_email_verification_Link(user.steg_email, user.id);
        await sendmail(user.steg_email, "Email Verification", `Click <a href="${verificationLink}">here</a> to verify your email`);
-       return res.status(401).json({ message: "Account not verified, check your email for verification link" });
+       return res.status(401).json({ message: "you are not verified yet , click the link that we've mailed you to verify your account" });
 
     }
-
-    const token = genjwt({ id: user.id, steg_email: user.steg_email, role }, "7d");
-    res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "Strict" });
-
-    return res.status(200).json({ message: "Logged in successfully", user });
+     const unitidstring = unittype+'_id' //just to get the name of the unit
+    const token = genjwt({ id: user.id, unittype , unitid : user.unitidstring }, "7d"); 
+    res.cookie("Accesstoken", token, { httpOnly: true, secure: true, sameSite: "Strict" });
+    const {password , ...userr} = user ; 
+    return res.status(200).json({ message: "Logged in successfully", userr });
 };
 
 
 const logoutCtrl = (req, res) => {
-    res.clearCookie('token', { httpOnly: true, secure: true, sameSite: 'Strict' });
+    res.clearCookie('Accesstoken', { httpOnly: true, secure: true, sameSite: 'Strict' });
 
     return res.status(200).json({ message: "Logged out successfully" });
 };

@@ -46,7 +46,7 @@ const validateRegister = (obj) => {
             .required()
             .messages({
                 'any.required': 'You must specify a unit (central or groupement or direction)',
-                'any.only': 'The unit must be either central or groupement or direction '
+                'any.only': 'You must specify a unit (central or groupement or direction) '
             }),
 
             unitid: joi.number()
@@ -69,7 +69,7 @@ const validatelogin  = (obj) =>{
         // .pattern(/@steg\.com\.tn$/)//$takmel b hadhaka
         .required()
         .messages({
-            "string.email": "Invalid email ",
+            "string.email": "Invalid email format",
             // "string.pattern.base": "invalid steg email",
             "any.required": "steg_email required"
         }),
@@ -94,16 +94,45 @@ const validatelogin  = (obj) =>{
 }
 
 
+const validateResetpassword = (obj) => {
+    const schema = joi.object({
+        steg_email: joi.string()
+          .email()
+          .required()
+          .messages({
+              "string.email": "Invalid email format",
+              "any.required": "steg_email required"
+          })
+    });
+    return schema.validate(obj);
+};
+const validatePassword =(obj)=>{
+    const schema = joi.object({
+        password: joi.string()
+            .min(8)
+            .max(20)
+            .pattern(/[a-z]/)
+            .pattern(/[A-Z]/)
+            .pattern(/[0-9]/)
+            .pattern(/[^a-zA-Z0-9]/)
+            .required()
+            .messages({
+                "string.min": "invalid password",
+                "string.max": "invalid password",
+                "string.pattern.base": "invalid password",
+                "any.required": "Password required"
+            })
+
+    });
+    return schema.validate(obj);
+}
 
 
 
 
 
 
-
-
-
-module.exports = {validateRegister ,validatelogin };
+module.exports = {validateRegister ,validatelogin ,validateResetpassword,validatePassword};
 
 
 // the backslashes are for escaping because the dot'.' means match anycaractere

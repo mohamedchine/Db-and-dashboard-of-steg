@@ -1,52 +1,61 @@
 const { genjwt, verifyjwt } = require('../utils/jwtUtils');
 const { sendmail } = require('../utils/mailUtils');
 const { hashPassword } = require('../utils/hashingUtils');
+const {validateResetpassword, validatePassword} = require('../utils/validationUtils');
+const {findUserByEmail} = require('../utils/dbUtils')
 const db = require('../config/db');
 
 const requestPasswordResetCtrl = async (req, res) => {
-    const { steg_email } = req.body;
+    const { error } = validateResetpassword(req.body);
 
-    // check if the email is provided
-    if (!steg_email) {
-        return res.status(400).json({ message: "Email is required" });
+    if (error) {
+        return res.status(400).json({ message: error.details[0].message });
     }
 
-    // find the user by email
-    const { user ,role } = await findUserByEmail(steg_email);
+    const { steg_email } = req.body;
+
+    const { user, unittype } = await findUserByEmail(steg_email);
 
     if (!user) {
         return res.status(404).json({ message: "User not found" });
     }
 
-    // generate a password reset token
-    const token = genjwt({ id: user.id, steg_email: user.steg_email, role }, "1h"); // Token valid for 1 hour
+    const token = genjwt({ userid: user.id, steg_email: user.steg_email, unittype }, "10m");
 
-    // send the password reset email
-    const resetLink = `${process.env.domain}${process.env.port}/reset-password?token=${token}`;
-    await sendmail(steg_email, 'Password Reset', `Click <a href="${resetLink}">here</a> to reset your password if u didn't request this please ignore this email`);
+    const resetLink = `${process.env.client_url}/reset-password?token=${token}`;
+    await sendmail(
+        steg_email,
+        'Password Reset',
+        `Click <a href="${resetLink}">here</a> to reset your password. If you didn't request this, please ignore this email.`
+    );
 
     return res.status(200).json({ message: "Password reset link has been sent to your email" });
 };
+
 const resetPasswordCtrl = async (req, res) => {
     const { token, newPassword } = req.body;
-
+   
     const payload = verifyjwt(token);
     if (!payload) {
-        return res.status(400).json({ message: "Invalid or expired token" });
+        return res.status(400).json({ message: "Invalid or expired reset link , we will redirect you to request a new link" ,redirect : "/welcomepage/request-reset-password"  });
     }
+    
+    const { id, steg_email, unittype } = payload;
+    if(!id || !steg_email ||!unittype ) return res.status(400).json({message : "that token is not meant for reseting the password"}); //in case user took the verify account token and put it in here 
 
-    const { id, steg_email, role } = payload;
+    
+    
 
+    const {error} = validatePassword({newPassword});
+    if (error)  return res.status(400).json({ message: error.details[0].message });
     const hashedPassword = await hashPassword(newPassword);
-
-
     await db.execute(
-        `UPDATE ${role.split('_')[0]}_accounts SET password = ? WHERE id = ? AND steg_email = ?`,
+        `UPDATE ${unittype}_accounts SET password = ? WHERE id = ? AND steg_email = ?`,
         [hashedPassword, id, steg_email]
     );
     
 
-    return res.status(200).json({ message: "Password has been reset successfully" });
+    return res.status(200).json({ message: "Password has been reset successfully now u can login" });
 };
 
 

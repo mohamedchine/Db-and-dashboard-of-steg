@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import "./signup.css";
 import axios from "axios";
-import {toast} from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Signup = () => {
         var unittypes = ["central" ,"groupement","direction"];
         const [centrals ,setcentrals] = useState(null);
@@ -11,7 +12,8 @@ const Signup = () => {
         const [password, setpassword] = useState("");
         const [unit, setunit] = useState("");
         const [unitid, setunitid] = useState(null);
-        const [showspecify , setshowspecify]=useState(false) ;    
+        const [showspecify , setshowspecify]=useState(false) ; 
+        const [loading ,setloading] = useState(false);   
 // to put the centralid in the specify 
     const handleonchangespecify = (e)=>{
         if(e.target.value=="default"){
@@ -48,6 +50,7 @@ const Signup = () => {
     
     //do the actual registration
     const handleRegister = async()=>{
+        setloading(true);
             const user = {
                 fullname: fn,
                 steg_email: email,
@@ -62,15 +65,16 @@ const Signup = () => {
                         'Content-Type': 'application/json'
                     }
                 }) ;
-                console.log(response.data) //into toast 
+                 toast.success(response.data.message);
             }catch(e){
                 
-                console.log("Error: "+ e.response.data.message);
+                toast.error( e.response.data.message);
             }
-            
+            setloading(false)
     }
     return ( 
         <div className="signup">
+            <div className="container">
              <input type="text"  placeholder=" FullName"  className="fname" value = {fn} onChange={(e)=>setfn(e.target.value)} />
              <input type="text"  placeholder="Steg email "  className="se"  value = {email} onChange={(e)=>setemail(e.target.value)} />
              <input type="password" className="pas" placeholder="Password"  value = {password} onChange={(e)=>setpassword(e.target.value)} />
@@ -97,8 +101,9 @@ const Signup = () => {
                     ))}
                         
              </select>}
-             <button  onClick={()=>handleRegister()} > Register </button>
-             
+             <button  onClick={()=>handleRegister()} className="register"  disabled={loading} > {loading? "loading .. " : "Register"} </button>
+             </div>
+             <ToastContainer position="top-right" autoClose={3000} />
         </div>
      );
 }

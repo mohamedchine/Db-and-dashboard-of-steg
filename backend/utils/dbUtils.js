@@ -1,20 +1,20 @@
 const db = require('../config/db');
 
 const findUserByEmail = async (email) => {
-    const userTypes = ['direction', 'central', 'groupement'];
+    const unitsTypes = ['direction', 'central', 'groupement'];
     let user = null;
-    let role = '';
+    let unittype = '';
 
-    for (const type of userTypes) {
+    for (const type of unitsTypes) {
         const [result] = await db.execute(`SELECT * FROM ${type}_accounts WHERE steg_email = ?`, [email]);
         if (result.length > 0) {
             user = result[0];
-            role = `${type}_employee`;
+            unittype = type;
             break;
         }
     }
 
-    return { user, role };
+    return { user, unittype };
 };
 
 module.exports = { findUserByEmail };

@@ -33,7 +33,7 @@ body {
     --text-light: #f8fafc;
     --text-muted: #e2e8f0;
     --divider-color: #64748b;
-    
+    --gray-color:rgb(196, 196, 196);
     
     --border-radius: 4px;
     --transition-speed: 0.3s;

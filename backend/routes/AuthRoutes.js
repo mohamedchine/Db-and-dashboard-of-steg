@@ -4,5 +4,5 @@ AuthRouter.post('/register' ,registerCtrl )
 AuthRouter.get('/verify-email',verifyAccountCtrl);
 //rate limit to do  reset password
 AuthRouter.post('/login' , loginCtrl); 
-AuthRouter.post('/logout',logoutCtrl)
+AuthRouter.post('/logout',logoutCtrl);
 module.exports = AuthRouter;
