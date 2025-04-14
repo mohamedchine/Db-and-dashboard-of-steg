@@ -1,11 +1,11 @@
 
 
 const joi = require('joi');
+const passwordErrorMessage = 
+'Password must be 8-20 characters and contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character';
 
 const validateRegister = (obj) => {
-    const passwordErrorMessage = 
-        'Password must be 8-20 characters and contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character';
-
+   
     const schema = joi.object({
         fullname: joi.string()
             .min(6)
@@ -107,8 +107,9 @@ const validateResetpassword = (obj) => {
     return schema.validate(obj);
 };
 const validatePassword =(obj)=>{
+   
     const schema = joi.object({
-        password: joi.string()
+        newPassword: joi.string()
             .min(8)
             .max(20)
             .pattern(/[a-z]/)
@@ -117,10 +118,10 @@ const validatePassword =(obj)=>{
             .pattern(/[^a-zA-Z0-9]/)
             .required()
             .messages({
-                "string.min": "invalid password",
-                "string.max": "invalid password",
-                "string.pattern.base": "invalid password",
-                "any.required": "Password required"
+                "string.min": passwordErrorMessage,
+                "string.max": passwordErrorMessage,
+                "string.pattern.base": passwordErrorMessage,
+                "any.required": passwordErrorMessage
             })
 
     });

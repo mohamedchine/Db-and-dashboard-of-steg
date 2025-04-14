@@ -21,6 +21,7 @@ const Resetpassword = () => {
   const [loading, setLoading] = useState(false);
 
   const handleRequestReset = async () => {
+    console.log(password)
     if (password != confirmpassword) {
       toast.error("Passwords do not match");
       return;
@@ -30,7 +31,7 @@ const Resetpassword = () => {
     try {
       const response = await axios.post(
         "http://localhost:3004/password/reset-password",
-        { password, token },
+        { newPassword:password, token },
         { headers: { "Content-Type": "application/json" } }
       );
 

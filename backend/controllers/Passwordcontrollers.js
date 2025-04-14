@@ -40,8 +40,8 @@ const resetPasswordCtrl = async (req, res) => {
         return res.status(400).json({ message: "Invalid or expired reset link , we will redirect you to request a new link" ,redirect : "/welcomepage/request-reset-password"  });
     }
     
-    const { id, steg_email, unittype } = payload;
-    if(!id || !steg_email ||!unittype ) return res.status(400).json({message : "that token is not meant for reseting the password"}); //in case user took the verify account token and put it in here 
+    const { userid, steg_email, unittype } = payload;
+    if(!userid || !steg_email ||!unittype ) return res.status(400).json({message : "that token is not meant for reseting the password"}); //in case user took the verify account token and put it in here 
 
     
     
@@ -51,7 +51,7 @@ const resetPasswordCtrl = async (req, res) => {
     const hashedPassword = await hashPassword(newPassword);
     await db.execute(
         `UPDATE ${unittype}_accounts SET password = ? WHERE id = ? AND steg_email = ?`,
-        [hashedPassword, id, steg_email]
+        [hashedPassword, userid, steg_email]
     );
     
 
