@@ -10,11 +10,51 @@ const findUserByEmail = async (email) => {
         if (result.length > 0) {
             user = result[0];
             unittype = type;
+            const unitIdField = `${type}_id`;
+            const unitTable = type;
+
+            const [[{ name }]] = await db.execute(
+                `SELECT name FROM ${unitTable} WHERE ${unitIdField} = ?`,
+                [user[unitIdField]]
+            );
+
+            unitname = name;
             break;
         }
     }
 
-    return { user, unittype };
+    return { user, unittype ,unitname};
 };
 
-module.exports = { findUserByEmail };
+
+const findUserById = async (id) => {
+    const unitsTypes = ['direction', 'central', 'groupement'];
+    let user = null;
+    let unittype = '';
+    let unitname = '';
+
+    for (const type of unitsTypes) {
+        const [result] = await db.execute(`SELECT * FROM ${type}_accounts WHERE id = ?`, [id]);
+        if (result.length > 0) {
+            user = result[0];
+            unittype = type;
+
+            const unitIdField = `${type}_id`;
+            const unitTable = type;
+
+            const [[{ name }]] = await db.execute(
+                `SELECT name FROM ${unitTable} WHERE ${unitIdField} = ?`,
+                [user[unitIdField]]
+            );
+
+            unitname = name;
+            break;
+        }
+    }
+
+    return { user, unittype, unitname };
+};
+
+
+
+module.exports = { findUserByEmail,findUserById };

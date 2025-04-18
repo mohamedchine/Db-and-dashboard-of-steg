@@ -3,13 +3,14 @@ import "./login.css";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const Login = () => {
     const [email, setemail] = useState("");
     const [password, setpassword] = useState("");
     const [loading, setloading] = useState(false);
+    const navigate = useNavigate();
 
     const handleLogin = async () => {
         setloading(true);
@@ -24,7 +25,18 @@ const Login = () => {
                     'Content-Type': 'application/json'
                 }
             });
-            toast.success(response.data.message); //take him to dashboard
+            toast.success(response.data.message);  //switch his role we will redirect him to his dashboard
+            const user = response.data.user ; 
+            //before redirecting him we need to save him in the authcontext
+            if(user.central_id)  setTimeout(() => {
+                navigate("/central/dashboard"); 
+              }, 3000);
+            else if(user.groupement_id)setTimeout(() => {
+                navigate("/groupement/dashboard"); 
+              }, 3000);
+            else setTimeout(() => {
+                navigate("/direction/dashboard"); 
+              }, 3000);
            
         } catch (e) {
             toast.error( e.response.data.message);

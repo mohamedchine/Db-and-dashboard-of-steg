@@ -8,6 +8,9 @@ import Wpage from "./pages/welcomepage/welcomepage";
 import NotFound from "./pages/notfound/notfound";
 import RequestResetPassword from "./pages/welcomepage/components/forgetpassword/requestresetpassword";
 import Resetpassword from "./pages/welcomepage/components/reset-password-component/resetpassword";
+import CentralDashboard from "./pages/centraldashboard/centraldashboard"
+import GroupementDashboard from "./pages/groupementdashboard/groupementdashboard"
+import DirectionDashboard from "./pages/directiondashboard/directiondashboard"
 import { Navigate } from "react-router-dom";
 function App() {
   return (
@@ -25,9 +28,14 @@ function App() {
             <Route path="request-reset-password" element={<RequestResetPassword/>}/>
             <Route path="reset-password" element={<Resetpassword/>} />
           </Route>
+          {/* dashboard routes */}
+          <Route path="/central/dashboard/*" element={<CentralDashboard />} />
+          <Route path="/groupement/dashboard/*" element={<GroupementDashboard />} />
+          <Route path="/direction/dashboard/*" element={<DirectionDashboard />} />
+          {/* 404 route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-
+      
       </Router>
     </div>
   );

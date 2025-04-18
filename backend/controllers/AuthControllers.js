@@ -4,7 +4,7 @@ const db = require('../config/db');
 const {verifyjwt ,genjwt } = require('../utils/jwtUtils');
 const { hashPassword, comparepassword } = require('../utils/hashingUtils');
 const { gen_email_verification_Link,sendmail } = require('../utils/mailUtils');
-const { findUserByEmail } = require('../utils/dbUtils');
+const { findUserByEmail ,findUserById} = require('../utils/dbUtils');
 const registerCtrl = async(req,res)=>{
     
     //data validation
@@ -145,7 +145,7 @@ const loginCtrl = async (req, res) => {
     }
      
     //checking if the user exist in the db
-    const {user , unittype} = await findUserByEmail(req.body.steg_email);
+    const {user , unittype, unitname} = await findUserByEmail(req.body.steg_email);
     if (!user) {
         return res.status(401).json({ message: "Incorrect email" });
     }
@@ -165,7 +165,39 @@ const loginCtrl = async (req, res) => {
     const token = genjwt({ id: user.id, unittype , unitid : user.unitidstring }, "7d"); 
     res.cookie("Accesstoken", token, { httpOnly: true, secure: true, sameSite: "Strict" });
     const {password , ...userr} = user ; 
-    return res.status(200).json({ message: "Logged in successfully", userr });
+    // we also need to send back the unitname to do it in top of the dashboard 
+    userr.unitname = unitname ; 
+    return res.status(200).json({ message: "Logged in successfully", user:userr   });
+};
+
+//this run when u close and oppen the app 
+const checkauthctrl = async (req, res) => {
+    const { Accesstoken } = req.cookies;
+
+    if (!Accesstoken) {
+        return res.status(401).json({ user: null, isAuthenticated: false });
+    }
+
+    const payload = verifyjwt(Accesstoken);
+    if (!payload) {
+        return res.status(401).json({ user: null, isAuthenticated: false });
+    }
+
+        const { user, unittype, unitname } = await findUserById(payload.id);
+        if (!user) {
+            return res.status(401).json({ user: null, isAuthenticated: false });
+        }
+
+        const { password, ...userr } = user;
+
+       
+        userr.unitname = unitname;
+
+        return res.status(200).json({
+            user: userr,
+            isAuthenticated: true,
+        });
+
 };
 
 
@@ -176,4 +208,4 @@ const logoutCtrl = (req, res) => {
 };
 
 
-module.exports={registerCtrl,verifyAccountCtrl , loginCtrl , logoutCtrl } ;
+module.exports={registerCtrl,verifyAccountCtrl , loginCtrl , logoutCtrl,checkauthctrl } ;
