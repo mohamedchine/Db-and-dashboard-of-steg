@@ -175,17 +175,17 @@ const checkauthctrl = async (req, res) => {
     const { Accesstoken } = req.cookies;
 
     if (!Accesstoken) {
-        return res.status(401).json({ user: null, isAuthenticated: false });
+        return res.status(401).json({ user: null  });
     }
 
     const payload = verifyjwt(Accesstoken);
     if (!payload) {
-        return res.status(401).json({ user: null, isAuthenticated: false });
+        return res.status(401).json({ user: null  });
     }
 
         const { user, unittype, unitname } = await findUserById(payload.id);
         if (!user) {
-            return res.status(401).json({ user: null, isAuthenticated: false });
+            return res.status(401).json({ user: null });
         }
 
         const { password, ...userr } = user;
@@ -194,8 +194,7 @@ const checkauthctrl = async (req, res) => {
         userr.unitname = unitname;
 
         return res.status(200).json({
-            user: userr,
-            isAuthenticated: true,
+            user: userr
         });
 
 };

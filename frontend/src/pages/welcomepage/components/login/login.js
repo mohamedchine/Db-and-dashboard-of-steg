@@ -1,21 +1,22 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import "./login.css";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../../../../context/usercontext";
 
 
 const Login = () => {
     const [email, setemail] = useState("");
     const [password, setpassword] = useState("");
-    const [loading, setloading] = useState(false);
+    const [loadingg, setloadinggg] = useState(false); 
+    const {setUser} =useContext(UserContext);
     const navigate = useNavigate();
-
+  
     const handleLogin = async () => {
-        setloading(true);
-       
         
+        setloadinggg(true);
         try {
             const response = await axios.post("http://localhost:3004/auth/login", {
                 steg_email: email,
@@ -24,24 +25,26 @@ const Login = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 }
+                ,withCredentials: true
             });
             toast.success(response.data.message);  //switch his role we will redirect him to his dashboard
-            const user = response.data.user ; 
-            //before redirecting him we need to save him in the authcontext
-            if(user.central_id)  setTimeout(() => {
-                navigate("/central/dashboard"); 
-              }, 3000);
-            else if(user.groupement_id)setTimeout(() => {
-                navigate("/groupement/dashboard"); 
-              }, 3000);
-            else setTimeout(() => {
-                navigate("/direction/dashboard"); 
-              }, 3000);
+            //save the user  in the global state
+            setUser(response.data.user);
+            const userData = response.data.user;
+            setTimeout(() => {
+                if(userData.central_id) {
+                    navigate("/central/dashboard", { replace: true });
+                } else if(userData.groupement_id) {
+                    navigate("/groupement/dashboard", { replace: true });
+                } else {
+                    navigate("/direction/dashboard", { replace: true });
+                }
+            }, 3000);
            
         } catch (e) {
             toast.error( e.response.data.message);
         }
-        setloading(false);
+        setloadinggg(false);
     };
 
     return (
@@ -63,8 +66,8 @@ const Login = () => {
                 />
                 <Link  to="/welcomepage/request-reset-password" className="frgpslink">Forgot password?</Link> 
                 
-                <button onClick={handleLogin} className="loginbtn" disabled={loading}>
-                    {loading ? "loading .. " :"Login"}
+                <button onClick={handleLogin} className="loginbtn" disabled={loadingg}>
+                    {loadingg ? "loadingg .. " :"Login"}
                 </button>
             </div>
             <ToastContainer position="top-right" autoClose={3000} />
