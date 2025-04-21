@@ -38,7 +38,6 @@ const findUserById = async (id) => {
         if (result.length > 0) {
             user = result[0];
             unittype = type;
-
             const unitIdField = `${type}_id`;
             const unitTable = type;
 

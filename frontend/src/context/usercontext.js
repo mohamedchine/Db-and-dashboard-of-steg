@@ -1,32 +1,17 @@
 // context/usercontext.js
-import { createContext, useState, useEffect } from "react";
-import axios from "axios";
+import { createContext, useState } from "react";
+
 
 const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setuser] = useState(null);
+
 
   // Runs only once when component mounts
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await axios.get("http://localhost:3004/auth/check", {
-          withCredentials: true,
-        });
-        setUser(res.data.user);
-        setLoading(false);
-      } catch (err) {
-        setLoading(false);
-      } 
-    };
-
-    checkAuth();
-  }, []); 
 
   return (
-    <UserContext.Provider value={{ user, setUser, loading }}>
+    <UserContext.Provider value={{ user, setuser}}>
       {children}
     </UserContext.Provider>
   );

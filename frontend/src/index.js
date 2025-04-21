@@ -3,18 +3,18 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { UserProvider } from './context/usercontext';
-import { BrowserRouter, Routes, Route } from 'react-router-dom'; // Ensure BrowserRouter is imported
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Ensure BrowserRouter is imported
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
-    <BrowserRouter>
+    <Router>
       <UserProvider>
         <Routes>
           <Route path="/*" element={<App />} />
         </Routes>
       </UserProvider>
-    </BrowserRouter>
+    </Router>
   // </React.StrictMode>
 );
 

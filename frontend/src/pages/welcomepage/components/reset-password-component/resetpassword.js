@@ -37,7 +37,7 @@ const Resetpassword = () => {
 
       toast.success(response.data.message);
       setTimeout(() => {
-        navigate("/welcomepage/login"); 
+        navigate("login" ,{replace:true}); 
       }, 3000);
     } catch (e) {
       toast.error(e.response.data.message );

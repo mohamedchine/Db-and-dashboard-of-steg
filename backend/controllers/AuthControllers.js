@@ -167,6 +167,7 @@ const loginCtrl = async (req, res) => {
     const {password , ...userr} = user ; 
     // we also need to send back the unitname to do it in top of the dashboard 
     userr.unitname = unitname ; 
+    userr.unittype = unittype ;
     return res.status(200).json({ message: "Logged in successfully", user:userr   });
 };
 
@@ -189,10 +190,9 @@ const checkauthctrl = async (req, res) => {
         }
 
         const { password, ...userr } = user;
-
        
         userr.unitname = unitname;
-
+        userr.unittype = unittype;
         return res.status(200).json({
             user: userr
         });
