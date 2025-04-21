@@ -9,7 +9,7 @@ const PersistingLogin = () => {
         const fetchData = async()=>{
             try{          
                 const result = await axios.get("http://localhost:3004/auth/check" ,{withCredentials:true});
-                 setuser((prev)=>{
+                 setuser(()=>{
                    
                     return result.data.user ;  //check the backend if u want to know why i did it like this
                  })

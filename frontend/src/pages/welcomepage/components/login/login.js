@@ -11,10 +11,10 @@ const Login = () => {
     const [email, setemail] = useState("");
     const [password, setpassword] = useState("");
     const [loadingg, setloadinggg] = useState(false); 
-    const { user, setuser } = useAuth();
+    const {  setuser } = useAuth();
 
     const navigate = useNavigate();
-    const location = useLocation(); 
+    
    
     const handleLogin = async () => {
         setloadinggg(true);
