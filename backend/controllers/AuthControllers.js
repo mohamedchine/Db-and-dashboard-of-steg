@@ -163,7 +163,14 @@ const loginCtrl = async (req, res) => {
     }
      const unitidstring = unittype+'_id' //just to get the name of the unit
     const token = genjwt({ id: user.id, unittype , unitid : user.unitidstring }, "7d"); 
-    res.cookie("Accesstoken", token, { httpOnly: true, secure: true, sameSite: "Strict" });
+    res.cookie("Accesstoken", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "Strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000
+      });
+      
+      
     const {password , ...userr} = user ; 
     // we also need to send back the unitname to do it in top of the dashboard 
     userr.unitname = unitname ; 
@@ -201,7 +208,13 @@ const checkauthctrl = async (req, res) => {
 
 
 const logoutCtrl = (req, res) => {
-    res.clearCookie('Accesstoken', { httpOnly: true, secure: true, sameSite: 'Strict' });
+    res.clearCookie('Accesstoken', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "Strict",
+    
+      });
+      
 
     return res.status(200).json({ message: "Logged out successfully" });
 };
