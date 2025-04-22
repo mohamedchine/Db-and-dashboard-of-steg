@@ -19,7 +19,7 @@ const PersistLogin = () => {
         const res = await axios.get("http://localhost:3004/auth/check", {
           withCredentials: true,
         });
-        setuser(res.data.user); // whatever shape your user is
+        setuser(res.data.user); 
       } catch (err) {
         setuser(null);
       } finally {
