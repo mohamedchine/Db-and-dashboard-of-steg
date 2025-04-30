@@ -31,8 +31,7 @@ const registerCtrl = async(req,res)=>{
     if (user_exist.length > 0) {
         return res.status(400).json({ message: "An account with that email already exists " });
     }
-    // in here we gotta somework to do if the user unverified we gotta check if he has an account or not
-     
+    
          
     //check if the user email exist in the stegdb(the email was giving from the steg or not) 
     const isemailgfs = await db.execute("select * from "+unit+"_employee_emails where employee_email = ?  and "+unit+"_id =? " ,[steg_email,unitid]);
