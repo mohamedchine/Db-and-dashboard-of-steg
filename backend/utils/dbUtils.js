@@ -4,6 +4,7 @@ const findUserByEmail = async (email) => {
     const unitsTypes = ['direction', 'central', 'groupement'];
     let user = null;
     let unittype = '';
+    let unitname = ''; 
 
     for (const type of unitsTypes) {
         const [result] = await db.execute(`SELECT * FROM ${type}_accounts WHERE steg_email = ?`, [email]);
@@ -23,7 +24,7 @@ const findUserByEmail = async (email) => {
         }
     }
 
-    return { user, unittype ,unitname};
+    return { user, unittype, unitname };
 };
 
 
@@ -55,5 +56,5 @@ const findUserById = async (id) => {
 };
 
 
-
+//i made it by mistake in this folder i wont change it 
 module.exports = { findUserByEmail,findUserById };

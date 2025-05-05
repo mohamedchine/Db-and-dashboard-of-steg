@@ -5,6 +5,8 @@ const {verifyjwt ,genjwt } = require('../utils/jwtUtils');
 const { hashPassword, comparepassword } = require('../utils/hashingUtils');
 const { gen_email_verification_Link,sendmail } = require('../utils/mailUtils');
 const { findUserByEmail ,findUserById} = require('../utils/dbUtils');
+
+
 const registerCtrl = async(req,res)=>{
     
     //data validation
@@ -161,7 +163,14 @@ const loginCtrl = async (req, res) => {
 
     }
      const unitidstring = unittype+'_id' //just to get the name of the unit
-    const token = genjwt({ id: user.id, unittype , unitid : user.unitidstring }, "7d"); 
+
+     //dynamicly create daily daily report in first login
+    //  if(unittype == 'central'){
+    //     await checkreportexistenceandcreateoneifnoexist(user[unitidstring]);
+    //  }
+    
+    const token = genjwt({ id: user.id, unittype , unitid : user[unitidstring] }, "7d"); 
+    
     res.cookie("Accesstoken", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
@@ -174,6 +183,7 @@ const loginCtrl = async (req, res) => {
     // we also need to send back the unitname to do it in top of the dashboard 
     userr.unitname = unitname ; 
     userr.unittype = unittype ;
+    
     return res.status(200).json({ message: "Logged in successfully", user:userr   });
 };
 
