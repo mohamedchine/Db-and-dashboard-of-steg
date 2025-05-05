@@ -24,12 +24,23 @@ const findalarmbyid = async (id) => {
 const deletealarm = async(id)=>{
     await db.execute("delete from alarms where id =?", [id]);
 }
-const getallunresolvedalarms = async(centralid)=>{
-    const [rows] = await db.execute("select * from alarms where status = 'Active' and reportid in (select id from dailyreports where centralid = ?)", [centralid]);
-    if (rows.length == 0) return -1;
-    return rows;
+const getallunresolvedalarmswiththeircreatedat = async (centralid) => {
+  const [rows] = await db.execute(`
+      SELECT 
+          alarms.*, 
+          report.created_at AS createdat
+      FROM 
+          alarms, report
+      WHERE 
+          alarms.reportid = report.id 
+          AND alarms.status = 'Active' 
+          AND report.central_id = ?
+  `, [centralid]);
 
-}
+  if (rows.length === 0) return -1;
+  return rows;
+};
 
 
-module.exports = { addalarm,findalarmbyid , deletealarm ,getallunresolvedalarms};
+
+module.exports = { addalarm,findalarmbyid , deletealarm ,getallunresolvedalarmswiththeircreatedat};

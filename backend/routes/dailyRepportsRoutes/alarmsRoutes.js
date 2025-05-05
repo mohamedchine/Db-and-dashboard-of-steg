@@ -20,10 +20,7 @@ alarmRouter.route('/delete/:alarmid').delete(validatealarmid , verify_centralemp
 alarmRouter.route('/unresolved/:centralid').get(verify_centralemployee_and_his_central, getunresolvedalarmsCtrl);
 
 
-//get alarms by reportid access garanted only to groupement supervisor of that central no im going to change it so i fetch all report by day
-// alarmRouter.route('/:reportid').get(validatereportid, verifygroupementemployee, getreportalarmsCtrl);
-
-//get all alarms in supervised centrals for groupement employee
+//update alarm only for the groupement
 
 
 
