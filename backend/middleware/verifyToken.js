@@ -36,7 +36,7 @@ const verifyToken = async(req,res,next)=>{
 
 // verify central employee and his central
 const verify_centralemployee_and_his_central = (req,res,next)=>{
-    console.log("hi");
+   
     verifyCentralEmployee(req,res,async()=>{
         if(req.user.central_id == req.params.centralid){
             return next();
