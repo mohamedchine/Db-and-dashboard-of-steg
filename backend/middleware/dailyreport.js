@@ -7,6 +7,7 @@ const validatereportid = async(req,res,next)=>{
     if(!isNaN(reportid)){
        const report = await findreportbyid(reportid);
        if(report != -1){
+        
            return next();
        }
     }

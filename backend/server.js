@@ -6,7 +6,7 @@ const AuthRouter = require('./routes/AuthRoutes');
 const UnitsRouter = require('./routes/unitsRoute');
 const PasswordRouter = require('./routes/passwordRoutes');
 const alarmRouter = require('./routes/dailyRepportsRoutes/alarmsRoutes');
-
+const defectiveequipementrouter = require('./routes/dailyRepportsRoutes/defectiveequipementroutes.js')
 
 
 const cookieParser = require('cookie-parser');
@@ -41,6 +41,7 @@ db.execute('select 1 ').then(async()=>{ //select is just to check if the connect
     app.use('/units',UnitsRouter);
     app.use('/password',PasswordRouter);
     app.use('/alarms',alarmRouter);
+    app.use('/defectiveequipements',defectiveequipementrouter);
     app.all('*',(req,res)=>{
         res.status(404).json({message : 'not found'})
     })

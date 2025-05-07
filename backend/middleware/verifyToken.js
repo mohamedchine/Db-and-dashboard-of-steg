@@ -60,7 +60,7 @@ const verify_centralemployee_and_his_report =async(req,res,next)=>{
 } 
 const verifygroupementemployee = async(req,res,next)=>{
     verifyToken(req,res,async()=>{
-        console.log(req.user);
+       
         if(req.user.unittype!="groupement"){
             return res.status(403).json({message : "u are not a groupement employee"})
         }

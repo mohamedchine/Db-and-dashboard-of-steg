@@ -1,4 +1,4 @@
-const { addalarm ,deletealarm,getallunresolvedalarmswiththeircreatedat} = require("../../model/alarms");
+const { addalarm ,deletealarm,getallunresolvedalarms} = require("../../model/alarms");
 const { validateAddAlarm } = require("../../utils/dailyreportValidation");
 const {record_activity}= require("../../utils/activitylogs");
 const addalarmCtrl = async (req, res) => {
@@ -29,7 +29,7 @@ const deletealarmCtrl = async(req,res)=>{
 
 
 const getunresolvedalarmsCtrl = async(req,res)=>{
-    const unresolvedalarms = await getallunresolvedalarmswiththeircreatedat(req.params.centralid) ;
+    const unresolvedalarms = await getallunresolvedalarms(req.params.centralid) ;
     return res.status(201).json({ message: "Successfully fetched unresolved alarms", unresolvedalarms });
 
 }
