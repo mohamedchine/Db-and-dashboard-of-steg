@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 01, 2025 at 05:04 PM
+-- Generation Time: May 07, 2025 at 01:58 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,6 +39,15 @@ CREATE TABLE `activity_logs` (
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `activity_logs`
+--
+
+INSERT INTO `activity_logs` (`id`, `centraluser_id`, `groupementuser_id`, `action`, `target_table`, `daily_report_id`, `changes`, `description`, `created_at`) VALUES
+(1, 26, NULL, 'add', 'alarms', 4, 'null', 'added an alarm', '2025-05-04 21:03:06'),
+(2, 26, NULL, 'add', 'alarms', 4, 'null', 'added an alarm', '2025-05-05 09:02:38'),
+(3, 26, NULL, 'delete', 'alarms', 4, 'null', 'deleted an alarm', '2025-05-05 09:26:57');
+
 -- --------------------------------------------------------
 
 --
@@ -52,9 +61,35 @@ CREATE TABLE `alarms` (
   `alarm_code` varchar(50) DEFAULT NULL,
   `description` text DEFAULT NULL,
   `status` enum('Active','Resolved') DEFAULT 'Active',
-  `happened_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `resolved_at` timestamp NULL DEFAULT NULL
+  `happened_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `resolved_at` timestamp NULL DEFAULT NULL,
+  `alarm_time` time DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `alarms`
+--
+
+INSERT INTO `alarms` (`id`, `turbine_id`, `reportid`, `alarm_code`, `description`, `status`, `happened_at`, `resolved_at`, `alarm_time`, `created_at`) VALUES
+(1, 1, 15, 'xhads', 'abcd', 'Resolved', '2025-05-01 17:27:52', '2025-05-01 17:27:52', NULL, '2025-05-06 20:29:12'),
+(2, 1, 15, 'TEMP_HIGH', 'Engine temperature exceeded threshold', 'Active', '2025-05-02 13:30:00', NULL, NULL, '2025-05-06 20:29:12'),
+(3, 1, 15, 'TEMP_HIGH', 'Engine temperature exceeded threshold', 'Active', '2025-05-02 13:30:00', NULL, NULL, '2025-05-06 20:29:12'),
+(4, 1, 15, 'TEMP_HIGH', 'Engine temperature exceeded threshold', 'Active', '2025-05-02 13:30:00', NULL, NULL, '2025-05-06 20:29:12'),
+(5, 1, 15, 'TEMP_HIGH', 'Engine temperature exceeded threshold', 'Active', '2025-05-02 13:30:00', NULL, NULL, '2025-05-06 20:29:12'),
+(6, 1, 15, 'TEMP_HIGH', 'Engine temperature exceeded threshold', 'Active', '2025-05-02 13:30:00', NULL, '19:05:36', '2025-05-06 20:29:12'),
+(7, 1, 15, 'TEMP_HIGH', 'Engine temperature exceeded threshold', 'Active', '2025-05-02 13:30:00', NULL, '19:11:37', '2025-05-06 20:29:12'),
+(8, 1, 15, 'TEMP_HIGH', 'Engine temperature exceeded threshold', 'Active', '2025-05-02 13:30:00', NULL, '19:16:18', '2025-05-06 20:29:12'),
+(10, 1, 15, 'TEMP_HIGH', 'Engine temperature exceeded threshold', 'Active', '2025-05-02 13:30:00', NULL, '20:35:14', '2025-05-06 20:29:12'),
+(11, 1, 15, 'TEMP_HIGH', 'Engine temperature exceeded threshold', 'Active', '2025-05-02 13:30:00', NULL, '20:39:18', '2025-05-06 20:29:12'),
+(12, 1, 15, 'TEMP_HIGH', 'Engine temperature exceeded threshold', 'Active', '2025-05-02 13:30:00', NULL, '21:09:20', '2025-05-06 20:29:12'),
+(13, 1, 15, 'TEMP_HIGH', 'Engine temperature exceeded threshold', 'Active', '2025-05-02 13:30:00', NULL, '21:20:24', '2025-05-06 20:29:12'),
+(14, 1, 15, 'TEMP_HIGH', 'Engine temperature exceeded threshold', 'Active', '2025-05-02 13:30:00', NULL, '07:10:06', '2025-05-06 20:29:12'),
+(15, 1, 15, 'TEMP_HIGH', 'Engine temperature exceeded threshold', 'Active', '2025-05-02 13:30:00', NULL, '14:44:44', '2025-05-06 20:29:12'),
+(16, 1, 16, 'TEMP_HIGH', 'Engine temperature exceeded threshold', 'Active', '2025-05-02 13:30:00', NULL, '14:44:52', '2025-05-06 20:29:12'),
+(17, 1, 4, 'TEMP_HIGH', 'Engine temperature exceeded threshold', 'Active', '2025-05-02 13:30:00', NULL, '15:13:37', '2025-05-06 20:29:12'),
+(18, 1, 4, 'TEMP_HIGH', 'Engine temperature exceeded threshold', 'Active', '2025-05-02 13:30:00', NULL, '21:00:21', '2025-05-06 20:29:12'),
+(19, 1, 4, 'TEMP_HIGH', 'Engine temperature exceeded threshold', 'Active', '2025-05-02 13:30:00', NULL, '21:03:06', '2025-05-06 20:29:12');
 
 -- --------------------------------------------------------
 
@@ -115,8 +150,8 @@ INSERT INTO `central_accounts` (`id`, `fullname`, `steg_email`, `password`, `is_
 (7, 'mohamed chine', 'raouf.benammar@steg.com.tn', '$2b$10$OO0aFKIU9lSM1cjZRNCAbO5VybxbeQ9hg6yk2pu0S8CrFiNprpnQG', 0, 1),
 (13, 'iheb  lahmer', 'ilahmar@steg.com.tn', '$2b$10$b9xuWKChqZifAb40gxlbI.SZN140Dh3TamYWjjAvjQbLiuJZi63r2', 0, 5),
 (22, 'mohamed chinne', 'nizar.chaabane@steg.com.tn', '$2b$10$7zj8U6nv2jnbapNglTbaCe3OHGS8WTK7QAqG//kxmGAK/AlE69TM.', 0, 4),
-(25, 'mouhamed chinne', 'mouhamedchinne@gmail.com', '$2b$10$AAPL9MV/xCKAay20JBrL0OtQpe/QCqe3wKzQO2aOp28O2ZZFlBeKi', 1, 2),
-(26, 'iheb  lahmer', 'arkanmsss80@gmail.com', '$2b$10$ShItMZM/vN1QMMtFYvkeZedO0BUudd9dmSWwX7J2mYf3MaYr02pHC', 1, 5);
+(26, 'iheb  lahmer', 'arkanmsss80@gmail.com', '$2b$10$ShItMZM/vN1QMMtFYvkeZedO0BUudd9dmSWwX7J2mYf3MaYr02pHC', 1, 5),
+(28, 'iheb  lahmer', 'trettr973@gmail.com', '$2b$10$aFT6e8EtWORa3v/tfrhVUe.K/qsKQdjRWYgHdftlttiXPo8TqvAYK', 0, 5);
 
 -- --------------------------------------------------------
 
@@ -145,6 +180,7 @@ INSERT INTO `central_employee_emails` (`employee_email`, `central_id`) VALUES
 ('arkanmsss80@gmail.com', 5),
 ('hassen.belhaj@steg.com.tn', 5),
 ('ilahmar@steg.com.tn', 5),
+('trettr973@gmail.com', 5),
 ('omar.khalifa@steg.com.tn', 6),
 ('slim.hajji@steg.com.tn', 7);
 
@@ -162,8 +198,17 @@ CREATE TABLE `defective_equipment` (
   `description` text DEFAULT NULL,
   `comments` text DEFAULT NULL,
   `reported_at` date DEFAULT NULL,
-  `fixed_at` date DEFAULT NULL
+  `fixed_at` date DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `defective_equipment`
+--
+
+INSERT INTO `defective_equipment` (`id`, `report_id`, `turbine_id`, `kks`, `description`, `comments`, `reported_at`, `fixed_at`, `created_at`) VALUES
+(3, 4, 64, 'KKS-2023-001', 'Generator bearing failure', 'Needs immediate replacement - vibration levels critical', '2025-05-10', '2025-05-15', '2025-05-07 10:15:36'),
+(4, 4, 64, 'KKS-2023-001', 'Generator bearing failure', 'Needs immediate replacement - vibration levels critical', '2025-05-10', '2025-05-15', '2025-05-07 10:16:43');
 
 -- --------------------------------------------------------
 
@@ -324,7 +369,9 @@ INSERT INTO `groupement_accounts` (`id`, `fullname`, `steg_email`, `password`, `
 (8, 'mohamed chinne', 'xsaa@steg.com.tn', '$2b$10$40UbYN7dHp9IC', 0, 1),
 (21, 'mohamed chinne', 'trettr973@gmail.com', '$2b$10$1wFms70qwSd6Z', 1, 1),
 (22, 'mohamed chinne', 'trett73@gmail.com', '$2b$10$4oEZft/vpGU8j', 1, 1),
-(23, 'mohamed chinne', 'tret7873@gmail.com', '$2b$10$gzvdEIAM8xTB1', 0, 1);
+(23, 'mohamed chinne', 'tret7873@gmail.com', '$2b$10$gzvdEIAM8xTB1', 0, 1),
+(24, 'mohamed chinne', 'madoumc54@gmail.com', '$2b$10$4oEZft/vpGU8jkqR3k3GnuyVgKKLq9XehexyykMxlW9HgEUmLJjty', 1, 4),
+(25, 'Johnathan Doe', 'john.doe@steg.com.tn', '$2b$10$E8BkqsiQt4Wr2TI9j/.zQOyD3hb1golJASbRTUxWzVFQJXIHld7ie', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -342,6 +389,7 @@ CREATE TABLE `groupement_employee_emails` (
 --
 
 INSERT INTO `groupement_employee_emails` (`employee_email`, `groupement_id`) VALUES
+('john.doe@steg.com.tn', 1),
 ('mehdi.kacem@steg.com.tn', 1),
 ('mourad.gharsalli@steg.com.tn', 1),
 ('riad.benothman@steg.com.tn', 1),
@@ -352,23 +400,6 @@ INSERT INTO `groupement_employee_emails` (`employee_email`, `groupement_id`) VAL
 ('sami.jebali@steg.com.tn', 3),
 ('anis.chakroun@steg.com.tn', 4),
 ('salah.mezri@steg.com.tn', 4);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `json_test`
---
-
-CREATE TABLE `json_test` (
-  `data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`data`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `json_test`
---
-
-INSERT INTO `json_test` (`data`) VALUES
-('{\"name\": \"Alice\", \"age\": 30, \"location\": {\"city\": \"Paris\", \"country\": \"France\"}}');
 
 -- --------------------------------------------------------
 
@@ -387,7 +418,8 @@ CREATE TABLE `maintenance` (
   `related_item_type` enum('Alarm','Defective Equipment') NOT NULL,
   `related_item_id` int(11) DEFAULT NULL,
   `start` datetime NOT NULL,
-  `end` datetime NOT NULL
+  `end` datetime NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -524,7 +556,9 @@ INSERT INTO `turbine` (`turbine_id`, `name`, `central_id`, `manufacturer`, `fuel
 (60, 'TG1', 14, 'FIAT', 'Gaz', '1984', 33.80),
 (61, 'TG2', 14, 'FIAT', 'Gaz', '1984', 33.80),
 (62, 'TG1', 12, 'FIAT', 'Gasoil', '1984', 34.50),
-(63, 'TG1', 13, 'FIAT', 'Gasoil', '1984', 34.50);
+(63, 'TG1', 13, 'FIAT', 'Gasoil', '1984', 34.50),
+(64, 'TG1', 5, 'ALSTHOM - GE', 'Gaz', '1978', 21.50),
+(65, 'TG2', 5, 'FIAT', ' Gaz', '1984', 34.50);
 
 --
 -- Indexes for dumped tables
@@ -671,13 +705,13 @@ ALTER TABLE `turbine`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `alarms`
 --
 ALTER TABLE `alarms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `central`
@@ -689,13 +723,13 @@ ALTER TABLE `central`
 -- AUTO_INCREMENT for table `central_accounts`
 --
 ALTER TABLE `central_accounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `defective_equipment`
 --
 ALTER TABLE `defective_equipment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `direction`
@@ -731,7 +765,7 @@ ALTER TABLE `groupement`
 -- AUTO_INCREMENT for table `groupement_accounts`
 --
 ALTER TABLE `groupement_accounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `maintenance`
@@ -755,7 +789,7 @@ ALTER TABLE `report`
 -- AUTO_INCREMENT for table `turbine`
 --
 ALTER TABLE `turbine`
-  MODIFY `turbine_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `turbine_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- Constraints for dumped tables
