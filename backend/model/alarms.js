@@ -1,20 +1,25 @@
 const db = require("../config/db");
 const addalarm = async ({ turbine_id, reportid, alarm_code, description, status, happened_at, resolved_at, alarm_time }) => {
-  await db.execute(
+  const [result] = await db.execute(
     "INSERT INTO alarms (turbine_id, reportid, alarm_code, description, status, happened_at, resolved_at, alarm_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
     [
-      turbine_id, 
-      reportid, 
-      alarm_code, 
-      description, 
-      status || 'Active', 
-      happened_at || new Date(), 
+      turbine_id,
+      reportid,
+      alarm_code,
+      description,
+      status || 'Active',
+      happened_at || new Date(),
       resolved_at || null,
       alarm_time || new Date().toTimeString().slice(0, 8)
     ]
   );
-};
 
+  const insertedId = result.insertId;
+
+  const [rows] = await db.execute("SELECT * FROM alarms WHERE id = ?", [insertedId]);
+
+  return rows[0]; // return the inserted alarm
+};
 
 const findalarmbyid = async (id) => {
   const [rows] = await db.execute("select * from alarms where id = ?", [id]);
@@ -34,7 +39,7 @@ const getallunresolvedalarms = async (centralid) => {
     ORDER BY alarms.created_at ASC
   `, [centralid]);
 
-  if (rows.length === 0) return -1;
+ ;
   return rows;
 };
 

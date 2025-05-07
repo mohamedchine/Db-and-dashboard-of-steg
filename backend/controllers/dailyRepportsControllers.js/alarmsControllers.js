@@ -10,13 +10,13 @@ const addalarmCtrl = async (req, res) => {
    }
    
   
-     await addalarm({
+   const addedalarm =   await addalarm({
        ...req.body,
        reportid: req.params.reportid 
      });
     await record_activity(req, "add", "alarms", null, "added an alarm");
      
-     return res.status(201).json({ message: "Successfully added alarm" });
+     return res.status(201).json({ message: "Successfully added alarm" , addedalarm :addedalarm });
   
 };
 

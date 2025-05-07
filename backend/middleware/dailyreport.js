@@ -1,5 +1,6 @@
 const {findreportbyid} = require("../model/report");
 const {findalarmbyid}=require("../model/alarms");
+const { findDefectiveEquipmentById } = require("../model/defectiveequipement");
 //to verify if the report id is valid 
 const validatereportid = async(req,res,next)=>{
     const reportid = req.params.reportid;
@@ -27,7 +28,19 @@ const validatealarmid = async(req,res,next)=>{
      }
      return res.status(404).json({ message: "invalid alarmid" });
 }
+const validatedefectiveequipementid = async(req,res,next)=>{
+    const defectiveequipementid = req.params.defectiveequipementid ;
+    if(!isNaN(defectiveequipementid)){
+        const defectiveequipement = await findDefectiveEquipmentById(defectiveequipementid);
+        if(defectiveequipement != -1){
+            req.params.reportid = defectiveequipement.report_id ; 
+            req.defectiveequipement = defectiveequipement ;
+            return next();
+        }
+     }
+     return res.status(404).json({ message: "invalid defectiveequipementid" });
+}
 
 module.exports = {
-    validatereportid,validatealarmid
+    validatereportid,validatealarmid,validatedefectiveequipementid
 }
