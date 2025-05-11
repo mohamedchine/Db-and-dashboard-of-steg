@@ -7,7 +7,7 @@ const validateAddAlarm = (data) => {
     alarm_code: joi.string().required().min(2),
     description: joi.string().required(),
     time :joi.optional(),
-    status: joi.string().optional(),
+    
     happened_at: joi.optional(),
     resolved_at: joi.optional()
   });

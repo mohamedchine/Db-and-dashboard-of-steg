@@ -1,4 +1,4 @@
-const { addalarm ,deletealarm,getallunresolvedalarms} = require("../../model/alarms");
+const { addalarm ,deletealarm,getallunresolvedalarms,gettodaysalarmsbycentral} = require("../../model/alarms");
 const { validateAddAlarm } = require("../../utils/dailyreportValidation");
 const {record_activity}= require("../../utils/activitylogs");
 const addalarmCtrl = async (req, res) => {
@@ -36,10 +36,46 @@ const getunresolvedalarmsCtrl = async(req,res)=>{
 
 
 
-const getallalarmsbycentralCtrl= async(req,res)=>{
-  
-}
+const gettodaysalarmsbycentralCtrl = async (req, res) => {
+  try {
+    const centralId = req.params.centralid;
+    
+    const alarms = await gettodaysalarmsbycentral(centralId);
+    
+    if (alarms === -1) {
+      return res.status(200).json([]); 
+    }
+    
+    return res.status(200).json(alarms);
+    
+  } catch (error) {
+    console.error("Error fetching today's alarms:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+const getAlarmsCtrl = async (req, res) => {
+  try {
+    const centralId = req.params.centralid;
+    
+    // Get unresolved alarms
+    const unresolved = await getallunresolvedalarms(centralId);
+    
+    // Get today's alarms
+    let today = await gettodaysalarmsbycentral(centralId);
+    if (today === -1) today = [];
+    
+    // Send both together
+    res.status(200).json({
+      unresolved,
+      today
+    });
+    
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
 
 module.exports = {
-  addalarmCtrl , deletealarmCtrl,getunresolvedalarmsCtrl,getallalarmsbycentralCtrl
+  addalarmCtrl , deletealarmCtrl,getunresolvedalarmsCtrl,gettodaysalarmsbycentralCtrl,getAlarmsCtrl
 };

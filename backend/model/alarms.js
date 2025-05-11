@@ -1,16 +1,16 @@
 const db = require("../config/db");
-const addalarm = async ({ turbine_id, reportid, alarm_code, description, status, happened_at, resolved_at, alarm_time }) => {
+const addalarm = async ({ turbine_id, reportid, alarm_code, description, happened_at, resolved_at }) => {
   const [result] = await db.execute(
-    "INSERT INTO alarms (turbine_id, reportid, alarm_code, description, status, happened_at, resolved_at, alarm_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+    "INSERT INTO alarms (turbine_id, reportid, alarm_code, description, status, happened_at, resolved_at) VALUES (?, ?, ?, ?, ?, ?, ?)", // 7 parameters
     [
       turbine_id,
       reportid,
       alarm_code,
       description,
-      status || 'Active',
+      resolved_at ? 'Resolved' : 'Active',
       happened_at || new Date(),
-      resolved_at || null,
-      alarm_time || new Date().toTimeString().slice(0, 8)
+      resolved_at || null
+      // Removed extra comma here
     ]
   );
 
@@ -18,7 +18,7 @@ const addalarm = async ({ turbine_id, reportid, alarm_code, description, status,
 
   const [rows] = await db.execute("SELECT * FROM alarms WHERE id = ?", [insertedId]);
 
-  return rows[0]; // return the inserted alarm
+  return rows[0];
 };
 
 const findalarmbyid = async (id) => {
@@ -30,19 +30,45 @@ const deletealarm = async(id)=>{
     await db.execute("delete from alarms where id =?", [id]);
 }
 const getallunresolvedalarms = async (centralid) => {
-  const [rows] = await db.execute(`
-    SELECT alarms.*
-    FROM alarms, report, central
-    WHERE alarms.reportid = report.id
-    AND report.central_id = ?
-    AND alarms.status = 'Active'
-    ORDER BY alarms.created_at ASC
-  `, [centralid]);
+  const [rows] = await db.execute(
+    `SELECT *
+     FROM alarms
+     WHERE reportid IN (
+         SELECT id FROM report
+         WHERE central_id = ?
+     )
+     AND status = 'Active'
+     ORDER BY created_at ASC`,
+    [centralid]
+  );
 
- ;
   return rows;
 };
 
+const updateAlarmStatus = async (id,resolvedat, status) => {
+  await db.execute(
+    "UPDATE alarms SET status = ? , resolved_at =? WHERE id = ?",
+    [status,resolvedat,id]
+  );
+};
 
 
-module.exports = { addalarm,findalarmbyid , deletealarm ,getallunresolvedalarms};
+const gettodaysalarmsbycentral = async (centralid) => {
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0); // Start of today
+  
+  const todayEnd = new Date();
+  todayEnd.setHours(23, 59, 59, 999); // End of today
+
+  const [rows] = await db.execute(`
+    SELECT alarms.* 
+    FROM alarms, report
+    WHERE alarms.reportid = report.id
+    AND report.central_id = ?
+    AND alarms.created_at BETWEEN ? AND ?
+    ORDER BY alarms.created_at DESC
+  `, [centralid, todayStart, todayEnd]);
+
+  return rows.length === 0 ? -1 : rows;
+};
+module.exports = { addalarm,findalarmbyid , deletealarm ,getallunresolvedalarms ,updateAlarmStatus,gettodaysalarmsbycentral};

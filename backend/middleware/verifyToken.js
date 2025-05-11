@@ -1,7 +1,7 @@
 const {getcentralidbyreportid} = require("../model/central");
 const {verifyjwt}=require('../utils/jwtUtils');
 const {findUserById}=require('../utils/dbUtils');
-
+const {findreportbyid} = require('../model/report');
 //middleware that verify accesstoken given to a user this one is global ; 
 const verifyToken = async(req,res,next)=>{
     const { Accesstoken } = req.cookies;
@@ -52,6 +52,9 @@ const verify_centralemployee_and_his_report =async(req,res,next)=>{
         
         const centralidbyreportid = await getcentralidbyreportid(req.params.reportid);
         if(centralidbyreportid!=-1 && centralidbyreportid==req.user.central_id ){
+            //just to do it in the final route
+          const  report =  await findreportbyid(req.params.reportid); 
+            
             return next();
         }
         return  res.status(403).json({message : "u are forbiden from doing so"})

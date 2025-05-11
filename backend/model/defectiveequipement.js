@@ -11,8 +11,8 @@ const addDefectiveEquipment = async ({
 }) => {
   const [result] = await db.execute(
     `INSERT INTO defective_equipment 
-     (report_id, turbine_id, kks, description, comments, reported_at, fixed_at) 
-     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+     (report_id, turbine_id, kks, description, comments, reported_at, fixed_at,status) 
+     VALUES (?, ?, ?, ?, ?, ?, ?,?)`,
     [
       reportid,
       turbine_id,
@@ -20,7 +20,8 @@ const addDefectiveEquipment = async ({
       description,
       comments,
       reported_at,
-      fixed_at === undefined ? null : fixed_at
+      fixed_at === undefined ? null : fixed_at , 
+      fixed_at === undefined? "Active" : "Fixed" 
     ]
   );
 
@@ -73,11 +74,51 @@ const getunfixeddefectiveequipments = async (centralid) => {
 
   return rows;
 };
+const updateDefectiveEquipmentStatus = async (id, status, fixedat) => {
+  await db.execute(
+    "UPDATE defective_equipment SET status = ?, fixed_at = ? WHERE id = ?",  // Removed comma after ?
+    [status, fixedat, id]
+  );
+};
+
+
+
+const todaysdefectiveequipments = async (centralid) => {
+  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+  const [rows] = await db.execute(
+    `SELECT de.* 
+     FROM defective_equipment de
+     WHERE de.report_id IN (
+         SELECT id FROM report WHERE central_id = ?
+     )
+     AND DATE(de.created_at) = ?
+     ORDER BY de.created_at DESC`,
+    [centralid, today]
+  );
+
+  return rows.length === 0 ? -1 : rows;
+};
+
+
+  const getDefectiveEquipmentByReportId = async (report_id) => {
+    const [rows] = await db.execute(
+      `SELECT * FROM defective_equipment 
+       WHERE report_id = ? 
+       ORDER BY created_at ASC`, 
+      [report_id]
+    );
+    return rows; // always returns array (empty if no results)
+  };
+
+
+
 
 module.exports = { 
   getunfixeddefectiveequipments , 
   addDefectiveEquipment,
   findDefectiveEquipmentById,
   deleteDefectiveEquipment,
-  getDefectiveEquipmentByTurbine
+  getDefectiveEquipmentByTurbine,
+  updateDefectiveEquipmentStatus , todaysdefectiveequipments,getDefectiveEquipmentByReportId
 };
