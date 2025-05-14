@@ -6,7 +6,7 @@ const record_activity = async(req, action, targettable, changes, description) =>
         req.user.unittype === "groupement" ? req.user.id : null,
         action,
         targettable,
-        req.params.reportid,
+        req.params.centralid,
         JSON.stringify(changes), 
         description
     ];

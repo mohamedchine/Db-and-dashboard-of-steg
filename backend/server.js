@@ -5,14 +5,19 @@ const db   = require('./config/db')
 const AuthRouter = require('./routes/AuthRoutes');
 const UnitsRouter = require('./routes/unitsRoute');
 const PasswordRouter = require('./routes/passwordRoutes');
-const alarmRouter = require('./routes/dailyRepportsRoutes/alarmsRoutes');
-const defectiveequipementrouter = require('./routes/dailyRepportsRoutes/defectiveequipementroutes.js')
-const maintenanceRouter = require('./routes/dailyRepportsRoutes/maintenanceRoutes');
+const alarmRouter = require('./routes/centraldashboard/alarmsRoutes');
+const defectiveequipementrouter = require('./routes/centraldashboard/defectiveequipementroutes.js')
+const maintenanceRouter = require('./routes/centraldashboard/maintenanceRoutes');
+const performanceRouter = require('./routes/centraldashboard/performanceRoutes');
+const TurbinesRouter = require('./routes/turbinesRoutes.js');
+
 
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const dynamicreportsetup = require('./utils/dynamicreportsetup');
-const busyHTML = require('./views/busy');
+const groupementRouter = require('./routes/groupement/groupementRoutes.js');
+
+
+
 
 
 const app = express();
@@ -25,24 +30,18 @@ db.execute('select 1 ').then(async()=>{ //select is just to check if the connect
           credentials: true, 
         })
       );
-    let isBusy = false ; //setting up daily repport ?
-    
-    await dynamicreportsetup((val) => { isBusy = val });
-
-
-    app.use((req, res, next) => {
-      if (isBusy) return res.status(400).send(busyHTML);
-      next();
-    });
-
+   
     app.use(cookieParser());
     app.use(express.json());
     app.use('/auth',AuthRouter);
     app.use('/units',UnitsRouter);
+    app.use('/turbines',TurbinesRouter);
     app.use('/password',PasswordRouter);
     app.use('/alarms',alarmRouter);
     app.use('/defectiveequipements',defectiveequipementrouter);
     app.use('/maintenance',maintenanceRouter);
+    app.use('/performance',performanceRouter);
+    app.use('/groupement',groupementRouter);
     app.all('*',(req,res)=>{
         res.status(404).json({message : 'not found'})
     })

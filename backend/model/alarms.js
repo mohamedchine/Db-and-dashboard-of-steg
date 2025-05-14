@@ -1,10 +1,10 @@
 const db = require("../config/db");
-const addalarm = async ({ turbine_id, reportid, alarm_code, description, happened_at, resolved_at }) => {
+const addalarm = async ({ turbine_id, central_id, alarm_code, description, happened_at, resolved_at }) => {
   const [result] = await db.execute(
-    "INSERT INTO alarms (turbine_id, reportid, alarm_code, description, status, happened_at, resolved_at) VALUES (?, ?, ?, ?, ?, ?, ?)", // 7 parameters
+    "INSERT INTO alarms (turbine_id, central_id, alarm_code, description, status, happened_at, resolved_at) VALUES (?, ?, ?, ?, ?, ?, ?)", // 7 parameters
     [
       turbine_id,
-      reportid,
+      central_id,
       alarm_code,
       description,
       resolved_at ? 'Resolved' : 'Active',
@@ -29,19 +29,31 @@ const findalarmbyid = async (id) => {
 const deletealarm = async(id)=>{
     await db.execute("delete from alarms where id =?", [id]);
 }
-const getallunresolvedalarms = async (centralid) => {
-  const [rows] = await db.execute(
-    `SELECT *
-     FROM alarms
-     WHERE reportid IN (
-         SELECT id FROM report
-         WHERE central_id = ?
-     )
-     AND status = 'Active'
-     ORDER BY created_at ASC`,
-    [centralid]
-  );
 
+
+
+
+const getunresolvedalarms = async (centralid, page = 1, limit = 10, turbine_id = null) => {
+  const offset = (page - 1) * limit;
+
+  let query = `
+    SELECT *
+    FROM alarms
+    WHERE central_id = ?
+      AND status = 'Active'
+  `;
+
+  const params = [centralid];
+
+  if (turbine_id) {
+    query += ` AND turbine_id = ? `;
+    params.push(turbine_id);
+  }
+
+  query += ` ORDER BY created_at ASC LIMIT ? OFFSET ? `;
+  params.push(limit, offset);
+
+  const [rows] = await db.execute(query, params);
   return rows;
 };
 
@@ -51,24 +63,78 @@ const updateAlarmStatus = async (id,resolvedat, status) => {
     [status,resolvedat,id]
   );
 };
+const getAllUnresolvedAlarms = async (central_id, turbine_id = null) => {
+  let query = `
+    SELECT *
+    FROM alarms
+    WHERE central_id = ?
+      AND status = 'Active'
+  `;
 
+  const params = [central_id];
 
-const gettodaysalarmsbycentral = async (centralid) => {
-  const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0); // Start of today
-  
-  const todayEnd = new Date();
-  todayEnd.setHours(23, 59, 59, 999); // End of today
+  if (turbine_id) {
+    query += ` AND turbine_id = ? `;
+    params.push(turbine_id);
+  }
 
-  const [rows] = await db.execute(`
-    SELECT alarms.* 
-    FROM alarms, report
-    WHERE alarms.reportid = report.id
-    AND report.central_id = ?
-    AND alarms.created_at BETWEEN ? AND ?
-    ORDER BY alarms.created_at DESC
-  `, [centralid, todayStart, todayEnd]);
+  query += ` ORDER BY created_at ASC`;
 
-  return rows.length === 0 ? -1 : rows;
+  const [rows] = await db.execute(query, params);
+
+  return rows;
 };
-module.exports = { addalarm,findalarmbyid , deletealarm ,getallunresolvedalarms ,updateAlarmStatus,gettodaysalarmsbycentral};
+
+const getresolvedalarms = async (centralid, page = 1, limit = 10, turbine_id = null) => {
+  const offset = (page - 1) * limit;
+
+  let query = `
+    SELECT *
+    FROM alarms
+    WHERE central_id = ?
+      AND status = 'Resolved'
+  `;
+
+  const params = [centralid];
+
+  if (turbine_id) {
+    query += ` AND turbine_id = ? `;
+    params.push(turbine_id);
+  }
+
+  query += ` ORDER BY created_at ASC LIMIT ? OFFSET ? `;
+  params.push(limit, offset);
+
+  const [rows] = await db.execute(query, params);
+  return rows;
+};
+
+
+const getpendingalarms = async (centralid, page = 1, limit = 10, turbine_id = null) => {
+  const offset = (page - 1) * limit;
+
+  let query = `
+    SELECT *
+    FROM alarms
+    WHERE central_id = ?
+      AND status = 'Pending'
+  `;
+
+  const params = [centralid];
+
+  if (turbine_id) {
+    query += ` AND turbine_id = ? `;
+    params.push(turbine_id);
+  }
+
+  query += ` ORDER BY created_at ASC LIMIT ? OFFSET ? `;
+  params.push(limit, offset);
+
+  const [rows] = await db.execute(query, params);
+  return rows;
+};
+
+
+
+
+module.exports = { addalarm,findalarmbyid , deletealarm ,getunresolvedalarms ,updateAlarmStatus,getresolvedalarms  , getpendingalarms,getAllUnresolvedAlarms};

@@ -2,6 +2,7 @@ const {getcentralidbyreportid} = require("../model/central");
 const {verifyjwt}=require('../utils/jwtUtils');
 const {findUserById}=require('../utils/dbUtils');
 const {findreportbyid} = require('../model/report');
+const {getCentralsByGroupementId} = require('../model/central')
 //middleware that verify accesstoken given to a user this one is global ; 
 const verifyToken = async(req,res,next)=>{
     const { Accesstoken } = req.cookies;
@@ -20,23 +21,26 @@ const verifyToken = async(req,res,next)=>{
     userr.unittype = unittype ;
     userr.unitname = unitname ;  
     req.user = userr ; 
+    
     next() ; 
 }
 //verify central employee const verifyCentralEmployee = async (req, res, next) => {
     const verifyCentralEmployee = async (req, res, next) => {
+        
         verifyToken(req, res, async () => {
             if (req.user.unittype !== "central") {
                 return res.status(403).json({ message: "You need to be a central employee to do this" });
             }
+            
             next();
         });
     };
 
 
 
-// verify central employee and his central
+// verify central employee and his central(hes trying to modify in his central or what )
 const verify_centralemployee_and_his_central = (req,res,next)=>{
-   
+    
     verifyCentralEmployee(req,res,async()=>{
         if(req.user.central_id == req.params.centralid){
             return next();
@@ -66,7 +70,10 @@ const verifygroupementemployee = async(req,res,next)=>{
        
         if(req.user.unittype!="groupement"){
             return res.status(403).json({message : "u are not a groupement employee"})
+            
         }
+        const centralids = await getCentralsByGroupementId(req.user.groupement_id);
+        req.centralids = centralids ;
         return next();
     })
 } ; 
@@ -74,10 +81,13 @@ const verifygroupementemployee = async(req,res,next)=>{
 
 
 
-//verify alarm id 
+
+
+
+
 module.exports = {
-   verifyToken ,
-   
+   verifyToken ,   
+
    verify_centralemployee_and_his_report,
    verifyCentralEmployee,
    

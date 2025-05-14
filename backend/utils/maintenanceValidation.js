@@ -1,13 +1,12 @@
 const Joi = require('joi'); 
-const {getallunresolvedalarms} = require('../model/alarms');
-const {getunfixeddefectiveequipments} = require('../model/defectiveequipement');
+const {getAllUnresolvedAlarms} = require('../model/alarms');
+const {getallunfixeddefectiveequipments} = require('../model/defectiveequipement');
 
 
 
 const validateMaintenance = (obj) => {
  
   const maintenanceSchema = Joi.object({
-    id: Joi.number().integer().positive(),
    
     kks: Joi.string().max(255).required(),
     ot_number: Joi.string().max(255).required(),
@@ -74,7 +73,7 @@ const validatesomemaintancecstuff = async(req, type, related_item_type, related_
 
     // Validate systematic maintenance with alarm
     if (type === "Systematic" && related_item_type === "Alarm") {
-        const alarms = await getallunresolvedalarms(centralid);
+        const alarms = await getAllUnresolvedAlarms(centralid);
         let alarmFound = null;
         
         for (const alarm of alarms) {
@@ -109,7 +108,7 @@ const validatesomemaintancecstuff = async(req, type, related_item_type, related_
 
     // Validate curative maintenance with equipment
     if (type === "Curative" && related_item_type === "Defective Equipment") {
-        const defectiveEquipment = await getunfixeddefectiveequipments(centralid);
+        const defectiveEquipment = await getallunfixeddefectiveequipments(centralid);
         let equipmentFound = null;
 
         for (const equipment of defectiveEquipment) {

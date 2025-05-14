@@ -23,7 +23,7 @@ const validatealarmid = async(req,res,next)=>{
     if(!isNaN(alarmid)){
         const alarm = await findalarmbyid(alarmid);
         if(alarm != -1){
-            req.params.reportid = alarm.reportid ; 
+            req.params.centralid = alarm.central_id ;
             req.alarm = alarm ;
             return next();
         }
@@ -35,7 +35,8 @@ const validatedefectiveequipementid = async(req,res,next)=>{
     if(!isNaN(defectiveequipementid)){
         const defectiveequipement = await findDefectiveEquipmentById(defectiveequipementid);
         if(defectiveequipement != -1){
-            req.params.reportid = defectiveequipement.report_id ; 
+            req.params.centralid = defectiveequipement.central_id ;
+            
             req.defectiveequipement = defectiveequipement ;
             return next();
         }
@@ -47,11 +48,11 @@ const validatedefectiveequipementid = async(req,res,next)=>{
 
 const validatemaintenanceid = async(req, res, next) => {
     const maintenanceid = req.params.id;
-    
+   
     if(!isNaN(maintenanceid)) {
-        const maintenance = await findMaintenanceById(maintenanceid);
+        const maintenance = await findMaintenanceById(maintenanceid  );
         if(maintenance != -1) {
-            req.params.reportid = maintenance.report_id; // Assuming your maintenance table has report_id column
+            req.params.centralid = maintenance.central_id ;
             req.maintenance = maintenance;
             return next();
         }

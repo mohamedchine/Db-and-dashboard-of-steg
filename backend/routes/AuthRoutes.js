@@ -1,5 +1,7 @@
 const AuthRouter = require('express').Router();
 const  {registerCtrl,verifyAccountCtrl,loginCtrl,logoutCtrl,checkauthctrl}  = require('../controllers/AuthControllers')
+
+//missing recaptcha and rate limiter
 AuthRouter.post('/register' ,registerCtrl )
 AuthRouter.get('/verify-email',verifyAccountCtrl);
 

@@ -3,11 +3,11 @@ const db = require("../config/db");
 const addMaintenance = async ({ body, params }) => {
     const [result] = await db.execute(
       `INSERT INTO maintenance 
-       (report_id, kks, ot_number, description, type, 
+       (central_id, kks, ot_number, description, type, 
         related_item_type, related_item_id, start, end) 
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
-        params.reportid,  
+        params.centralid,  
         body.kks,
         body.ot_number,
         body.description,
@@ -47,36 +47,56 @@ const deleteMaintenance = async (id) => {
 };
 
 
-const getUndoneMaintenance = async (centralId) => {
-  const [rows] = await db.execute(
-    `SELECT m.* 
-     FROM maintenance m, central c, report r 
-     WHERE m.report_id = r.id 
-     AND r.central_id = c.central_id
-     AND c.central_id = ?
-     AND m.end IS NULL
-     ORDER BY m.start ASC`,
-    [centralId]
-  );
-  return rows.length === 0 ? -1 : rows;
+const getUndoneMaintenance = async (centralId, page = 1, limit = 10, turbine_id = null) => {
+  const offset = (page - 1) * limit;
+
+  let query = `
+    SELECT * 
+    FROM maintenance
+    WHERE central_id = ?
+      AND end IS NULL
+  `;
+
+  const params = [centralId];
+
+  if (turbine_id) {
+    query += ` AND turbine_id = ? `;
+    params.push(turbine_id);
+  }
+
+  query += ` ORDER BY start ASC LIMIT ? OFFSET ?`;
+  params.push(limit, offset);
+
+  const [rows] = await db.execute(query, params);
+  return rows;
 };
 
 
 
-const updateMaintenanceDate = async (id, end) => {
-  await db.execute(
-    "UPDATE maintenance SET start = ?, end = ? WHERE id = ?",
-    [ end, id]
-  );
+const getDoneMaintenance = async (centralId, page = 1, limit = 10, turbine_id = null) => {
+  const offset = (page - 1) * limit;
 
-  const [rows] = await db.execute(
-    "SELECT * FROM maintenance WHERE id = ?",
-    [id]
-  );
+  let query = `
+    SELECT * 
+    FROM maintenance 
+   
+    WHERE central_id = ?
+      AND end IS NOT NULL
+  `;
 
-  return rows[0];
+  const params = [centralId];
+
+  if (turbine_id) {
+    query += ` AND turbine_id = ? `;
+    params.push(turbine_id);
+  }
+
+  query += ` ORDER BY end DESC LIMIT ? OFFSET ?`;
+  params.push(limit, offset);
+
+  const [rows] = await db.execute(query, params);
+  return rows;
 };
-
 
 const updateMaintenanceEndDate = async (id, endDate) => {
   await db.execute(
@@ -87,21 +107,6 @@ const updateMaintenanceEndDate = async (id, endDate) => {
    return updatedmaintenance;
 };
 
-const getTodayMaintenance = async (centralId) => {
-  const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
-  
-  const [rows] = await db.execute(
-    `SELECT m.* 
-     FROM maintenance m
-     WHERE m.report_id IN (
-       SELECT id FROM report WHERE central_id = ?
-     )
-     AND DATE(m.created_at) = ?
-     ORDER BY m.created_at DESC`,
-    [centralId, today]
-  );
-  
-  return rows.length === 0 ? -1 : rows;
-};
-module.exports = { addMaintenance,findMaintenanceById ,deleteMaintenance , getUndoneMaintenance,updateMaintenanceEndDate , getTodayMaintenance};
+
+module.exports = { addMaintenance,findMaintenanceById ,deleteMaintenance , getUndoneMaintenance,updateMaintenanceEndDate ,getDoneMaintenance};
 
