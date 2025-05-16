@@ -157,7 +157,16 @@ const getallunfixeddefectiveequipments = async (centralid) => {
   return rows;
 };
 
+
+
+
+const getDefectiveequipementbyperiodeandcentralid = async(centralid , startdate, enddate) => {
+  
+} 
+
+
 module.exports = {
+  getDefectiveequipementbyperiodeandcentralid,
   addDefectiveEquipment,
   findDefectiveEquipmentById,
   deleteDefectiveEquipment,

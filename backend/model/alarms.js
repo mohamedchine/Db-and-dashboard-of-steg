@@ -136,5 +136,11 @@ const getpendingalarms = async (centralid, page = 1, limit = 10, turbine_id = nu
 
 
 
+const getalarmsbyperiodeandcentralid =  async(centralid , startdate, enddate) => {
+  
+} 
 
-module.exports = { addalarm,findalarmbyid , deletealarm ,getunresolvedalarms ,updateAlarmStatus,getresolvedalarms  , getpendingalarms,getAllUnresolvedAlarms};
+
+
+
+module.exports = { addalarm,findalarmbyid , deletealarm ,getunresolvedalarms ,updateAlarmStatus,getresolvedalarms  , getpendingalarms,getAllUnresolvedAlarms,getalarmsbyperiodeandcentralid};
