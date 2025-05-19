@@ -14,6 +14,17 @@ const verifyToken = async(req,res,next)=>{
         return res.status(401).json({ message : "invalid access t"  });
     }
     const { user, unittype, unitname } = await findUserById(payload.id);
+    if(user.is_active ==0 && unittype!=="direction") {
+        res.clearCookie('Accesstoken', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "Strict",
+        
+          });
+          
+        return res.status(403).json({ message : "sorry ur account has been desactivated by the admin  "  })
+    };
+
      if (!user) {
             return res.status(401).json({ message : "we couldnt find u " });
     }
@@ -79,6 +90,17 @@ const verifygroupementemployee = async(req,res,next)=>{
 } ; 
 
 
+const verifydirectionemployee = async(req,res,next)=>{
+    verifyToken(req,res,async()=>{
+
+        if(req.user.unittype!="direction"){
+            return res.status(403).json({message : "u are not a direction employee"})
+
+        }
+        return next();
+    });
+}
+
 
 
 
@@ -86,7 +108,7 @@ const verifygroupementemployee = async(req,res,next)=>{
 
 
 module.exports = {
-   verifyToken ,   
+   verifyToken ,   verifydirectionemployee , 
 
    verify_centralemployee_and_his_report,
    verifyCentralEmployee,

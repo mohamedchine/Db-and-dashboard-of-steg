@@ -1,5 +1,6 @@
 const db = require("../config/db");
-
+const {findalarmbyid} = require('../model/alarms');
+const {findDefectiveEquipmentById} = require('./defectiveequipement')
 const addMaintenance = async ({ body, params }) => {
     const [result] = await db.execute(
       `INSERT INTO maintenance 
@@ -107,121 +108,132 @@ const updateMaintenanceEndDate = async (id, endDate) => {
    return updatedmaintenance;
 };
 
-
+const findmaintenancebyalarmid = async (alarmid) => {
+  const [rows] = await db.execute(
+    "SELECT * FROM maintenance WHERE related_item_type = 'Alarm' AND related_item_id = ?", 
+    [alarmid]
+  );
+  return rows[0] || null;  
+};
+const findMaintenanceByDefectiveEquipmentId = async (equipmentId) => {
+  const [rows] = await db.execute(
+    "SELECT * FROM maintenance WHERE related_item_type = 'Defective Equipment' AND related_item_id = ?",
+    [equipmentId]
+  );
+  return rows[0] || null;
+};
 // this gets u the maintenance that ended in that periode as finished and the ones that started in that periode and didnt finish as unfinished 
-const getmaintenancebyperiodeandcentralid = async(centralid , start , end)=>{
-    try {
-      
-      const [maintenanceRecords] = await db.execute(`
-        SELECT 
-          m.id,
-          m.central_id,
-          m.kks,
-          m.ot_number,
-          m.description,
-          m.type,
-          m.related_item_type,
-          m.related_item_id,
-          m.start,
-          m.end,
-          m.created_at,
-          CASE
-            WHEN m.end IS NOT NULL AND m.end BETWEEN ? AND ? THEN 'finished'
-            ELSE 'unfinished'
-          END AS status
-        FROM maintenance m
-        WHERE 
-          m.central_id = ? AND (
-            (m.start BETWEEN ? AND ?) OR
-            (m.end BETWEEN ? AND ?) OR
-            (m.start <= ? AND (m.end IS NULL OR m.end >= ?))
-          )
-        ORDER BY m.start DESC
-      `, [start, end, centralid, start, end, start, end, start, end]);
-  
-      // Helper function to format date
-      const formatDate = (dateString) => {
-        if (!dateString) return null;
-        const date = new Date(dateString);
-        return date.toISOString().replace('T', ' ').substring(0, 19);
-      };
-  
-      const processedRecords = [];
-  
-      // Sequentially process each record
-      for (const record of maintenanceRecords) {
-        let relatedItemDetails = null;
-        let turbineId = null;
-  
-        if (record.related_item_type === 'Alarm' && record.related_item_id) {
-          const [alarmDetails] = await db.execute(`
-            SELECT alarm_code, description, status, happened_at, resolved_at, turbine_id
-            FROM alarms
-            WHERE id = ?
-          `, [record.related_item_id]);
-  
-          if (alarmDetails.length > 0) {
-            relatedItemDetails = {
-              type: 'Alarm',
-              ...alarmDetails[0]
+const getMaintenanceByPeriodAndCentralId = async(centralId, start, end) => {
+  try {
+    // First, retrieve maintenance records that fall within the specified period
+    const [maintenanceRecords] = await db.execute(`
+      SELECT 
+        m.id,
+        m.central_id,
+        m.kks,
+        m.ot_number,
+        m.description,
+        m.type,
+        m.related_item_type,
+        m.related_item_id,
+        m.start,
+        m.end,
+        m.created_at,
+        CASE
+          WHEN m.end IS NOT NULL AND m.end BETWEEN ? AND ? THEN 'finished'
+          ELSE 'unfinished'
+        END AS status
+      FROM maintenance m
+      WHERE 
+        m.central_id = ? AND (
+          (m.start BETWEEN ? AND ?) OR
+          (m.end BETWEEN ? AND ?) OR
+          (m.start <= ? AND (m.end IS NULL OR m.end >= ?))
+        )
+      ORDER BY m.start DESC
+    `, [start, end, centralId, start, end, start, end, start, end]);
+
+    // Helper function to format date
+    const formatDate = (dateString) => {
+      if (!dateString) return null;
+      const date = new Date(dateString);
+      return date.toISOString().replace('T', ' ').substring(0, 19);
+    };
+
+    const processedRecords = [];
+
+    // Process each record
+    for (const record of maintenanceRecords) {
+      let relatedItem = null;
+      let turbineId = null;
+
+      // Check if related_item_type and related_item_id are valid
+      if (record.related_item_type && record.related_item_id) {
+        if (record.related_item_type === 'Alarm') {
+          // Use the helper function to get alarm details
+          const alarm = await findalarmbyid(record.related_item_id);
+          
+          if (alarm !== -1) {
+            // Keep the alarm object as is, just add a type field
+            relatedItem = {
+              ...alarm,
+              type: 'Alarm'
             };
-            turbineId = alarmDetails[0].turbine_id;
+            turbineId = alarm.turbine_id;
           }
-        } else if (record.related_item_type === 'Defective Equipment' && record.related_item_id) {
-          const [equipmentDetails] = await db.execute(`
-            SELECT kks, description, status, reported_at, fixed_at, turbine_id
-            FROM defective_equipment
-            WHERE id = ?
-          `, [record.related_item_id]);
-  
-          if (equipmentDetails.length > 0) {
-            relatedItemDetails = {
-              type: 'Defective Equipment',
-              ...equipmentDetails[0]
+        } else if (record.related_item_type === 'Defective Equipment') {
+          // Use the helper function to get defective equipment details
+          const equipment = await findDefectiveEquipmentById(record.related_item_id);
+          
+          if (equipment !== -1) {
+            // Keep the equipment object as is, just add a type field
+            relatedItem = {
+              ...equipment,
+              type: 'Defective Equipment'
             };
-            turbineId = equipmentDetails[0].turbine_id;
+            turbineId = equipment.turbine_id;
           }
         }
-  
-        let turbineName = 'Unknown';
-        if (turbineId) {
-          const [turbineResult] = await db.execute(`
-            SELECT name FROM turbine WHERE turbine_id = ?
-          `, [turbineId]);
-  
-          if (turbineResult.length > 0) {
-            turbineName = turbineResult[0].name;
-          }
-        }
-  
-        processedRecords.push({
-          id: record.id,
-          central_id: record.central_id,
-          turbine_id: turbineId,
-          turbine_name: turbineName,
-          kks: record.kks,
-          ot_number: record.ot_number,
-          description: record.description,
-          type: record.type,
-          start: formatDate(record.start),
-          end: formatDate(record.end),
-          created_at: formatDate(record.created_at),
-          status: record.status,
-          related_item: relatedItemDetails
-        });
       }
-  
-      // Group records by status
-      return {
-        finished: processedRecords.filter(record => record.status === 'finished'),
-        unfinished: processedRecords.filter(record => record.status === 'unfinished')
-      };
-    } catch (error) {
-      console.error('Error fetching maintenance data:', error);
-      throw error;
+
+      let turbineName = 'Unknown';
+      if (turbineId) {
+        const [turbineResult] = await db.execute(`
+          SELECT name FROM turbine WHERE turbine_id = ?
+        `, [turbineId]);
+
+        if (turbineResult.length > 0) {
+          turbineName = turbineResult[0].name;
+        }
+      }
+
+      processedRecords.push({
+        id: record.id,
+        central_id: record.central_id,
+        turbine_id: turbineId,
+        turbine_name: turbineName,
+        kks: record.kks,
+        ot_number: record.ot_number,
+        description: record.description,
+        type: record.type,
+        start: formatDate(record.start),
+        end: formatDate(record.end),
+        created_at: formatDate(record.created_at),
+        status: record.status,
+        related_item: relatedItem
+      });
     }
-  };
 
+    // Group records by status
+    return {
+      finished: processedRecords.filter(record => record.status === 'finished'),
+      unfinished: processedRecords.filter(record => record.status === 'unfinished')
+    };
+  } catch (error) {
+    console.error('Error fetching maintenance data:', error);
+    throw error;
+  }
+};
 
-module.exports = { addMaintenance,findMaintenanceById ,deleteMaintenance , getUndoneMaintenance,updateMaintenanceEndDate ,getDoneMaintenance,getmaintenancebyperiodeandcentralid};
+module.exports = { findMaintenanceByDefectiveEquipmentId ,addMaintenance,findMaintenanceById ,findmaintenancebyalarmid,deleteMaintenance , getUndoneMaintenance,updateMaintenanceEndDate ,getDoneMaintenance,getMaintenanceByPeriodAndCentralId};
 

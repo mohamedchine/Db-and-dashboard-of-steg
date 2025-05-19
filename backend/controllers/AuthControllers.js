@@ -83,7 +83,7 @@ const verifyAccountCtrl = async (req, res) => {
     }
 
     const { email, id } = payload;
-    const accountTypes = ['central', 'groupement', 'direction'];
+    const accountTypes = ['central', 'groupement'];
 
     for (const type of accountTypes) {
         // Check if the account is already verified
@@ -155,8 +155,8 @@ const loginCtrl = async (req, res) => {
     if (!passwordMatch) {
         return res.status(401).json({ message: "Incorrect password" });
     }
-
-    if (!user.is_verified) {
+    if(!user.is_active && unittype !== "direction" ) return res.status(403).json({message : "sorry ur account has been desactivated by the admin"}) ;
+    if (!user.is_verified && unittype !== "direction") {   //well give the direction employee a directly verified account 
        const verificationLink = gen_email_verification_Link(user.steg_email, user.id);
        await sendmail(user.steg_email, "Email Verification", `Click <a href="${verificationLink}">here</a> to verify your email`);
        return res.status(401).json({ message: "you are not verified yet , click the link that we've mailed you to verify your account" });

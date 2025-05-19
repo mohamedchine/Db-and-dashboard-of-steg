@@ -1,6 +1,7 @@
-const { addalarm ,deletealarm,getunresolvedalarms,getresolvedalarms,getpendingalarms} = require("../../model/alarms");
+const { addalarm ,deletealarm,getunresolvedalarms,getresolvedalarms,getpendingalarms, findalarmbyid} = require("../../model/alarms");
+const { findmaintenancebyalarmid, deleteMaintenance } = require("../../model/maintenance");
 const { validateAddAlarm } = require("../../utils/dailyreportValidation");
-const {record_activity}= require("../../utils/activitylogs");
+
 const addalarmCtrl = async (req, res) => {
    //validation of the data
    const { error } = validateAddAlarm(req.body);
@@ -21,11 +22,18 @@ const addalarmCtrl = async (req, res) => {
 };
 
 
-const deletealarmCtrl = async(req,res)=>{
-      await deletealarm (req.params.alarmid) ;
-      await record_activity(req, "delete", "alarms", null, "deleted an alarm");
-      return res.status(201).json({ message: "Successfully deleted alarm" });
-}
+const deletealarmCtrl = async (req, res) => {
+  const alarm = await findalarmbyid(req.params.alarmid);
+  const today = new Date().toISOString().split('T')[0]; 
+  
+  if (new Date(alarm.created_at).toISOString().split('T')[0] < today) {
+    return res.status(403).json("This alarm wasn't added today so you can't delete it unless u request to ur groupement to delete it  ");
+  }
+  const maintenance = await findmaintenancebyalarmid(req.params.alarmid);
+  if(maintenance){await deleteMaintenance(maintenance.id);}  
+  await deletealarm(req.params.alarmid);
+  return res.status(201).json({ message: "Successfully deleted alarm" });
+};
 
 
 const getunresolvedalarmsCtrl = async (req, res) => {

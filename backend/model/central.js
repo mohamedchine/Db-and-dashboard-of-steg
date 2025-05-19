@@ -66,5 +66,15 @@ const getTurbinesByCentralId = async (centralId) => {
       throw error;
     }
   };
+  const getallcentralids = async () => {
+    try {
+        const [rows] = await db.execute("SELECT central_id FROM central");
+        const centralIds = rows.map(row => row.central_id);
+        return centralIds;
+    } catch (error) {
+        console.error('Error fetching all central IDs:', error);
+        throw error;
+    }
+};
 
-module.exports = {getcentralidbyreportid,findcentralbyid,findturbinebyid,getCentralsByGroupementId ,getCentralNameById ,getTurbinesByCentralId};
+module.exports = {getcentralidbyreportid,findcentralbyid,findturbinebyid,getCentralsByGroupementId ,getCentralNameById ,getTurbinesByCentralId,getallcentralids};

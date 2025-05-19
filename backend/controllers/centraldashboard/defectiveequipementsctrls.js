@@ -6,8 +6,10 @@ const {
     getunfixeddefectiveequipments,
     getfixeddefectiveequipments,
     deleteDefectiveEquipment,
-    getDefectiveEquipmentByTurbine,getpendingdefectiveequipments
+    getDefectiveEquipmentByTurbine,getpendingdefectiveequipments,
+    findDefectiveEquipmentById
   } = require("../../model/defectiveequipement");
+const { findMaintenanceByDefectiveEquipmentId } = require('../../model/maintenance');
 
 const adddefectiveequipementCtrl = async(req,res)=>{
      
@@ -37,18 +39,42 @@ const adddefectiveequipementCtrl = async(req,res)=>{
 
 
 
-const deletedefectiveequipementCtrl = async(req,res)=>{
-   
-   
-    await deleteDefectiveEquipment(req.params.defectiveequipementid);
+const deletedefectiveequipementCtrl = async (req, res) => {
+  try {
+    // 1. Find the defective equipment
+    const equipment = await findDefectiveEquipmentById(req.params.defectiveequipementid);
     
+    // 2. Check creation date
+    const today = new Date().toISOString().split('T')[0];
+    const createdDate = new Date(equipment.created_at).toISOString().split('T')[0];
+    
+    if (createdDate < today) {
+      return res.status(403).json({
+        message: "This defective equipment wasn't added today so you can't delete it unless you request your groupement to delete it"
+      });
+    }
 
+    // 3. Find and delete related maintenance
+    const maintenance = await findMaintenanceByDefectiveEquipmentId(equipment.id);
+    if (maintenance) {
+      await deleteMaintenance(maintenance.id);
+    }
 
-    return res.status(201).json({ message: "Successfully deleted alarm" });
-  
+    // 4. Delete the equipment
+    await deleteDefectiveEquipment(req.params.defectiveequipementid);
 
-}
+    return res.status(201).json({ 
+      message: "Successfully deleted defective equipment and related maintenance" 
+    });
 
+  } catch (error) {
+    console.error('Error deleting defective equipment:', error);
+    return res.status(500).json({
+      message: "Failed to delete defective equipment",
+      error: error.message
+    });
+  }
+};
 
 
 

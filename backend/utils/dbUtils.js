@@ -54,7 +54,32 @@ const findUserById = async (id) => {
 
     return { user, unittype, unitname };
 };
+const findUserByIdAndUnittype = async (id, unittype) => {
+    const validTypes = ['direction', 'central', 'groupement'];
+    if (!validTypes.includes(unittype)) {
+        throw new Error(`Invalid unit type: ${unittype}`);
+    }
+
+    const [result] = await db.execute(
+        `SELECT * FROM ${unittype}_accounts WHERE id = ?`,
+        [id]
+    );
+
+    if (result.length === 0) {
+        return { user: null, unitname: '', unittype };
+    }
+
+    const user = result[0];
+    const unitIdField = `${unittype}_id`;
+
+    const [[{ name }]] = await db.execute(
+        `SELECT name FROM ${unittype} WHERE ${unitIdField} = ?`,
+        [user[unitIdField]]
+    );
+
+    return { user, unittype, unitname: name };
+};
 
 
 //i made it by mistake in this folder i wont change it 
-module.exports = { findUserByEmail,findUserById };
+module.exports = { findUserByEmail,findUserById ,findUserByIdAndUnittype};

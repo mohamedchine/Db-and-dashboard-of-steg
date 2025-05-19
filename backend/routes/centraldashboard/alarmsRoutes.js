@@ -3,7 +3,7 @@ const alarmRouter = require('express').Router();
 const {addalarmCtrl,deletealarmCtrl,getunresolvedalarmsCtrl,getpendingAlarmCtrl,getresolvedAlarmCtrl} = require('../../controllers/centraldashboard/alarmsControllers') ;
 const {validatealarmid} = require('../../middleware/dailyreport');
 const{validatecentralid} = require('../../middleware/central');
-const {verify_centralemployee_and_his_report,verify_centralemployee_and_his_central} = require('../../middleware/verifyToken');
+const {verify_centralemployee_and_his_central} = require('../../middleware/verifyToken');
 //post alarms central employee 
   
 

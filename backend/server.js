@@ -10,7 +10,7 @@ const defectiveequipementrouter = require('./routes/centraldashboard/defectiveeq
 const maintenanceRouter = require('./routes/centraldashboard/maintenanceRoutes');
 const performanceRouter = require('./routes/centraldashboard/performanceRoutes');
 const TurbinesRouter = require('./routes/turbinesRoutes.js');
-
+const directionRooutes = require('./routes/directiondashboard/directionRoutes.js');
 
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
@@ -42,6 +42,7 @@ db.execute('select 1 ').then(async()=>{ //select is just to check if the connect
     app.use('/maintenance',maintenanceRouter);
     app.use('/performance',performanceRouter);
     app.use('/groupement',groupementRouter);
+    app.use('/direction',directionRooutes);
     app.all('*',(req,res)=>{
         res.status(404).json({message : 'not found'})
     })
