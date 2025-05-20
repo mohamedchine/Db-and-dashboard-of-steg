@@ -1,4 +1,4 @@
-const { validateperformance } = require('../../utils/perofrmanceValidation');
+const {  validateperformance } = require('../../utils/perofrmanceValidation');
 const {
   getperformancebyturbinedate,
   updateperformance,
@@ -46,6 +46,18 @@ const addPerformanceCtrl = async (req, res) => {
     mwh_peak,
     mwh_tlr
   } = req.body;
+  // const today = new Date();
+  // today.setHours(0, 0, 0, 0); // Reset hours, minutes, seconds, milliseconds to 0
+  
+  // const performanceDate = new Date(performance_date);
+  // performanceDate.setHours(0, 0, 0, 0); // Reset hours, minutes, seconds, milliseconds to 0
+  
+  // // Now compare dates without time components
+  // if(performanceDate < today) {
+  //   return res.status(400).json({
+  //     message: 'This performance has already been seen by the groupement so you cant modify it unless they accept so'
+  //   });
+  // }
 
   const turbineid = req.params.turbineid;
   const centralid = req.params.centralid;

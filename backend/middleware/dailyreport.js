@@ -47,10 +47,11 @@ const validatedefectiveequipementid = async(req,res,next)=>{
 
 
 const validatemaintenanceid = async(req, res, next) => {
-    const maintenanceid = req.params.id;
-   
+    const maintenanceid = req.params.maintenanceid;
+   console.log(maintenanceid);
     if(!isNaN(maintenanceid)) {
-        const maintenance = await findMaintenanceById(maintenanceid  );
+        const maintenance = await findMaintenanceById(maintenanceid);
+        console.log(maintenance)
         if(maintenance != -1) {
             req.params.centralid = maintenance.central_id ;
             req.maintenance = maintenance;

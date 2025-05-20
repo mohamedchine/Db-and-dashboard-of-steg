@@ -1,4 +1,5 @@
 const {findcentralbyid , findturbinebyid} = require("../model/central");
+const { getModificationRequestById } = require("../model/requestmodification");
 //to verify if the report id is valid 
 const validatecentralid = async(req,res,next)=>{
    
@@ -26,6 +27,20 @@ const validateturbineid = async(req,res,next)=>{
         return res.status(404).json({ message: "invalid turbine" });
     }
 }
+
+
+const validatemodificationid = async(req,res,next)=>{
+    const modificationid = req.params.id ; 
+    if(!isNaN(modificationid)){
+        const modification = await getModificationRequestById(modificationid);
+        if(modification){
+            req.modification = modification ; 
+            return next();
+        }
+    }
+    return res.status(404).json({ message: "invalid modificationid" });
+    
+}
 module.exports = {
-    validatecentralid,validateturbineid
+    validatecentralid,validateturbineid,validatemodificationid
 }

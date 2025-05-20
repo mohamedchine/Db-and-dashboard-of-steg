@@ -337,8 +337,20 @@ const getconsumptionbyturbineid = async (turbineid, periode) => {
   }
 };
 
-
+const getperformancebyid = async(id) => {
+  try {
+      const [performance] = await db.execute(
+          `SELECT * FROM performance WHERE id = ?`,
+          [id]
+      );
+      return performance[0] || null;
+  } catch (error) {
+      console.error('Error fetching performance by ID:', error);
+      throw error; // Re-throw or handle as appropriate for your application
+  }
+};
 module.exports = {
+  getperformancebyid,
   getperformancebyturbinedate,
   updateperformance,
   addperformance,getPerformancesByCentralAndDate,getconsumptionbyturbineid,getavailabilitybyturbineid , getproductionbyturbineid

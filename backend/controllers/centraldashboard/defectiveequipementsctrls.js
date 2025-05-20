@@ -45,14 +45,14 @@ const deletedefectiveequipementCtrl = async (req, res) => {
     const equipment = await findDefectiveEquipmentById(req.params.defectiveequipementid);
     
     // 2. Check creation date
-    const today = new Date().toISOString().split('T')[0];
-    const createdDate = new Date(equipment.created_at).toISOString().split('T')[0];
+    // const today = new Date().toISOString().split('T')[0];
+    // const createdDate = new Date(equipment.created_at).toISOString().split('T')[0];
     
-    if (createdDate < today) {
-      return res.status(403).json({
-        message: "This defective equipment wasn't added today so you can't delete it unless you request your groupement to delete it"
-      });
-    }
+    // if (createdDate < today) {
+    //   return res.status(403).json({
+    //     message: "This defective equipment wasn't added today so you can't delete it unless you request your groupement to delete it"
+    //   });
+    // }
 
     // 3. Find and delete related maintenance
     const maintenance = await findMaintenanceByDefectiveEquipmentId(equipment.id);

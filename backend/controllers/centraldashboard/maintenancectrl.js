@@ -59,6 +59,21 @@ const addmaintenanceCtrl = async(req, res) => {
 
 //for the day if somoene added it today means
 const deletemaintenanceCtrl = async(req,res)=>{
+
+      //check if the maintenance was created today or not 
+    //   const today = new Date().toISOString().split('T')[0];
+    //   const maintenanceDate = new Date(req.maintenance.created_at).toISOString().split('T')[0];
+  
+    //   // Check if maintenance was created today
+    //   if (maintenanceDate < today) {
+    //     return res.status(403).json({
+    //       message: "This maintenance wasn't added today so you can't delete it"
+    //     });
+    //   }
+
+
+
+
        if(req.maintenance.related_item_type == "Defective Equipment"){
         await updateDefectiveEquipmentStatus(req.maintenance.related_item_id, "Not Fixed", null);
        }

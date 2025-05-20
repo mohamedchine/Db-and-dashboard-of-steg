@@ -15,6 +15,7 @@ const directionRooutes = require('./routes/directiondashboard/directionRoutes.js
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const groupementRouter = require('./routes/groupement/groupementRoutes.js');
+const modificationRouter = require('./routes/modificationRoutes.js');
 
 
 
@@ -43,6 +44,7 @@ db.execute('select 1 ').then(async()=>{ //select is just to check if the connect
     app.use('/performance',performanceRouter);
     app.use('/groupement',groupementRouter);
     app.use('/direction',directionRooutes);
+    // app.use('/modificationrequests' ,modificationRouter);
     app.all('*',(req,res)=>{
         res.status(404).json({message : 'not found'})
     })

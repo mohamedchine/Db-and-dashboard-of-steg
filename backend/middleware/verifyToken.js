@@ -104,10 +104,16 @@ const verifydirectionemployee = async(req,res,next)=>{
 
 
 
-
+const verifymodificationismeantforhim = async(req,res,next)=>{
+     if(req.modification.receiver_groupement_id != req.user.groupement_id){
+        return res.status(403).json({message : "this modification is not meant for you"})
+     }
+     return next();
+}
 
 
 module.exports = {
+    verifymodificationismeantforhim,
    verifyToken ,   verifydirectionemployee , 
 
    verify_centralemployee_and_his_report,

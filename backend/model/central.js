@@ -77,4 +77,5 @@ const getTurbinesByCentralId = async (centralId) => {
     }
 };
 
+
 module.exports = {getcentralidbyreportid,findcentralbyid,findturbinebyid,getCentralsByGroupementId ,getCentralNameById ,getTurbinesByCentralId,getallcentralids};
