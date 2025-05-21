@@ -2,6 +2,7 @@ const {validatesomemaintancecstuff , validateMaintenance} = require('../../utils
 const {updateAlarmStatus} = require('../../model/alarms');
 const {updateDefectiveEquipmentStatus} = require('../../model/defectiveequipement')
 const {addMaintenance ,deleteMaintenance ,getUndoneMaintenance ,updateMaintenanceEndDate ,findMaintenanceById,getDoneMaintenance} = require('../../model/maintenance');
+const { addactivitylog } = require('../../routes/activitylogs');
 
 
 
@@ -17,31 +18,62 @@ const addmaintenanceCtrl = async(req, res) => {
         req.user.central_id
     );
     if(!valid) return res.status(400).json({message});
-
+   
+   
+   
+   
+   
+    let activity = {
+        central_user_email: req.user.steg_email,
+        action: "add",
+        target_table: "maintenances",
+        description: "added a maintenance",
+        target_table_old_value: null,
+        
+       }
+   
+   
+   
+   
     // Handle maintenance completion case
     if(req.body.end) {
         if(req.alarmid) {
-          await updateAlarmStatus(req.alarmid, req.body.end, 'Resolved');
+          const {
+            oldAlarm,
+            newAlarm
+          } = await updateAlarmStatus(req.alarmid, req.body.end, 'Resolved');
+          activity.consequence_table = "alarms" ;
+          activity.consequence_table_old_value = oldAlarm;
+          activity.consequence_table_new_value = newAlarm;
         }
         if(req.defecteqid) {
-            await updateDefectiveEquipmentStatus(
-                req.defecteqid, 
-                'Fixed',  
-                req.body.end
-            );
+           const {Old, New } =  await updateDefectiveEquipmentStatus(req.defecteqid,'Fixed',req.body.end);
+            activity.consequence_table = "defective_equipment" ;
+            activity.consequence_table_old_value = Old;
+            activity.consequence_table_new_value = New;
         }
     } 
  
     else {
         if(req.alarmid) {
-            await updateAlarmStatus(req.alarmid, null, 'Pending');
+        
+        
+        const{oldAlarm,newAlarm}=    await updateAlarmStatus(req.alarmid, null, 'Pending');
+        activity.consequence_table = "alarms" ;
+        activity.consequence_table_old_value = oldAlarm;
+        activity.consequence_table_new_value = newAlarm;
+        
+        
         }
         if(req.defecteqid) {
-            await updateDefectiveEquipmentStatus(
+            const {Old,New} = await updateDefectiveEquipmentStatus(
                 req.defecteqid, 
                 'Pending',  
                 null  
             );
+            activity.consequence_table = "defective_equipment" ;
+            activity.consequence_table_old_value = Old;
+            activity.consequence_table_new_value = New;
         }
     }
 
@@ -49,7 +81,8 @@ const addmaintenanceCtrl = async(req, res) => {
         body: req.body,
         params: req.params
     });
-
+    activity.target_table_new_value= maintenance;
+    await addactivitylog(activity);
     return res.status(201).json(maintenance);
 };
 
@@ -70,18 +103,36 @@ const deletemaintenanceCtrl = async(req,res)=>{
     //       message: "This maintenance wasn't added today so you can't delete it"
     //     });
     //   }
-
+    let activity = {
+        central_user_email: req.user.steg_email,
+        action: "delete",
+        target_table: "maintenances",
+        description: "deleted a maintenance",
+        target_table_old_value: null,
+       }
 
 
 
        if(req.maintenance.related_item_type == "Defective Equipment"){
-        await updateDefectiveEquipmentStatus(req.maintenance.related_item_id, "Not Fixed", null);
-       }
+        const {Old,New} = await updateDefectiveEquipmentStatus(req.maintenance.related_item_id, "Not Fixed", null);
+        activity.consequence_table = "defective_equipment" ;
+        activity.consequence_table_old_value = Old;
+        activity.consequence_table_new_value = New;
+    }
        if(req.maintenance.related_item_type == "Alarm"){
-        await updateAlarmStatus(req.maintenance.related_item_id, null, "Active");
-       }    
-       await deleteMaintenance(req.maintenance.id) ;
-
+         const{
+            oldAlarm,
+            newAlarm
+          } =  await updateAlarmStatus(req.maintenance.related_item_id, null, "Active");
+          activity.consequence_table = "alarms" ;
+          activity.consequence_table_old_value = oldAlarm;
+          activity.consequence_table_new_value = newAlarm;
+          
+    
+    }    
+       const {Old,New} = await deleteMaintenance(req.maintenance.id) ;
+       activity.target_table_old_value = Old;
+       activity.target_table_new_value = New;
        return res.status(201).json({ message: "Successfully deleted maintenance" });
 }
 
@@ -158,21 +209,37 @@ const setmaintenanceenddateCtrl = async (req, res) => {
 
         // 2. Update the maintenance end date
         const updatedMaintenance = await updateMaintenanceEndDate(maintenanceId, endDate);
-
+        let activity = {
+            central_user_email: req.user.steg_email,
+            action: "update",
+            target_table: "maintenances",
+            description: "added a maintenance",
+            target_table_old_value: maintenance,
+            target_table_new_value: updatedMaintenance,
+            consequence_table: maintenance.related_item_type,
+           };
         // 3. Update related item based on type
         if (maintenance.related_item_type === 'Alarm' && maintenance.related_item_id) {
-            await updateAlarmStatus(
+            const{
+                oldAlarm,
+                newAlarm
+              } = await updateAlarmStatus(
                 maintenance.related_item_id,
                 endDate ? endDate : null,
                 endDate ? 'Resolved' : 'Active'
             );
+            activity.consequence_table_old_value = oldAlarm;
+            activity.consequence_table_new_value = newAlarm;
         } else if (maintenance.related_item_type === 'Defective Equipment' && maintenance.related_item_id) {
-            await updateDefectiveEquipmentStatus(
+            const{New,Old} = await updateDefectiveEquipmentStatus(
                 maintenance.related_item_id,
                 endDate ? 'Fixed' : 'Not Fixed',
                 endDate ? endDate : null
             );
+            activity.consequence_table_old_value = Old;
+            activity.consequence_table_new_value = New;
         }
+        await addactivitylog(activity);
 
         return res.status(200).json({
             message: "Maintenance and related item updated successfully",

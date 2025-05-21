@@ -41,10 +41,26 @@ const findMaintenanceById = async (id) => {
 
 
 const deleteMaintenance = async (id) => {
+  // First, fetch the existing record before deletion
+  const [oldMaintenanceResult] = await db.execute(
+    "SELECT * FROM maintenance WHERE id = ?",
+    [id]
+  );
+  
+  // Get the first row (the maintenance record)
+  const oldMaintenance = oldMaintenanceResult.length > 0 ? oldMaintenanceResult[0] : null;
+  
+  // Delete the record
   await db.execute(
     "DELETE FROM maintenance WHERE id = ?",
     [id]
   );
+  
+  // Return the old record and null for the new (since it's deleted)
+  return {
+    Old: oldMaintenance,
+    New: null
+  };
 };
 
 

@@ -1,5 +1,6 @@
 const { addalarm ,deletealarm,getunresolvedalarms,getresolvedalarms,getpendingalarms, findalarmbyid} = require("../../model/alarms");
 const { findmaintenancebyalarmid, deleteMaintenance } = require("../../model/maintenance");
+const { addactivitylog } = require("../../routes/activitylogs");
 const { validateAddAlarm } = require("../../utils/dailyreportValidation");
 
 const addalarmCtrl = async (req, res) => {
@@ -15,7 +16,15 @@ const addalarmCtrl = async (req, res) => {
        ...req.body,
        central_id: req.params.centralid 
      });
-    
+     const activity = {
+      central_user_email: req.user.steg_email,
+      action: "add",
+      target_table: "alarms",
+      description: "added an alarm",
+      target_table_old_value: null,
+      target_table_new_value: addedalarm
+     }
+    await addactivitylog(activity);
      
      return res.status(201).json({ message: "Successfully added alarm" , addedalarm :addedalarm });
   
@@ -29,9 +38,24 @@ const deletealarmCtrl = async (req, res) => {
   // if (new Date(alarm.created_at).toISOString().split('T')[0] < today) {
   //   return res.status(403).json("This alarm wasn't added today so you can't delete it unless u request to ur groupement to delete it  ");
   // }
+  const activity = {
+    central_user_email: req.user.steg_email,
+    action: "delete",
+    target_table: "alarms",
+    description: "deleted an alarm",
+    target_table_old_value: req.alarm,
+    target_table_new_value: null
+   }
+  
   const maintenance = await findmaintenancebyalarmid(req.params.alarmid);
-  if(maintenance){await deleteMaintenance(maintenance.id);}  
+  if(maintenance){
+    await deleteMaintenance(maintenance.id);
+    activity.consequence_table = "maintenance" ;
+    activity.consequence_table_old_value = maintenance ;
+    activity.consequence_table_new_value = null ;
+  }  
   await deletealarm(req.params.alarmid);
+  await addactivitylog(activity);
   return res.status(201).json({ message: "Successfully deleted alarm" });
 };
 

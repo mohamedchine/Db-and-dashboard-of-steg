@@ -89,11 +89,31 @@ const getunfixeddefectiveequipments = async (centralid, page = 1, limit = 10, tu
 
 
 const updateDefectiveEquipmentStatus = async (id, status, fixedat) => {
+  // First, fetch the old record before updating
+  const [oldEquipment] = await db.execute(
+    "SELECT * FROM defective_equipment WHERE id = ?",
+    [id]
+  );
+  
+  // Update the equipment record
   await db.execute(
-    "UPDATE defective_equipment SET status = ?, fixed_at = ? WHERE id = ?",  // Removed comma after ?
+    "UPDATE defective_equipment SET status = ?, fixed_at = ? WHERE id = ?",
     [status, fixedat, id]
   );
+  
+  // Fetch the updated record
+  const [updatedEquipment] = await db.execute(
+    "SELECT * FROM defective_equipment WHERE id = ?",
+    [id]
+  );
+  
+  // Return both old and new data
+  return {
+    Old: oldEquipment[0],
+    New: updatedEquipment[0]
+  };
 };
+
 
 const getfixeddefectiveequipments = async (centralid, page = 1, limit = 10, turbine_id = null) => {
   const offset = (page - 1) * limit;

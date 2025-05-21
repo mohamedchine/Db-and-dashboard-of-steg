@@ -57,11 +57,32 @@ const getunresolvedalarms = async (centralid, page = 1, limit = 10, turbine_id =
   return rows;
 };
 
-const updateAlarmStatus = async (id,resolvedat, status) => {
-  await db.execute(
-    "UPDATE alarms SET status = ? , resolved_at =? WHERE id = ?",
-    [status,resolvedat,id]
+const updateAlarmStatus = async (id, resolvedat, status) => {
+  // First, fetch the original alarm data
+  const [oldAlarmResult] = await db.execute(
+    "SELECT * FROM alarms WHERE id = ?",
+    [id]
   );
+  const oldAlarm = oldAlarmResult[0];
+  
+  // Update the alarm's status and resolved_at time
+  await db.execute(
+    "UPDATE alarms SET status = ?, resolved_at = ? WHERE id = ?",
+    [status, resolvedat, id]
+  );
+  
+  // Fetch the updated alarm data
+  const [newAlarmResult] = await db.execute(
+    "SELECT * FROM alarms WHERE id = ?",
+    [id]
+  );
+  const newAlarm = newAlarmResult[0];
+  
+  // Return both old and new alarm data
+  return {
+    oldAlarm,
+    newAlarm
+  };
 };
 const getAllUnresolvedAlarms = async (central_id, turbine_id = null) => {
   let query = `

@@ -1,6 +1,6 @@
 
 const {validateDefectiveEquipment} = require('../../utils/defectiveequipementsValidation');
-const {record_activity}= require("../../utils/activitylogs");
+
 const { 
     addDefectiveEquipment,
     getunfixeddefectiveequipments,
@@ -9,7 +9,8 @@ const {
     getDefectiveEquipmentByTurbine,getpendingdefectiveequipments,
     findDefectiveEquipmentById
   } = require("../../model/defectiveequipement");
-const { findMaintenanceByDefectiveEquipmentId } = require('../../model/maintenance');
+const { findMaintenanceByDefectiveEquipmentId, deleteMaintenance } = require('../../model/maintenance');
+const { addactivitylog } = require('../../routes/activitylogs');
 
 const adddefectiveequipementCtrl = async(req,res)=>{
      
@@ -21,8 +22,15 @@ const adddefectiveequipementCtrl = async(req,res)=>{
         ...req.body,
         central_id: req.params.centralid ,
       });
-      
-      
+      const activity = {
+        central_user_email: req.user.steg_email,
+        action: "add",
+        target_table: "defective_equipement",
+        description: "added a defecitve_equipement",
+        target_table_old_value: null,
+        target_table_new_value: addedeq 
+       }
+       await addactivitylog(activity);
      
 
 
@@ -53,16 +61,26 @@ const deletedefectiveequipementCtrl = async (req, res) => {
     //     message: "This defective equipment wasn't added today so you can't delete it unless you request your groupement to delete it"
     //   });
     // }
-
+    const activity = {
+      central_user_email: req.user.steg_email,
+      action: "delete",
+      target_table: "defective_equipement",
+      description: "deleted a defective_equipement",
+      target_table_old_value: req.defectiveequipement,
+      target_table_new_value: null
+     }
     // 3. Find and delete related maintenance
     const maintenance = await findMaintenanceByDefectiveEquipmentId(equipment.id);
     if (maintenance) {
       await deleteMaintenance(maintenance.id);
+      activity.consequence_table = "maintenance" ;
+      activity.consequence_table_old_value = maintenance ;
+      activity.consequence_table_new_value = null ;
     }
 
     // 4. Delete the equipment
     await deleteDefectiveEquipment(req.params.defectiveequipementid);
-
+    await addactivitylog(activity);
     return res.status(201).json({ 
       message: "Successfully deleted defective equipment and related maintenance" 
     });
