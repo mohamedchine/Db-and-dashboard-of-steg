@@ -80,6 +80,22 @@ const findUserByIdAndUnittype = async (id, unittype) => {
     return { user, unittype, unitname: name };
 };
 
-
+const finduserbyemailunittypeunitidinthehr = async (email, unittype, unitid) => {
+    const query = `SELECT * FROM ${unittype}_employee_emails WHERE employee_email = ? AND ${unittype}_id = ?`;
+    const [result] = await db.execute(query, [email, unitid]);
+    
+    if (result.length === 0) {
+        return null;
+    }
+    
+    return result[0];
+};
 //i made it by mistake in this folder i wont change it 
-module.exports = { findUserByEmail,findUserById ,findUserByIdAndUnittype};
+
+
+const deleteuseraccountbyidunittype = async(id,unittype,unitid)=>{
+    const query = `DELETE FROM ${unittype}_accounts WHERE id =? AND ${unittype}_id =?`;
+    const [result] = await db.execute(query, [id, unitid]);
+    return result;
+}
+module.exports = { findUserByEmail ,findUserByIdAndUnittype,finduserbyemailunittypeunitidinthehr,deleteuseraccountbyidunittype};

@@ -2,7 +2,7 @@ const {validatesomemaintancecstuff , validateMaintenance} = require('../../utils
 const {updateAlarmStatus} = require('../../model/alarms');
 const {updateDefectiveEquipmentStatus} = require('../../model/defectiveequipement')
 const {addMaintenance ,deleteMaintenance ,getUndoneMaintenance ,updateMaintenanceEndDate ,findMaintenanceById,getDoneMaintenance} = require('../../model/maintenance');
-const { addactivitylog } = require('../../routes/activitylogs');
+const { addactivitylog } = require('../../model/activitylogs');
 
 
 

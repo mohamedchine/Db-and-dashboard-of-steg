@@ -42,7 +42,7 @@ const validateRegister = (obj) => {
                 "any.required": "Password is required"
             }),
             unit: joi.string()
-            .valid('central', 'groupement')
+            .valid('central', 'groupement','direction')
             .required()
             .messages({
                 'any.required': 'You must specify a unit (central or groupement )',

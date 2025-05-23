@@ -1,6 +1,6 @@
 const { addalarm ,deletealarm,getunresolvedalarms,getresolvedalarms,getpendingalarms, findalarmbyid} = require("../../model/alarms");
 const { findmaintenancebyalarmid, deleteMaintenance } = require("../../model/maintenance");
-const { addactivitylog } = require("../../routes/activitylogs");
+const { addactivitylog } = require("../../model/activitylogs");
 const { validateAddAlarm } = require("../../utils/dailyreportValidation");
 
 const addalarmCtrl = async (req, res) => {

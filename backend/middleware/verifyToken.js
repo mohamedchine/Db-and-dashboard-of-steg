@@ -1,8 +1,8 @@
 const {getcentralidbyreportid} = require("../model/central");
 const {verifyjwt}=require('../utils/jwtUtils');
-const {findUserById}=require('../utils/dbUtils');
 const {findreportbyid} = require('../model/report');
-const {getCentralsByGroupementId} = require('../model/central')
+const {getCentralsByGroupementId} = require('../model/central');
+const { findUserByIdAndUnittype, finduserbyemailunittypeunitidinthehr, deleteuseraccountbyidunittype } = require("../utils/dbUtils");
 //middleware that verify accesstoken given to a user this one is global ; 
 const verifyToken = async(req,res,next)=>{
     const { Accesstoken } = req.cookies;
@@ -13,8 +13,13 @@ const verifyToken = async(req,res,next)=>{
     if (!payload) {
         return res.status(401).json({ message : "invalid access t"  });
     }
-    const { user, unittype, unitname } = await findUserById(payload.id);
-    if(user.is_active ==0 && unittype!=="direction") {
+    const { user, unittype, unitname } = await findUserByIdAndUnittype(payload.id,payload.unittype);
+    //if we didnt find him
+    if (!user) {
+        return res.status(401).json({ message : "we couldnt find u " });
+}
+//if we found him we look if hes been desactivated by the admin of the central or not(only work if the user is central employee) 
+    if(  unittype!=="direction" && unittype!=="groupement" && user.is_active ==0) {
         res.clearCookie('Accesstoken', {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
@@ -24,10 +29,22 @@ const verifyToken = async(req,res,next)=>{
           
         return res.status(403).json({ message : "sorry ur account has been desactivated by the admin  "  })
     };
+    //if not desactivated w check if he is been kicked by the hr or not , if he no longer work in in his central or groupement or direction we delete his account 
+    const unitid = user[`${unittype}_id`];
+    const useruserexistinthehrdb = await finduserbyemailunittypeunitidinthehr(user.steg_email, unittype, unitid);
+    req.user2 = useruserexistinthehrdb;
+    if(!useruserexistinthehrdb){
+        //delete his fookin accoount then
+        await deleteuseraccountbyidunittype(user.id , unittype ,unitid);
+        res.clearCookie('Accesstoken', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "Strict",
 
-     if (!user) {
-            return res.status(401).json({ message : "we couldnt find u " });
+          });
+          return res.status(401).json({ message: `u have been kicked from our ${unittype} by the hr` });
     }
+     
     const { password, ...userr } = user;
     userr.unittype = unittype ;
     userr.unitname = unitname ;  
@@ -46,7 +63,10 @@ const verifyToken = async(req,res,next)=>{
             next();
         });
     };
+    
 
+    //verify central employee if he is cheff or not 
+ 
 
 
 // verify central employee and his central(hes trying to modify in his central or what )
@@ -60,7 +80,29 @@ const verify_centralemployee_and_his_central = (req,res,next)=>{
     })
 } 
 
+const verifycentralemployeeandcheffofcnetral = async(req,res,next)=>{
+    verify_centralemployee_and_his_central(req,res,async()=>{
+        
+        if(req.user2.is_chef==1){
+            return next();
+        }
+        return  res.status(403).json({message : "u are not a cheff of this central"});
+    });
+}
 
+
+const verifycentralemployeeandcheffofcnetraland_desactivateduserisfromhiscentral = async(req,res,next)=>{
+   //nchoufo est ce que el user hedhaka from nafss el central walla
+   const usertodesactivate = findUserByIdAndUnittype(req.params.usertodesactivateid,"central");
+   if(!usertodesactivate){
+    return  res.status(400).json({message : "this user already desactivated"});}
+    verify_centralemployee_and_his_central(req,res,async()=>{
+        if(usertodesactivate.central_id!=req.user.central_id){
+            return  res.status(403).json({message : "this user is not from your central, u can't desactivate him"});
+        }
+    })
+    return next();
+}
 //this one check if the user is central employee and if he trying to access his central report only or not ;
 const verify_centralemployee_and_his_report =async(req,res,next)=>{
     verifyCentralEmployee(req,res,async()=>{
@@ -112,7 +154,7 @@ const verifymodificationismeantforhim = async(req,res,next)=>{
 }
 
 
-module.exports = {
+module.exports = {verifycentralemployeeandcheffofcnetral ,
     verifymodificationismeantforhim,
    verifyToken ,   verifydirectionemployee , 
 
@@ -120,5 +162,5 @@ module.exports = {
    verifyCentralEmployee,
    
    verifygroupementemployee,
-   verify_centralemployee_and_his_central
+   verify_centralemployee_and_his_central,verifycentralemployeeandcheffofcnetraland_desactivateduserisfromhiscentral
 }

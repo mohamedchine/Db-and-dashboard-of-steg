@@ -130,6 +130,32 @@ const updateuserstatus = async (id, unittype, isActive) => {
     }
   };
 
+
+
+
+  const getalluserswithcentralid = async(centralId)=>{
+    try {
+     
+        const [users]=await db.execute('select fullname ,steg_email,id,is_active from central_accounts where central_id = ? ',[centralId])
+           return users;
+
+
+
+    }
+   catch(e){
+    console.log(e.message);
+   }
+  }
+
+
+  const desactivateuser = async(id)=>{
+    await db.execute('update central_accounts set is_active = 0 where id = ?',[id]);
+    
+  }
+  const activateuser = async(id)=>{
+    await db.execute('update central_accounts set is_active = 1 where id = ?',[id]);
+    
+  }
 module.exports = {
-    getalluserwithunit,updateuserstatus
+    getalluserwithunit,updateuserstatus,getalluserswithcentralid,desactivateuser,activateuser
 };

@@ -10,7 +10,7 @@ const {
     findDefectiveEquipmentById
   } = require("../../model/defectiveequipement");
 const { findMaintenanceByDefectiveEquipmentId, deleteMaintenance } = require('../../model/maintenance');
-const { addactivitylog } = require('../../routes/activitylogs');
+const { addactivitylog } = require('../../model/activitylogs');
 
 const adddefectiveequipementCtrl = async(req,res)=>{
      

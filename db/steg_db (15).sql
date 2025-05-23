@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 16, 2025 at 01:14 PM
+-- Generation Time: May 23, 2025 at 01:12 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,14 +29,31 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `activity_logs` (
   `id` bigint(20) NOT NULL,
-  `centraluser_id` int(11) DEFAULT NULL,
-  `groupementuser_id` int(11) DEFAULT NULL,
+  `central_user_email` varchar(255) DEFAULT NULL,
   `action` varchar(50) NOT NULL,
   `target_table` varchar(50) NOT NULL,
-  `changes` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`changes`)),
   `description` text DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp()
+  `created_at` datetime DEFAULT current_timestamp(),
+  `target_table_old_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`target_table_old_value`)),
+  `target_table_new_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`target_table_new_value`)),
+  `consequence_table` varchar(50) DEFAULT NULL,
+  `consequence_table_old_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`consequence_table_old_value`)),
+  `consequence_table_new_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`consequence_table_new_value`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `activity_logs`
+--
+
+INSERT INTO `activity_logs` (`id`, `central_user_email`, `action`, `target_table`, `description`, `created_at`, `target_table_old_value`, `target_table_new_value`, `consequence_table`, `consequence_table_old_value`, `consequence_table_new_value`) VALUES
+(24, 'arkanmsss80@gmail.com', 'add', 'alarms', 'added an alarm', '2025-05-21 00:16:44', NULL, '{\"id\":53,\"turbine_id\":2,\"central_id\":5,\"alarm_code\":\"B2\",\"description\":\"Low oil pressure\",\"status\":\"Active\",\"happened_at\":\"2023-05-15T07:00:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-05-20T23:16:44.000Z\"}', NULL, NULL, NULL),
+(25, 'arkanmsss80@gmail.com', 'delete', 'alarms', 'deleted an alarm', '2025-05-21 00:20:34', '{\"id\":40,\"turbine_id\":2,\"central_id\":5,\"alarm_code\":\"B2\",\"description\":\"Low oil pressure\",\"status\":\"Active\",\"happened_at\":\"2023-05-15T07:00:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-05-13T17:04:45.000Z\"}', NULL, NULL, NULL, NULL),
+(26, 'arkanmsss80@gmail.com', 'delete', 'alarms', 'deleted an alarm', '2025-05-21 00:23:39', '{\"id\":49,\"turbine_id\":1,\"central_id\":5,\"alarm_code\":\"ALM-0425\",\"description\":\"Coolant leak detected\",\"status\":\"Resolved\",\"happened_at\":\"2025-04-01T13:00:00.000Z\",\"resolved_at\":\"2025-05-17T15:00:00.000Z\",\"created_at\":\"2025-05-17T15:28:23.000Z\"}', NULL, 'maintenance', '{\"id\":31,\"central_id\":5,\"kks\":\"KKS-ALM0425\",\"ot_number\":\"OT-ALM0425\",\"description\":\"Fixed coolant leak in turbine #1\",\"type\":\"Curative\",\"related_item_type\":\"Alarm\",\"related_item_id\":49,\"start\":\"2025-05-02T08:00:00.000Z\",\"end\":\"2025-05-17T15:00:00.000Z\",\"created_at\":\"2025-05-17T15:28:23.000Z\",\"updated_at\":null}', NULL),
+(27, 'arkanmsss80@gmail.com', 'add', 'defectivee_equipements', 'added a defecitve_equipement', '2025-05-21 00:40:22', NULL, '{\"id\":32,\"central_id\":5,\"turbine_id\":1,\"kks\":\"KKS12345\",\"description\":\"Broken rotor blade\",\"comments\":\"Needs immediate replacement\",\"reported_at\":\"2023-05-15T07:00:00.000Z\",\"fixed_at\":null,\"created_at\":\"2025-05-20T23:40:22.000Z\",\"status\":\"\"}', NULL, NULL, NULL),
+(28, 'arkanmsss80@gmail.com', 'add', 'defective_equipement', 'added a defecitve_equipement', '2025-05-21 00:41:29', NULL, '{\"id\":33,\"central_id\":5,\"turbine_id\":1,\"kks\":\"KKS12345\",\"description\":\"Broken rotor blade\",\"comments\":\"Needs immediate replacement\",\"reported_at\":\"2023-05-15T07:00:00.000Z\",\"fixed_at\":null,\"created_at\":\"2025-05-20T23:41:29.000Z\",\"status\":\"\"}', NULL, NULL, NULL),
+(29, 'arkanmsss80@gmail.com', 'add', 'maintenances', 'added a maintenance', '2025-05-21 01:11:43', NULL, '{\"id\":33,\"central_id\":5,\"kks\":\"KKS123\",\"ot_number\":\"OT-001\",\"description\":\"Repair done\",\"type\":\"Systematic\",\"related_item_type\":\"Alarm\",\"related_item_id\":45,\"start\":\"2025-05-10T07:00:00.000Z\",\"end\":null,\"created_at\":\"2025-05-21T00:11:43.000Z\",\"updated_at\":null}', 'alarms', '{\"id\":45,\"turbine_id\":64,\"central_id\":5,\"alarm_code\":\"ALM-K003\",\"description\":\"Vibration threshold exceeded\",\"status\":\"Active\",\"happened_at\":\"2025-05-03T08:45:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-05-15T21:53:05.000Z\"}', '{\"id\":45,\"turbine_id\":64,\"central_id\":5,\"alarm_code\":\"ALM-K003\",\"description\":\"Vibration threshold exceeded\",\"status\":\"Pending\",\"happened_at\":\"2025-05-03T08:45:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-05-15T21:53:05.000Z\"}'),
+(30, 'arkanmsss80@gmail.com', 'add', 'alarms', 'added an alarm', '2025-05-22 23:12:00', NULL, '{\"id\":54,\"turbine_id\":2,\"central_id\":5,\"alarm_code\":\"B2\",\"description\":\"Low oil pressure\",\"status\":\"Active\",\"happened_at\":\"2023-05-15T07:00:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-05-22T22:12:00.000Z\"}', NULL, NULL, NULL),
+(31, 'arkanmsss80@gmail.com', 'update', 'performances', 'updated a performance record', '2025-05-22 23:27:55', '{\"id\":2,\"central_id\":5,\"turbine_id\":64,\"performance_date\":\"2025-04-30T23:00:00.000Z\",\"fuel_type\":\"Gas\",\"load_status\":\"Loaded\",\"period\":\"Day\",\"fuel_consumption\":\"125.50\",\"gross_energy_production\":\"3100.00\",\"auxiliaries_consumption\":\"155.00\",\"net_active_energy_production\":\"2945.00\",\"reactive_energy_production\":\"210.00\",\"startups\":0,\"ignitions\":0,\"couplings\":0,\"load_trips\":0,\"net_energy_distribution\":null,\"starts_since_last_inspection\":null,\"max_power_peak\":null,\"flame_hours\":null,\"production_hours\":\"20.50\",\"daily_availability\":\"23.00\",\"average_hourly_power\":null,\"gas_calorific_value\":null,\"gasoil_calorific_value\":null,\"specific_consumption\":\"0.43\",\"daily_availability_rate\":\"95.83\",\"cumulative_availability_rate\":null,\"operating_hours_last_inspection\":null,\"starts_since_first_coupling\":null,\"operating_hours_since_first_coupling\":null,\"pumpable_gasoil_stock\":null,\"autonomy_at_pmc\":null,\"mwh_peak\":null,\"mwh_tlr\":null,\"created_at\":\"2025-05-14T21:36:50.000Z\",\"updated_at\":\"2025-05-14T21:36:50.000Z\"}', '{\"id\":2,\"central_id\":\"5\",\"turbine_id\":\"64\",\"performance_date\":\"2025-05-01\",\"fuel_type\":\"Gas\",\"load_status\":\"Loaded\",\"period\":\"Day\",\"fuel_consumption\":120.55,\"gross_energy_production\":3000.75,\"auxiliaries_consumption\":150.25,\"net_active_energy_production\":2850.5,\"reactive_energy_production\":200,\"startups\":4,\"ignitions\":3,\"couplings\":1,\"load_trips\":0,\"net_energy_distribution\":2750.45,\"starts_since_last_inspection\":10,\"max_power_peak\":450.75,\"flame_hours\":18.25,\"production_hours\":20,\"daily_availability\":98.5,\"average_hourly_power\":142.53,\"gas_calorific_value\":45.78,\"gasoil_calorific_value\":42.3,\"specific_consumption\":0.43,\"daily_availability_rate\":97.25,\"cumulative_availability_rate\":96,\"operating_hours_last_inspection\":2500,\"starts_since_first_coupling\":80,\"operating_hours_since_first_coupling\":10500,\"pumpable_gasoil_stock\":1200.6,\"autonomy_at_pmc\":15.75,\"mwh_peak\":120.5,\"mwh_tlr\":85.25}', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -64,14 +81,17 @@ INSERT INTO `alarms` (`id`, `turbine_id`, `central_id`, `alarm_code`, `descripti
 (35, 2, 5, 'B2', 'Low oil pressure', 'Resolved', '2023-05-15 08:00:00', '2023-05-15 10:30:00', '2025-05-12 21:56:16'),
 (37, 2, 5, 'B2', 'Low oil pressure', 'Pending', '2023-05-15 08:00:00', NULL, '2025-05-12 21:59:10'),
 (38, 2, 5, 'B2', 'Low oil pressure', 'Resolved', '2023-05-15 08:00:00', '2025-05-10 08:11:00', '2025-05-13 13:51:21'),
-(39, 2, 5, 'B2', 'Low oil pressure', 'Active', '2023-05-15 08:00:00', NULL, '2025-05-13 13:51:35'),
-(40, 2, 5, 'B2', 'Low oil pressure', 'Active', '2023-05-15 08:00:00', NULL, '2025-05-13 17:04:45'),
 (42, 2, 5, 'B2', 'Low oil pressure', 'Resolved', '2023-05-15 08:00:00', '2025-05-01 14:30:00', '2025-05-13 17:11:57'),
 (43, 64, 5, 'ALM-K001', 'High temperature in generator', 'Resolved', '2025-05-01 08:30:00', '2025-05-01 14:45:00', '2025-05-15 21:53:05'),
 (44, 65, 5, 'ALM-K002', 'Low oil pressure', 'Resolved', '2025-05-02 10:15:00', '2025-05-02 16:20:00', '2025-05-15 21:53:05'),
-(45, 64, 5, 'ALM-K003', 'Vibration threshold exceeded', 'Active', '2025-05-03 09:45:00', NULL, '2025-05-15 21:53:05'),
+(45, 64, 5, 'ALM-K003', 'Vibration threshold exceeded', 'Pending', '2025-05-03 09:45:00', NULL, '2025-05-15 21:53:05'),
 (46, 65, 5, 'ALM-K004', 'Cooling system malfunction', 'Active', '2025-05-04 11:30:00', NULL, '2025-05-15 21:53:05'),
-(47, 65, 5, 'ALM-K005', 'Emergency shutdown triggered', 'Resolved', '2025-05-01 07:15:00', '2025-05-01 12:30:00', '2025-05-15 21:53:05');
+(47, 65, 5, 'ALM-K005', 'Emergency shutdown triggered', 'Resolved', '2025-05-01 07:15:00', '2025-05-01 12:30:00', '2025-05-15 21:53:05'),
+(48, 2, 5, 'xyz', 'terks', 'Resolved', '2025-04-01 16:12:16', '2025-05-07 16:12:16', '2025-05-17 15:15:28'),
+(51, 2, 5, 'B2', 'Low oil pressure', 'Active', '2023-05-15 08:00:00', NULL, '2025-05-20 23:00:21'),
+(52, 2, 5, 'B2', 'Low oil pressure', 'Active', '2023-05-15 08:00:00', NULL, '2025-05-20 23:03:30'),
+(53, 2, 5, 'B2', 'Low oil pressure', 'Active', '2023-05-15 08:00:00', NULL, '2025-05-20 23:16:44'),
+(54, 2, 5, 'B2', 'Low oil pressure', 'Active', '2023-05-15 08:00:00', NULL, '2025-05-22 22:12:00');
 
 -- --------------------------------------------------------
 
@@ -119,21 +139,22 @@ CREATE TABLE `central_accounts` (
   `steg_email` varchar(50) NOT NULL,
   `password` varchar(70) NOT NULL,
   `is_verified` tinyint(1) DEFAULT 0,
-  `central_id` int(11) DEFAULT NULL
+  `central_id` int(11) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `central_accounts`
 --
 
-INSERT INTO `central_accounts` (`id`, `fullname`, `steg_email`, `password`, `is_verified`, `central_id`) VALUES
-(1, 'mohamed chinne', 'ahmed.benali@steg.co', '$2b$10$KoRGGoBby/cen.KpJTYHnOU', 1, 1),
-(6, 'mohamed chinne', 'karim.mahmoudi@steg.', '$2b$10$RGAtoVxnAgTLDftEhR8J2e1', 0, 2),
-(7, 'mohamed chine', 'raouf.benammar@steg.com.tn', '$2b$10$OO0aFKIU9lSM1cjZRNCAbO5VybxbeQ9hg6yk2pu0S8CrFiNprpnQG', 0, 1),
-(13, 'iheb  lahmer', 'ilahmar@steg.com.tn', '$2b$10$b9xuWKChqZifAb40gxlbI.SZN140Dh3TamYWjjAvjQbLiuJZi63r2', 0, 5),
-(22, 'mohamed chinne', 'nizar.chaabane@steg.com.tn', '$2b$10$7zj8U6nv2jnbapNglTbaCe3OHGS8WTK7QAqG//kxmGAK/AlE69TM.', 0, 4),
-(26, 'iheb  lahmer', 'arkanmsss80@gmail.com', '$2b$10$ShItMZM/vN1QMMtFYvkeZedO0BUudd9dmSWwX7J2mYf3MaYr02pHC', 1, 5),
-(28, 'iheb  lahmer', 'trettr973@gmail.com', '$2b$10$aFT6e8EtWORa3v/tfrhVUe.K/qsKQdjRWYgHdftlttiXPo8TqvAYK', 0, 5);
+INSERT INTO `central_accounts` (`id`, `fullname`, `steg_email`, `password`, `is_verified`, `central_id`, `is_active`) VALUES
+(1, 'mohamed chinne', 'ahmed.benali@steg.co', '$2b$10$KoRGGoBby/cen.KpJTYHnOU', 1, 1, 1),
+(6, 'mohamed chinne', 'karim.mahmoudi@steg.', '$2b$10$RGAtoVxnAgTLDftEhR8J2e1', 0, 2, 1),
+(7, 'mohamed chine', 'raouf.benammar@steg.com.tn', '$2b$10$OO0aFKIU9lSM1cjZRNCAbO5VybxbeQ9hg6yk2pu0S8CrFiNprpnQG', 0, 1, 1),
+(13, 'iheb  lahmer', 'ilahmar@steg.com.tn', '$2b$10$b9xuWKChqZifAb40gxlbI.SZN140Dh3TamYWjjAvjQbLiuJZi63r2', 0, 5, 1),
+(22, 'mohamed chinne', 'nizar.chaabane@steg.com.tn', '$2b$10$7zj8U6nv2jnbapNglTbaCe3OHGS8WTK7QAqG//kxmGAK/AlE69TM.', 0, 4, 1),
+(26, 'iheb  lahmer', 'arkanmsss80@gmail.com', '$2b$10$ShItMZM/vN1QMMtFYvkeZedO0BUudd9dmSWwX7J2mYf3MaYr02pHC', 1, 5, 1),
+(28, 'iheb  lahmer', 'trettr973@gmail.com', '$2b$10$aFT6e8EtWORa3v/tfrhVUe.K/qsKQdjRWYgHdftlttiXPo8TqvAYK', 0, 5, 0);
 
 -- --------------------------------------------------------
 
@@ -143,28 +164,29 @@ INSERT INTO `central_accounts` (`id`, `fullname`, `steg_email`, `password`, `is_
 
 CREATE TABLE `central_employee_emails` (
   `employee_email` varchar(50) NOT NULL,
-  `central_id` int(11) NOT NULL
+  `central_id` int(11) NOT NULL,
+  `is_chef` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `central_employee_emails`
 --
 
-INSERT INTO `central_employee_emails` (`employee_email`, `central_id`) VALUES
-('ahmed.benali@steg.com.tn', 1),
-('raouf.benammar@steg.com.tn', 1),
-('karim.mahmoudi@steg.com.tn', 2),
-('mohamed.trabelsi@steg.com.tn', 2),
-('mouhamedchinne@gmail.com', 2),
-('fethi.jlassi@steg.com.tn', 3),
-('lotfi.benromdhane@steg.com.tn', 3),
-('nizar.chaabane@steg.com.tn', 4),
-('arkanmsss80@gmail.com', 5),
-('hassen.belhaj@steg.com.tn', 5),
-('ilahmar@steg.com.tn', 5),
-('trettr973@gmail.com', 5),
-('omar.khalifa@steg.com.tn', 6),
-('slim.hajji@steg.com.tn', 7);
+INSERT INTO `central_employee_emails` (`employee_email`, `central_id`, `is_chef`) VALUES
+('ahmed.benali@steg.com.tn', 1, 0),
+('arkanmsss80@gmail.com', 5, 1),
+('fethi.jlassi@steg.com.tn', 3, 0),
+('hassen.belhaj@steg.com.tn', 5, 0),
+('ilahmar@steg.com.tn', 5, 0),
+('karim.mahmoudi@steg.com.tn', 2, 0),
+('lotfi.benromdhane@steg.com.tn', 3, 0),
+('mohamed.trabelsi@steg.com.tn', 2, 0),
+('mouhamedchinne@gmail.com', 2, 0),
+('nizar.chaabane@steg.com.tn', 4, 0),
+('omar.khalifa@steg.com.tn', 6, 0),
+('raouf.benammar@steg.com.tn', 1, 0),
+('slim.hajji@steg.com.tn', 7, 0),
+('trettr973@gmail.com', 5, 0);
 
 -- --------------------------------------------------------
 
@@ -201,7 +223,12 @@ INSERT INTO `defective_equipment` (`id`, `central_id`, `turbine_id`, `kks`, `des
 (22, 5, 65, 'KKS-K002', 'Damaged bearing', NULL, '2025-05-02 08:45:00', '2025-05-03 14:00:00', '2025-05-15 21:53:05', 'Fixed'),
 (23, 5, 64, 'KKS-K003', 'Leaking oil seal', NULL, '2025-05-03 10:30:00', NULL, '2025-05-15 21:53:05', 'Pending'),
 (24, 5, 65, 'KKS-K004', 'Cracked valve housing', NULL, '2025-05-04 09:15:00', NULL, '2025-05-15 21:53:05', 'Pending'),
-(25, 5, 65, 'KKS-K005', 'Worn out coupling', NULL, '2025-05-01 11:45:00', '2025-05-02 16:30:00', '2025-05-15 21:53:05', 'Fixed');
+(25, 5, 65, 'KKS-K005', 'Worn out coupling', NULL, '2025-05-01 11:45:00', '2025-05-02 16:30:00', '2025-05-15 21:53:05', 'Fixed'),
+(29, 5, 1, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-20 20:23:28', ''),
+(30, 5, 1, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-20 23:37:54', ''),
+(31, 5, 1, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-20 23:38:17', ''),
+(32, 5, 1, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-20 23:40:22', ''),
+(33, 5, 1, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-20 23:41:29', '');
 
 -- --------------------------------------------------------
 
@@ -240,14 +267,6 @@ CREATE TABLE `direction_accounts` (
   `is_verified` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `direction_accounts`
---
-
-INSERT INTO `direction_accounts` (`id`, `fullname`, `steg_email`, `password`, `direction_id`, `is_verified`) VALUES
-(4, 'mohamed chinne', 'adel.bahri@steg.com.tn', '$2b$10$sEg2OakILK4n0eOuisdP4u5', 1, 1),
-(7, 'mohamed chinne', 'foued.trabelsi@steg.com.tn', '$2b$10$BF9r0XAbn4bKs7uhN2PLr.ZodyZSazoHoJmYic6fnjoUGrMZtmxXi', 1, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -264,16 +283,18 @@ CREATE TABLE `direction_employee_emails` (
 --
 
 INSERT INTO `direction_employee_emails` (`employee_email`, `direction_id`) VALUES
-('adel.bahri@steg.com.tn', 1),
-('chokri.bensalah@steg.com.tn', 1),
-('foued.trabelsi@steg.com.tn', 1),
-('houssem.abid@steg.com.tn', 1),
-('imed.bedoui@steg.com.tn', 1),
-('lassaad.mezghani@steg.com.tn', 1),
-('naceur.jabri@steg.com.tn', 1),
-('ridha.kharrat@steg.com.tn', 1),
-('salem.majri@steg.com.tn', 1),
-('zied.chebbi@steg.com.tn', 1);
+('amine.belhadj@steg.com.tn', 1),
+('dalila.benzarti@steg.com.tn', 1),
+('farid.mansour@steg.com.tn', 1),
+('leila.nasri@steg.com.tn', 1),
+('marwan.cherif@steg.com.tn', 1),
+('nacer.jaouadi@steg.com.tn', 1),
+('rafik.hamdi@steg.com.tn', 1),
+('samia.frikha@steg.com.tn', 1),
+('sonia.benmohamed@steg.com.tn', 1),
+('tarek.aouididi@steg.com.tn', 1),
+('wassim.chebbi@steg.com.tn', 1),
+('yassine.khelifi@steg.com.tn', 1);
 
 -- --------------------------------------------------------
 
@@ -386,12 +407,13 @@ INSERT INTO `maintenance` (`id`, `central_id`, `kks`, `ot_number`, `description`
 (21, 5, 'KKS123', 'OT-001', 'Repair done', 'Systematic', 'Alarm', 42, '2025-05-10 08:00:00', '2025-05-01 14:30:00', '2025-05-13 19:55:19', '2025-05-13 19:56:05'),
 (22, 5, 'KKS-M001', 'OT-K001', 'Generator cooling system repair', '', 'Alarm', 1, '2025-05-01 15:00:00', '2025-05-01 20:30:00', '2025-05-01 13:50:00', NULL),
 (23, 5, 'KKS-M002', 'OT-K002', 'Oil pressure system maintenance', '', 'Alarm', 2, '2025-05-02 16:30:00', '2025-05-02 21:45:00', '2025-05-02 15:25:00', NULL),
-(24, 5, 'KKS-M003', 'OT-K003', 'Vibration dampening system inspection', '', 'Alarm', 3, '2025-05-03 10:00:00', NULL, '2025-05-03 08:50:00', NULL),
 (25, 5, 'KKS-M004', 'OT-K004', 'Cooling system overhaul', '', 'Alarm', 4, '2025-05-04 12:00:00', NULL, '2025-05-04 10:45:00', NULL),
 (26, 5, 'KKS-M005', 'OT-K005', 'Pressure sensor replacement', '', 'Defective Equipment', 1, '2025-05-01 10:00:00', '2025-05-02 15:30:00', '2025-05-01 08:45:00', NULL),
 (27, 5, 'KKS-M006', 'OT-K006', 'Bearing replacement', '', 'Defective Equipment', 2, '2025-05-02 09:30:00', '2025-05-03 14:00:00', '2025-05-02 08:15:00', NULL),
 (28, 5, 'KKS-M007', 'OT-K007', 'Oil seal replacement', '', 'Defective Equipment', 3, '2025-05-03 11:00:00', NULL, '2025-05-03 09:45:00', NULL),
-(29, 5, 'KKS-M008', 'OT-K008', 'Valve housing replacement', '', 'Defective Equipment', 4, '2025-05-04 10:00:00', NULL, '2025-05-04 08:45:00', NULL);
+(29, 5, 'KKS-M008', 'OT-K008', 'Valve housing replacement', '', 'Defective Equipment', 4, '2025-05-04 10:00:00', NULL, '2025-05-04 08:45:00', NULL),
+(32, 5, 'KKS-DEF023', 'OT-DEF023', 'Repair for defective equipment #23', 'Curative', 'Defective Equipment', 23, '2025-05-18 09:00:00', '2025-05-18 14:30:00', '2025-05-17 18:43:31', NULL),
+(33, 5, 'KKS123', 'OT-001', 'Repair done', 'Systematic', 'Alarm', 45, '2025-05-10 08:00:00', NULL, '2025-05-21 00:11:43', NULL);
 
 -- --------------------------------------------------------
 
@@ -445,7 +467,7 @@ CREATE TABLE `performance` (
 
 INSERT INTO `performance` (`id`, `central_id`, `turbine_id`, `performance_date`, `fuel_type`, `load_status`, `period`, `fuel_consumption`, `gross_energy_production`, `auxiliaries_consumption`, `net_active_energy_production`, `reactive_energy_production`, `startups`, `ignitions`, `couplings`, `load_trips`, `net_energy_distribution`, `starts_since_last_inspection`, `max_power_peak`, `flame_hours`, `production_hours`, `daily_availability`, `average_hourly_power`, `gas_calorific_value`, `gasoil_calorific_value`, `specific_consumption`, `daily_availability_rate`, `cumulative_availability_rate`, `operating_hours_last_inspection`, `starts_since_first_coupling`, `operating_hours_since_first_coupling`, `pumpable_gasoil_stock`, `autonomy_at_pmc`, `mwh_peak`, `mwh_tlr`, `created_at`, `updated_at`) VALUES
 (1, 5, 64, '2025-05-14', 'Gas', 'Loaded', 'Day', 120.55, 3000.75, 150.25, 2850.50, 200.00, 4, 3, 1, 0, 2750.45, 10, 450.75, 18.25, 20.00, 98.50, 142.53, 45.78, 42.30, 0.43, 97.25, 96.00, 2500, 80, 10500, 1200.60, 15.75, 120.50, 85.25, '2025-05-14 14:48:16', '2025-05-14 14:48:42'),
-(2, 5, 64, '2025-05-01', 'Gas', 'Loaded', 'Day', 125.50, 3100.00, 155.00, 2945.00, 210.00, 0, 0, 0, 0, NULL, NULL, NULL, NULL, 20.50, 23.00, NULL, NULL, NULL, 0.43, 95.83, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-05-14 21:36:50', '2025-05-14 21:36:50'),
+(2, 5, 64, '2025-05-01', 'Gas', 'Loaded', 'Day', 120.55, 3000.75, 150.25, 2850.50, 200.00, 4, 3, 1, 0, 2750.45, 10, 450.75, 18.25, 20.00, 98.50, 142.53, 45.78, 42.30, 0.43, 97.25, 96.00, 2500, 80, 10500, 1200.60, 15.75, 120.50, 85.25, '2025-05-14 21:36:50', '2025-05-22 22:27:55'),
 (3, 5, 64, '2025-05-02', 'Gas', 'Loaded', 'Day', 130.20, 3200.00, 160.00, 3040.00, 215.00, 0, 0, 0, 0, NULL, NULL, NULL, NULL, 21.00, 22.50, NULL, NULL, NULL, 0.43, 93.75, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-05-14 21:36:50', '2025-05-14 21:36:50'),
 (4, 5, 64, '2025-05-03', 'Gas', 'Loaded', 'Day', 128.75, 3150.00, 157.50, 2992.50, 212.00, 0, 0, 0, 0, NULL, NULL, NULL, NULL, 20.75, 23.50, NULL, NULL, NULL, 0.43, 97.92, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-05-14 21:36:50', '2025-05-14 21:36:50'),
 (5, 5, 64, '2025-05-04', 'Gas', 'Loaded', 'Day', 132.40, 3250.00, 162.50, 3087.50, 218.00, 0, 0, 0, 0, NULL, NULL, NULL, NULL, 21.25, 24.00, NULL, NULL, NULL, 0.43, 100.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-05-14 21:36:50', '2025-05-14 21:36:50'),
@@ -513,7 +535,34 @@ INSERT INTO `performance` (`id`, `central_id`, `turbine_id`, `performance_date`,
 (67, 7, 12, '2025-05-03', 'Gas', 'Loaded', 'Day', 6550.00, 31200.00, 1560.00, 29640.00, 2220.00, 0, 0, 0, 0, NULL, NULL, NULL, NULL, 21.20, 24.00, NULL, NULL, NULL, 0.22, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-05-15 13:17:47', '2025-05-15 13:17:47'),
 (68, 7, 13, '2025-05-01', 'Gas', 'Loaded', 'Day', 6400.00, 30500.00, 1525.00, 28975.00, 2150.00, 0, 0, 0, 0, NULL, NULL, NULL, NULL, 20.50, 23.50, NULL, NULL, NULL, 0.22, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-05-15 13:17:47', '2025-05-15 13:17:47'),
 (69, 7, 13, '2025-05-02', 'Gas', 'Loaded', 'Day', 6500.00, 31000.00, 1550.00, 29450.00, 2200.00, 0, 0, 0, 0, NULL, NULL, NULL, NULL, 21.00, 24.00, NULL, NULL, NULL, 0.22, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-05-15 13:17:47', '2025-05-15 13:17:47'),
-(70, 7, 13, '2025-05-03', 'Gas', 'Loaded', 'Day', 6450.00, 30700.00, 1535.00, 29165.00, 2170.00, 0, 0, 0, 0, NULL, NULL, NULL, NULL, 20.70, 23.70, NULL, NULL, NULL, 0.22, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-05-15 13:17:47', '2025-05-15 13:17:47');
+(70, 7, 13, '2025-05-03', 'Gas', 'Loaded', 'Day', 6450.00, 30700.00, 1535.00, 29165.00, 2170.00, 0, 0, 0, 0, NULL, NULL, NULL, NULL, 20.70, 23.70, NULL, NULL, NULL, 0.22, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-05-15 13:17:47', '2025-05-15 13:17:47'),
+(71, 5, 64, '2025-05-19', 'Gas', 'Loaded', 'Day', 120.55, 3000.75, 150.25, 2850.50, 200.00, 4, 3, 1, 0, 2750.45, 10, 450.75, 18.25, 20.00, 98.50, 142.53, 45.78, 42.30, 0.43, 97.25, 96.00, 2500, 80, 10500, 1200.60, 15.75, 120.50, 85.25, '2025-05-19 15:20:52', '2025-05-19 15:20:52');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `request_modification`
+--
+
+CREATE TABLE `request_modification` (
+  `id` int(11) NOT NULL,
+  `table_name` varchar(100) NOT NULL COMMENT 'Name of the table where the record exists',
+  `record_id` int(11) NOT NULL COMMENT 'ID of the record being modified',
+  `old_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'Original value of the field (JSON format)' CHECK (json_valid(`old_value`)),
+  `new_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'Requested new value (JSON format)' CHECK (json_valid(`new_value`)),
+  `receiver_groupement_id` int(11) DEFAULT NULL COMMENT 'Groupement ID of the receiver',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `raison` varchar(500) DEFAULT NULL COMMENT 'Reason for the modification request',
+  `method` enum('update','delete','insert') NOT NULL DEFAULT 'update' COMMENT 'Type of modification requested',
+  `requester` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'Requester information in JSON format (id, central_id, name, etc.)' CHECK (json_valid(`requester`))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `request_modification`
+--
+
+INSERT INTO `request_modification` (`id`, `table_name`, `record_id`, `old_value`, `new_value`, `receiver_groupement_id`, `created_at`, `raison`, `method`, `requester`) VALUES
+(8, 'alarms', 39, '{\"id\":39,\"turbine_id\":2,\"central_id\":5,\"alarm_code\":\"B2\",\"description\":\"Low oil pressure\",\"status\":\"Active\",\"happened_at\":\"2023-05-15T07:00:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-05-13T13:51:35.000Z\"}', NULL, 1, '2025-05-20 17:13:40', 'incorrectly inserted it', 'delete', '{\"id\":26,\"fullname\":\"iheb  lahmer\",\"steg_email\":\"arkanmsss80@gmail.com\",\"is_verified\":1,\"central_id\":5,\"is_active\":1,\"unittype\":\"central\",\"unitname\":\"Korba\"}');
 
 -- --------------------------------------------------------
 
@@ -580,9 +629,7 @@ INSERT INTO `turbine` (`turbine_id`, `name`, `central_id`, `manufacturer`, `fuel
 -- Indexes for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_central_user` (`centraluser_id`),
-  ADD KEY `fk_groupement_user` (`groupementuser_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `alarms`
@@ -638,8 +685,7 @@ ALTER TABLE `direction_accounts`
 -- Indexes for table `direction_employee_emails`
 --
 ALTER TABLE `direction_employee_emails`
-  ADD UNIQUE KEY `employee_email` (`employee_email`),
-  ADD KEY `direction_id` (`direction_id`);
+  ADD PRIMARY KEY (`employee_email`);
 
 --
 -- Indexes for table `groupement`
@@ -678,6 +724,13 @@ ALTER TABLE `performance`
   ADD KEY `fk_performance_turbine` (`turbine_id`);
 
 --
+-- Indexes for table `request_modification`
+--
+ALTER TABLE `request_modification`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_receiver_groupement` (`receiver_groupement_id`);
+
+--
 -- Indexes for table `turbine`
 --
 ALTER TABLE `turbine`
@@ -692,13 +745,13 @@ ALTER TABLE `turbine`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `alarms`
 --
 ALTER TABLE `alarms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT for table `central`
@@ -716,7 +769,7 @@ ALTER TABLE `central_accounts`
 -- AUTO_INCREMENT for table `defective_equipment`
 --
 ALTER TABLE `defective_equipment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `direction`
@@ -728,7 +781,7 @@ ALTER TABLE `direction`
 -- AUTO_INCREMENT for table `direction_accounts`
 --
 ALTER TABLE `direction_accounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `groupement`
@@ -746,13 +799,19 @@ ALTER TABLE `groupement_accounts`
 -- AUTO_INCREMENT for table `maintenance`
 --
 ALTER TABLE `maintenance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `performance`
 --
 ALTER TABLE `performance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+
+--
+-- AUTO_INCREMENT for table `request_modification`
+--
+ALTER TABLE `request_modification`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `turbine`
@@ -763,13 +822,6 @@ ALTER TABLE `turbine`
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `activity_logs`
---
-ALTER TABLE `activity_logs`
-  ADD CONSTRAINT `fk_central_user` FOREIGN KEY (`centraluser_id`) REFERENCES `central_accounts` (`id`),
-  ADD CONSTRAINT `fk_groupement_user` FOREIGN KEY (`groupementuser_id`) REFERENCES `groupement_accounts` (`id`);
 
 --
 -- Constraints for table `alarms`
@@ -810,12 +862,6 @@ ALTER TABLE `direction_accounts`
   ADD CONSTRAINT `directionfk` FOREIGN KEY (`direction_id`) REFERENCES `direction` (`direction_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `direction_employee_emails`
---
-ALTER TABLE `direction_employee_emails`
-  ADD CONSTRAINT `direction_employee_emails_ibfk_1` FOREIGN KEY (`direction_id`) REFERENCES `direction` (`direction_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
 -- Constraints for table `groupement`
 --
 ALTER TABLE `groupement`
@@ -838,6 +884,12 @@ ALTER TABLE `groupement_employee_emails`
 --
 ALTER TABLE `maintenance`
   ADD CONSTRAINT `fk_maintenance_central` FOREIGN KEY (`central_id`) REFERENCES `central` (`central_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `request_modification`
+--
+ALTER TABLE `request_modification`
+  ADD CONSTRAINT `fk_receiver_groupement` FOREIGN KEY (`receiver_groupement_id`) REFERENCES `groupement` (`groupement_id`);
 
 --
 -- Constraints for table `turbine`

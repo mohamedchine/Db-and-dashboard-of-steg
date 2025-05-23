@@ -12,8 +12,10 @@ const performanceRouter = require('./routes/centraldashboard/performanceRoutes')
 const TurbinesRouter = require('./routes/turbinesRoutes.js');
 const directionRooutes = require('./routes/directiondashboard/directionRoutes.js');
 const groupementRouter = require('./routes/groupement/groupementRoutes.js');
+const chefRouter = require('./routes/centraldashboard/chefRoutes.js')
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const activitylogRouter = require('./routes/centraldashboard/activityLogsRoutes.js');
 
 
 
@@ -43,8 +45,8 @@ db.execute('select 1 ').then(async()=>{ //select is just to check if the connect
     app.use('/performance',performanceRouter);
     app.use('/groupement',groupementRouter);
     app.use('/direction',directionRooutes);
-    
-    // app.use('/activitylogs',)
+    app.use('/chef',chefRouter);
+    app.use('/activitylogs',activitylogRouter);
   
     // app.use('/modificationrequests' ,modificationRouter);
     app.all('*',(req,res)=>{

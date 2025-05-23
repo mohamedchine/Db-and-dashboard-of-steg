@@ -5,7 +5,7 @@ const {
   addperformance,
   getPerformancesByCentralAndDate
 } = require('../../model/performance');
-
+const {addactivitylog} = require('../../model/activitylogs');
 const addPerformanceCtrl = async (req, res) => {
   const { error } = validateperformance(req.body);
   if (error) {
@@ -46,18 +46,6 @@ const addPerformanceCtrl = async (req, res) => {
     mwh_peak,
     mwh_tlr
   } = req.body;
-  // const today = new Date();
-  // today.setHours(0, 0, 0, 0); // Reset hours, minutes, seconds, milliseconds to 0
-  
-  // const performanceDate = new Date(performance_date);
-  // performanceDate.setHours(0, 0, 0, 0); // Reset hours, minutes, seconds, milliseconds to 0
-  
-  // // Now compare dates without time components
-  // if(performanceDate < today) {
-  //   return res.status(400).json({
-  //     message: 'This performance has already been seen by the groupement so you cant modify it unless they accept so'
-  //   });
-  // }
 
   const turbineid = req.params.turbineid;
   const centralid = req.params.centralid;
@@ -102,13 +90,27 @@ const addPerformanceCtrl = async (req, res) => {
         mwh_peak,
         mwh_tlr
       );
+      const updatedPerformance = {
+        id: existingPerformance.id,
+        central_id: centralid,
+        turbine_id: turbineid,
+        ...req.body
+      };
 
+      const activity = {
+        central_user_email: req.user.steg_email,
+        action: "update",
+        target_table: "performances",
+        description: "updated a performance record",
+        target_table_old_value: existingPerformance,
+        target_table_new_value: updatedPerformance
+      };
+      
+      await addactivitylog(activity);
       return res.status(200).json({
         message: "Performance updated successfully",
-        performance: {
-          id: existingPerformance.id,
-          ...req.body
-        }
+        performance: 
+         updatedPerformance
       });
     } else {
       // Step 3: Add new
@@ -148,13 +150,26 @@ const addPerformanceCtrl = async (req, res) => {
         mwh_peak,
         mwh_tlr
       );
+      const newPerformance = {
+        id: newPerformanceId,
+        central_id: centralid,
+        turbine_id: turbineid,
+        ...req.body
+      };
 
+      const activity = {
+        central_user_email: req.user.steg_email,
+        action: "add",
+        target_table: "performances",
+        description: "added a performance record",
+        target_table_old_value: null,
+        target_table_new_value: newPerformance
+      };
+      
+      await addactivitylog(activity);
       return res.status(201).json({
         message: "Performance added successfully",
-        performance: {
-          id: newPerformanceId,
-          ...req.body
-        }
+        performance: newPerformance
       });
     }
   } catch (err) {

@@ -4,7 +4,7 @@ const db = require('../config/db');
 const {verifyjwt ,genjwt } = require('../utils/jwtUtils');
 const { hashPassword, comparepassword } = require('../utils/hashingUtils');
 const { gen_email_verification_Link,sendmail } = require('../utils/mailUtils');
-const { findUserByEmail ,findUserById} = require('../utils/dbUtils');
+const { findUserByEmail , findUserByIdAndUnittype} = require('../utils/dbUtils');
 
 
 const registerCtrl = async(req,res)=>{
@@ -83,16 +83,16 @@ const verifyAccountCtrl = async (req, res) => {
     }
 
     const { email, id } = payload;
-    const accountTypes = ['central', 'groupement'];
-
+    const accountTypes = ['central', 'groupement','direction'];
     for (const type of accountTypes) {
         // Check if the account is already verified
         const [checkResult] = await db.execute(
-            `SELECT is_verified FROM ${type}_accounts WHERE steg_email = ? AND id = ?`,
+            `SELECT * FROM ${type}_accounts WHERE steg_email = ? AND id = ?`,
             [email, id]
+            
         );
-
-        if (checkResult[0].is_verified) {
+        if (checkResult.length>0 && checkResult[0][0].is_verified==1
+        ) {
             return res.status(200).send(`
                 <!DOCTYPE html>
                 <html>
@@ -155,8 +155,8 @@ const loginCtrl = async (req, res) => {
     if (!passwordMatch) {
         return res.status(401).json({ message: "Incorrect password" });
     }
-    if(!user.is_active && unittype !== "direction" ) return res.status(403).json({message : "sorry ur account has been desactivated by the admin"}) ;
-    if (!user.is_verified && unittype !== "direction") {   //well give the direction employee a directly verified account 
+    if(!user.is_active && unittype !== "direction" && unittype!=="groupement" ) return res.status(403).json({message : "sorry ur account has been desactivated by the chef of the central,if u think it has been desactivated by mistake u can contact him"}) ;
+    if (!user.is_verified ) {   //well give the direction employee a directly verified account 
        const verificationLink = gen_email_verification_Link(user.steg_email, user.id);
        await sendmail(user.steg_email, "Email Verification", `Click <a href="${verificationLink}">here</a> to verify your email`);
        return res.status(401).json({ message: "you are not verified yet , click the link that we've mailed you to verify your account" });
@@ -200,7 +200,7 @@ const checkauthctrl = async (req, res) => {
         return res.status(401).json({ user: null  });
     }
 
-        const { user, unittype, unitname } = await findUserById(payload.id);
+        const { user, unittype, unitname } = await findUserByIdAndUnittype(payload.id,payload.unittype);
         if (!user) {
             return res.status(401).json({ user: null });
         }
@@ -214,6 +214,7 @@ const checkauthctrl = async (req, res) => {
         });
 
 };
+
 
 
 const logoutCtrl = (req, res) => {
