@@ -3,11 +3,7 @@ import useAuth from "../context/useAuth";
 import Wpage from "../pages/welcomepage/welcomepage";
 
 const AuthRedirect = () => {
-  const date = new Date();
-  const showTime = date.getHours() 
-      + ':' + date.getMinutes() 
-      + ":" + date.getSeconds();
-  console.log("authredirect is running" ,showTime);
+ 
   const { user } = useAuth();
   
   if (user) {

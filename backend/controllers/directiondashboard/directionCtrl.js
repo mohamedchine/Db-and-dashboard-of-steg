@@ -1,4 +1,4 @@
-const {getallcentralids,getCentralNameById,getTurbinesByCentralId }= require('../../model/central');
+const {getallcentralids,getCentralNameById,getTurbinesByCentralId, getallCentralsnameandid }= require('../../model/central');
 const {getconsumptionbyturbineid,getavailabilitybyturbineid , getproductionbyturbineid} =require('../../model/performance');
 const {getMaintenanceByPeriodAndCentralId} =require('../../model/maintenance');
 const {getDefectiveEquipmentByPeriodAndCentralId} = require('../../model/defectiveequipement');
@@ -329,4 +329,13 @@ const activateuseracountctrl = async (req, res) => {
   }
 };
 
-module.exports = {getallcentralsperformanceCtrl,getmaintenancedefectiveequipementalarmsCtrl,getallusersaccountsCtrl ,desactivateuseracountctrl,activateuseracountctrl};
+
+const getallcentralsCtrl = async(req,res)=>{
+  const allcentral = await getallCentralsnameandid();
+  return res.status(200).json({
+     success: true,
+     data: allcentral
+   });
+}
+
+module.exports = {getallcentralsperformanceCtrl,getmaintenancedefectiveequipementalarmsCtrl,getallcentralsCtrl,getallusersaccountsCtrl ,desactivateuseracountctrl,activateuseracountctrl};

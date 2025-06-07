@@ -1,5 +1,5 @@
 const { verifygroupementemployee } = require('../../middleware/verifyToken');
-const {getcentralsdatabyperiodeCtrl , getmaintenancedefectiveequipementalarmsCtrl} = require('../../controllers/groupement/groupementCtrl');
+const {getcentralsdatabyperiodeCtrl , getmaintenancedefectiveequipementalarmsCtrl, getcentralsbygroupementidctrl} = require('../../controllers/groupement/groupementCtrl');
 
 const groupementRouter = require('express').Router();
 groupementRouter.route('/centralsdata/byperiode').get(
@@ -13,6 +13,7 @@ groupementRouter.route('/defeq-alarms-maintenance/byperiode').get(
 )
 
 
-
+groupementRouter.get('/supervisedcentrals',verifygroupementemployee, getcentralsbygroupementidctrl
+)
 
 module.exports = groupementRouter;

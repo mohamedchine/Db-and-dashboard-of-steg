@@ -5,11 +5,8 @@ import { createContext, useState } from "react";
 const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-  const date = new Date();
-  const showTime = date.getHours() 
-      + ':' + date.getMinutes() 
-      + ":" + date.getSeconds();
-  console.log("usercontext  is running" ,showTime);
+ 
+
   const [user, setuser] = useState(null);
 
 

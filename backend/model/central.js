@@ -38,6 +38,41 @@ const getCentralsByGroupementId = async (groupementid) => {
         throw error;
     }
 };
+const getCentralsnameandidByGroupementId = async (groupementid) => {
+  try {
+      const [rows] = await db.execute(
+          'SELECT central_id, name FROM central WHERE groupement_id = ?', 
+          [groupementid]
+      );
+      
+      const centrals = rows.map(row => ({
+          central_id: row.central_id,
+          central_name: row.name
+      }));
+      
+      return centrals;
+  } catch (error) {
+      console.error('Error fetching central IDs and names:', error);
+      throw error;
+  }
+};
+const getallCentralsnameandid = async () => {
+  try {
+      const [rows] = await db.execute(
+          'SELECT central_id, name FROM central '
+      );
+      
+      const centrals = rows.map(row => ({
+          central_id: row.central_id,
+          central_name: row.name
+      }));
+      
+      return centrals;
+  } catch (error) {
+      console.error('Error fetching central IDs and names:', error);
+      throw error;
+  }
+};
 
 
 const getTurbinesByCentralId = async (centralId) => {
@@ -78,4 +113,4 @@ const getTurbinesByCentralId = async (centralId) => {
 };
 
 
-module.exports = {getcentralidbyreportid,findcentralbyid,findturbinebyid,getCentralsByGroupementId ,getCentralNameById ,getTurbinesByCentralId,getallcentralids};
+module.exports = {getcentralidbyreportid,findcentralbyid,findturbinebyid,getCentralsByGroupementId ,getCentralNameById ,getallCentralsnameandid,getTurbinesByCentralId,getallcentralids,getCentralsnameandidByGroupementId};

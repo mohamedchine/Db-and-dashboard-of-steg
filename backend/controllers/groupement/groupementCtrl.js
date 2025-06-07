@@ -1,4 +1,4 @@
-const { getCentralNameById, getTurbinesByCentralId } = require('../../model/central');
+const { getCentralNameById, getTurbinesByCentralId, getCentralsnameandidByGroupementId } = require('../../model/central');
 const {getconsumptionbyturbineid,getavailabilitybyturbineid , getproductionbyturbineid} =require('../../model/performance');
 const {getMaintenanceByPeriodAndCentralId} =require('../../model/maintenance');
 const {getDefectiveEquipmentByPeriodAndCentralId} = require('../../model/defectiveequipement');
@@ -235,5 +235,15 @@ const getmaintenancedefectiveequipementalarmsCtrl = async (req, res) => {
 
 
 
-module.exports = { getcentralsdatabyperiodeCtrl ,getmaintenancedefectiveequipementalarmsCtrl};
+
+
+const getcentralsbygroupementidctrl = async(req,res)=>{
+  const centrals = await getCentralsnameandidByGroupementId(req.user.groupement_id);
+  res.status(200).json({
+    success: true,
+    data: centrals
+  })
+}
+
+module.exports = { getcentralsdatabyperiodeCtrl ,getmaintenancedefectiveequipementalarmsCtrl,getcentralsbygroupementidctrl};
 
