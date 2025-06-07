@@ -75,7 +75,7 @@ const Resetpassword = () => {
           {loading ? "loading.." : "Reset Password"}
         </button>
       </div>
-      <ToastContainer position="top-right" autoClose={3000} />
+     
     </div>
   );
 };

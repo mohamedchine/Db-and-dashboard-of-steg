@@ -103,7 +103,7 @@ const Signup = () => {
              </select>}
              <button  onClick={()=>handleRegister()} className="register"  disabled={loading} > {loading? "loading .. " : "Register"} </button>
              </div>
-             <ToastContainer position="top-right" autoClose={3000} />
+            
         </div>
      );
 }

@@ -42,7 +42,7 @@ const RequestResetPassword = () => {
           {loading?"loading .." :  "Request a password Reset"}
         </button>
       </div>
-      <ToastContainer position="top-right" autoClose={2000} />
+   
     </div>
   );
 };

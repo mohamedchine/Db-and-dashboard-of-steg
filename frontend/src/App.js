@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Wpage from "./pages/welcomepage/welcomepage";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import NotFound from "./pages/notfound/notfound";
 import CentralDashboard from "./pages/centraldashboard/centraldashboard";
 import GroupementDashboard from "./pages/groupementdashboard/groupementdashboard";
@@ -17,6 +18,7 @@ import AuthRedirect from "./utils/authredirect";
 function App() {
   return (
     <div className="App">
+       <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
         {/* Wrap everything in PersistingLogin to check auth status first */}
         <Route element={<PersistingLogin />}>
