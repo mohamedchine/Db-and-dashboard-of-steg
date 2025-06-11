@@ -21,11 +21,16 @@ const addalarm = async ({ turbine_id, central_id, alarm_code, description, happe
   return rows[0];
 };
 
+
+
 const findalarmbyid = async (id) => {
   const [rows] = await db.execute("select * from alarms where id=  ?", [id]);
   if (rows.length == 0) return -1;
   return rows[0]; 
 }
+
+
+
 const deletealarm = async(id)=>{
     await db.execute("delete from alarms where id =?", [id]);
 }
@@ -33,9 +38,7 @@ const deletealarm = async(id)=>{
 
 
 
-const getunresolvedalarms = async (centralid, page = 1, limit = 10, turbine_id = null) => {
-  const offset = (page - 1) * limit;
-
+const getunresolvedalarms = async (centralid, turbine_id = null) => {
   let query = `
     SELECT *
     FROM alarms
@@ -50,8 +53,7 @@ const getunresolvedalarms = async (centralid, page = 1, limit = 10, turbine_id =
     params.push(turbine_id);
   }
 
-  query += ` ORDER BY created_at ASC LIMIT ? OFFSET ? `;
-  params.push(limit, offset);
+  query += ` ORDER BY created_at ASC`;
 
   const [rows] = await db.execute(query, params);
   return rows;
@@ -106,9 +108,7 @@ const getAllUnresolvedAlarms = async (central_id, turbine_id = null) => {
   return rows;
 };
 
-const getresolvedalarms = async (centralid, page = 1, limit = 10, turbine_id = null) => {
-  const offset = (page - 1) * limit;
-
+const getresolvedalarms = async (centralid, turbine_id = null) => {
   let query = `
     SELECT *
     FROM alarms
@@ -123,17 +123,14 @@ const getresolvedalarms = async (centralid, page = 1, limit = 10, turbine_id = n
     params.push(turbine_id);
   }
 
-  query += ` ORDER BY created_at ASC LIMIT ? OFFSET ? `;
-  params.push(limit, offset);
+  query += ` ORDER BY created_at ASC`;
 
   const [rows] = await db.execute(query, params);
   return rows;
 };
 
 
-const getpendingalarms = async (centralid, page = 1, limit = 10, turbine_id = null) => {
-  const offset = (page - 1) * limit;
-
+const getpendingalarms = async (centralid, turbine_id = null) => {
   let query = `
     SELECT *
     FROM alarms
@@ -148,13 +145,11 @@ const getpendingalarms = async (centralid, page = 1, limit = 10, turbine_id = nu
     params.push(turbine_id);
   }
 
-  query += ` ORDER BY created_at ASC LIMIT ? OFFSET ? `;
-  params.push(limit, offset);
+  query += ` ORDER BY created_at ASC`;
 
   const [rows] = await db.execute(query, params);
   return rows;
 };
-
 
 
 const getAlarmsByPeriodAndCentralId = async (centralId, startDate, endDate) => {

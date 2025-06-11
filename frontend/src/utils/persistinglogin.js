@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
+import { Box, CircularProgress } from "@mui/material";
 import axios from "axios";
 import useAuth from "../context/useAuth";
 
@@ -12,7 +13,7 @@ const PersistLogin = () => {
     
     const verifyUser = async () => {
       try {
-        console.log("user before persisting login check :",user );
+      
         const res = await axios.get("http://localhost:3004/auth/check", {
           withCredentials: true,
         });
@@ -21,7 +22,7 @@ const PersistLogin = () => {
         setuser(null);
       } finally {
        
-        console.log("user is after the persisting login check :",user );
+        
         setLoading(false);
       }
     };
@@ -33,7 +34,13 @@ const PersistLogin = () => {
     }
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return <Outlet />;
 };

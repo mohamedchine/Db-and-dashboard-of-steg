@@ -162,12 +162,8 @@ const loginCtrl = async (req, res) => {
        return res.status(401).json({ message: "you are not verified yet , click the link that we've mailed you to verify your account" });
 
     }
-     const unitidstring = unittype+'_id' //just to get the name of the unit
+     const unitidstring = unittype+'_id'
 
-     //dynamicly create daily daily report in first login
-    //  if(unittype == 'central'){
-    //     await checkreportexistenceandcreateoneifnoexist(user[unitidstring]);
-    //  }
     
     const token = genjwt({ id: user.id, unittype , unitid : user[unitidstring] }, "7d"); 
     
@@ -178,9 +174,21 @@ const loginCtrl = async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000
       });
       
-      
+    
+    
+      //we gonna check if he's a cheff or not first to send the role with the response if the user is central employee
+    let is_chief = false ; 
+    if(unittype == 'central'){
+        const [checkingchef] = await db.execute("select is_chef from central_employee_emails where employee_email = ?   ",[user.steg_email]);
+        is_chief =checkingchef[0].is_chef==1;    
+    }
+
+
+    
+    
     const {password , ...userr} = user ; 
-    // we also need to send back the unitname to do it in top of the dashboard 
+    // we also need to send back the unitname to do it in top of the dashboard
+    if(unittype == 'central') userr.is_chief = is_chief ;
     userr.unitname = unitname ; 
     userr.unittype = unittype ;
     
@@ -204,9 +212,15 @@ const checkauthctrl = async (req, res) => {
         if (!user) {
             return res.status(401).json({ user: null });
         }
-
-        const { password, ...userr } = user;
+        //if the user is central employee we need to check if he's a chief or not
+        let is_chief = false ; 
+         if(unittype == 'central'){
+        const [checkingchef] = await db.execute("select is_chef from central_employee_emails where employee_email = ?   ",[user.steg_email]);
+        is_chief =checkingchef[0].is_chef==1;    
+         }
        
+         const { password, ...userr } = user;
+          if(unittype == 'central') userr.is_chief = is_chief ;
         userr.unitname = unitname;
         userr.unittype = unittype;
         return res.status(200).json({

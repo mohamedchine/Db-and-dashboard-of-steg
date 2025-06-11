@@ -4,6 +4,7 @@ const { addactivitylog } = require("../../model/activitylogs");
 const { validateAddAlarm } = require("../../utils/dailyreportValidation");
 
 const addalarmCtrl = async (req, res) => {
+  if(req.body.happened_at && req.body.resolved_at && req.body.happened_at>req.body.resolved_at) return res.status(400).json({message: "resolved_at must be greater than happened_at"}) ;
    //validation of the data
    const { error } = validateAddAlarm(req.body);
   
@@ -26,7 +27,7 @@ const addalarmCtrl = async (req, res) => {
      }
     await addactivitylog(activity);
      
-     return res.status(201).json({ message: "Successfully added alarm" , addedalarm :addedalarm });
+     return res.status(201).json({ message: "Successfully added the alarm" , addedalarm :addedalarm });
   
 };
 
@@ -63,18 +64,14 @@ const deletealarmCtrl = async (req, res) => {
 const getunresolvedalarmsCtrl = async (req, res) => {
   try {
     const { centralid } = req.params;
-    const { page, limit, turbine } = req.query;
+    const { turbine } = req.query;
 
-    const pageNum = parseInt(page) || 1;
-    const limitNum = parseInt(limit) || 10;
     const turbineId = turbine ? parseInt(turbine) : null;
 
-    const data = await getunresolvedalarms(centralid, pageNum, limitNum, turbineId);
+    const data = await getunresolvedalarms(centralid, turbineId);
 
     return res.status(200).json({
       message: "Successfully fetched unresolved alarms",
-      page: pageNum,
-      limit: limitNum,
       total: data.length,
       turbine_id: turbineId,
       data
@@ -90,18 +87,14 @@ const getunresolvedalarmsCtrl = async (req, res) => {
 const getresolvedAlarmCtrl = async (req, res) => {
   try {
     const { centralid } = req.params;
-    const { page, limit, turbine } = req.query;
+    const { turbine } = req.query;
 
-    const pageNum = parseInt(page) || 1;
-    const limitNum = parseInt(limit) || 10;
     const turbineId = turbine ? parseInt(turbine) : null;
 
-    const data = await getresolvedalarms(centralid, pageNum, limitNum, turbineId);
+    const data = await getresolvedalarms(centralid, turbineId);
 
     return res.status(200).json({
       message: "Successfully fetched resolved alarms",
-      page: pageNum,
-      limit: limitNum,
       total: data.length,
       turbine_id: turbineId,
       data
@@ -117,18 +110,14 @@ const getresolvedAlarmCtrl = async (req, res) => {
 const getpendingAlarmCtrl = async (req, res) => {
   try {
     const { centralid } = req.params;
-    const { page, limit, turbine } = req.query;
+    const { turbine } = req.query;
 
-    const pageNum = parseInt(page) || 1;
-    const limitNum = parseInt(limit) || 10;
     const turbineId = turbine ? parseInt(turbine) : null;
 
-    const data = await getpendingalarms(centralid, pageNum, limitNum, turbineId);
+    const data = await getpendingalarms(centralid, turbineId);
 
     return res.status(200).json({
       message: "Successfully fetched pending alarms",
-      page: pageNum,
-      limit: limitNum,
       total: data.length,
       turbine_id: turbineId,
       data
@@ -139,6 +128,7 @@ const getpendingAlarmCtrl = async (req, res) => {
     return res.status(500).json({ message: "Failed to fetch pending alarms" });
   }
 };
+
 
 
 

@@ -1,0 +1,11 @@
+/* Reset some default styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+/* Ensure the app container takes full height */
+#root, .App {
+    height: 100%;
+}

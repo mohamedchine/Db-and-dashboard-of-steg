@@ -15,6 +15,7 @@ import Resetpassword from "./pages/welcomepage/components/reset-password-compone
 import RequireAuth from "./protectedornotroutes/requireAuth";
 import PersistingLogin from "./utils/persistinglogin";
 import AuthRedirect from "./utils/authredirect";
+import { TurbinesProvider } from "./context/turbinesContext";
 function App() {
   return (
     <div className="App">
@@ -35,7 +36,11 @@ function App() {
           
           {/* Protected routes */}
           <Route element={<RequireAuth allowedunittype={["central"]} />}> 
-            <Route path="/central/dashboard/*" element={<CentralDashboard />} />
+          <Route path="/central/dashboard/*" element={
+            <TurbinesProvider>
+            <CentralDashboard />
+            </TurbinesProvider>
+             } />
           </Route>
           
           <Route element={<RequireAuth allowedunittype={["groupement"]} />}> 
