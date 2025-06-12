@@ -83,7 +83,7 @@ const addmaintenanceCtrl = async(req, res) => {
     });
     activity.target_table_new_value= maintenance;
     await addactivitylog(activity);
-    return res.status(201).json(maintenance);
+    return res.status(201).json({message : "maintenance added successfuly" , maintenance});
 };
 
 

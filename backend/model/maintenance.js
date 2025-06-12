@@ -7,16 +7,16 @@ const addMaintenance = async ({ body, params }) => {
        (central_id, kks, ot_number, description, type, 
         related_item_type, related_item_id, start, end) 
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        params.centralid,  
+       [
+        params.centralid,
         body.kks,
         body.ot_number,
         body.description,
         body.type,
         body.related_item_type,
         body.related_item_id,
-        body.start,
-        body.end || body.end || null
+        body.start || new Date().toISOString().slice(0, 19).replace('T', ' '),
+        body.end || null
       ]
     );
   

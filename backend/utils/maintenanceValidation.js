@@ -14,7 +14,7 @@ const validateMaintenance = (obj) => {
     type: Joi.string().valid('Curative', 'Systematic').required(),
     related_item_type: Joi.string().valid('Alarm', 'Defective Equipment').required(),
     related_item_id: Joi.number().integer().positive().required(),
-    start: Joi.date().iso().required(),
+    start: Joi.date().iso().optional(),
     end: Joi.date().iso().min(Joi.ref('start')).optional(),
   
   });
@@ -87,6 +87,7 @@ const validatesomemaintancecstuff = async(req, type, related_item_type, related_
         if (!alarmFound) {
             return { valid: false, message: "Invalid alarm ID or alarm not in your central" };
         }
+
 
         // Date validation against alarm
         const maintenanceStart = new Date(req.body.start);

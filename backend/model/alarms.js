@@ -53,7 +53,7 @@ const getunresolvedalarms = async (centralid, turbine_id = null) => {
     params.push(turbine_id);
   }
 
-  query += ` ORDER BY created_at ASC`;
+  query += ` ORDER BY created_at DESC`;
 
   const [rows] = await db.execute(query, params);
   return rows;
@@ -101,7 +101,7 @@ const getAllUnresolvedAlarms = async (central_id, turbine_id = null) => {
     params.push(turbine_id);
   }
 
-  query += ` ORDER BY created_at ASC`;
+  query += ` ORDER BY created_at DESC`;
 
   const [rows] = await db.execute(query, params);
 
@@ -123,7 +123,7 @@ const getresolvedalarms = async (centralid, turbine_id = null) => {
     params.push(turbine_id);
   }
 
-  query += ` ORDER BY created_at ASC`;
+  query += ` ORDER BY created_at DESC`;
 
   const [rows] = await db.execute(query, params);
   return rows;
@@ -145,7 +145,7 @@ const getpendingalarms = async (centralid, turbine_id = null) => {
     params.push(turbine_id);
   }
 
-  query += ` ORDER BY created_at ASC`;
+  query += ` ORDER BY created_at DESC`;
 
   const [rows] = await db.execute(query, params);
   return rows;
