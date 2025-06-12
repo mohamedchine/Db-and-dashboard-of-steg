@@ -1,13 +1,12 @@
 import React from "react";
-import Alamrsmdl from "./alarmsmodel";
+import Equipementsmdl from "./equipementmdl";
 import { Box, CircularProgress } from "@mui/material";
 import useAuth from "../../../../../context/useAuth";
-import { useFetchResolvedAlarms } from "../hooks/fetchalarms";
-// import { useFetchResolvedAlarms } from "../hooks/useFetchResolvedAlarms";
+import { useFetchfixedequipements } from "../hooks/fetchequipements";
 
 const Fixed = ({ turbineId }) => {
     const { user } = useAuth();
-    const { loading, alarms } = useFetchResolvedAlarms(user.central_id, turbineId);
+    const { loading, equipements } = useFetchfixedequipements(user.central_id, turbineId);
 
     if (loading) {
         return (
@@ -18,10 +17,10 @@ const Fixed = ({ turbineId }) => {
     }
 
     return (
-        <Alamrsmdl
-            alarms={alarms}
-            title="Resolved Alarms"
-            subtitle="Alarms that have been addressed"
+        <Equipementsmdl
+           equipements={equipements}
+            title="Fixed Equipements"
+            subtitle="Equipements that have been addressed"
         />
     );
 };

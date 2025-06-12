@@ -2,32 +2,35 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { Routes, Route } from 'react-router-dom';
 
-import AlarmsNavbar from './components/navbar';
-import Pending from './components/pendingalarms';
-import Resolved from './components/resolvedalarms';
-import Unresolved from './components/unresolvedalarms';
-import { useAlarmsNavigation } from './hooks/usenavigatealarms';
-import AlarmForm from './components/addalarmform';
 
-const Alarms = () => {
+import Pending from './components/pendingdefeq';
+
+import { useAlarmsNavigation } from './hooks/usenavigatealarms';
+
+import Unfixed from './components/unfixeddefeq';
+import Fixed from './components/fixeddefeq';
+import DefectivequipementForm from './components/adddefectiveequipementform';
+import DefectiveequipementsNavbar from './components/navbar';
+
+const DefectiveEquipement = () => {
   const { tabValue, selectedTurbine, handleTabChange, handleTurbineChange ,handleselectedaddalarm} = useAlarmsNavigation();
   
   return (
     <Box sx={{ width: '100%' }}>
-      <AlarmsNavbar 
-        selectedTurbine={selectedTurbine}
-        onTurbineChange={handleTurbineChange}
-        tabValue={tabValue}
-        onTabChange={handleTabChange}
-        onAddAlarm={handleselectedaddalarm}
+      <DefectiveequipementsNavbar 
+        selectedTurbine={selectedTurbine} //to keep the turbine the same across other tabs
+        onTurbineChange={handleTurbineChange}//when change it keep it the change when navigating through tabs
+        tabValue={tabValue}  //heighleight 
+        onTabChange={handleTabChange}   //to redirect switch the the new tabvalue and heighleight the new we cant use onclick navigate(route) in MUI because they dont allow us
+        onAddAlarm={handleselectedaddalarm} //unheighleight all and redirect to alarm
       />
 
       <Box sx={{ py: 2 }}>
         <Routes>
-          <Route index element={<Unresolved turbineId={selectedTurbine} />} />
-          <Route path="fixed" element={<Resolved turbineId={selectedTurbine} />} />
-          <Route path="unfixed" element={<Pending turbineId={selectedTurbine} />} />
-          <Route path="pending" element={<AlarmForm  turbineId={selectedTurbine}/>} />
+          <Route index element={<Unfixed turbineId={selectedTurbine} />} />
+          <Route path="fixed" element={<Fixed turbineId={selectedTurbine} />} />
+          <Route path="pending" element={<Pending turbineId={selectedTurbine} />} />
+          <Route path="add" element={<DefectivequipementForm  turbineId={selectedTurbine}/>} />
         </Routes>
       </Box>
     
@@ -35,4 +38,4 @@ const Alarms = () => {
   );
 };
 
-export default Alarms;
+export default DefectiveEquipement;

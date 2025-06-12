@@ -1,10 +1,10 @@
 import { useState, useEffect, useContext } from "react";
 import { TurbinesContext } from "../../../../../context/turbinesContext";
-import api from "../apicalls/fetchalarms";
-import addTurbineName from "../utils/filteralarms";
+import api from "../apicalls/fetchequipements";
+import addTurbineName from "../utils/filterequipements";
 
-export const useFetchUnresolvedAlarms = (centralId, turbineId) => {
-    const [alarms, setAlarms] = useState([]);
+export const useFetchNotfixed = (centralId, turbineId) => {
+    const [equipements, setequipements] = useState([]);
     const [loading, setLoading] = useState(true);
     
     const { turbines } = useContext(TurbinesContext);
@@ -13,12 +13,12 @@ export const useFetchUnresolvedAlarms = (centralId, turbineId) => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const data = await api.fetchUnresolvedAlarms(centralId, turbineId);
+                const data = await api.fetchnotffixedequipements(centralId, turbineId);
                 const enrichedData = addTurbineName(data, turbines);
-                setAlarms(enrichedData);
+                setequipements(enrichedData);
             } catch (err) {
-                console.error("Fetch unresolved alarms error:", err);
-                setAlarms([]);
+                console.error("Fetch not fixed equipements error:", err);
+                setequipements([]);
             } finally {
                 setLoading(false);
             }
@@ -27,7 +27,7 @@ export const useFetchUnresolvedAlarms = (centralId, turbineId) => {
         fetchData();
     }, [centralId, turbineId, turbines]);
 
-    return { loading, alarms };
+    return { loading, equipements };
 };
 
 
@@ -35,8 +35,8 @@ export const useFetchUnresolvedAlarms = (centralId, turbineId) => {
 
 
 
-export const useFetchResolvedAlarms = (centralId, turbineId) => {
-    const [alarms, setAlarms] = useState([]);
+export const useFetchfixedequipements = (centralId, turbineId) => {
+    const [equipements, setequipements] = useState([]);
     const [loading, setLoading] = useState(true);
     const { turbines } = useContext(TurbinesContext);
 
@@ -44,12 +44,12 @@ export const useFetchResolvedAlarms = (centralId, turbineId) => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const data = await api.fetchResolvedAlarms(centralId, turbineId);
+                const data = await api.fetchffixedequipements(centralId, turbineId);
                 const enrichedData = addTurbineName(data, turbines);
-                setAlarms(enrichedData);
+                setequipements(enrichedData);
             } catch (err) {
-                console.error("Fetch resolved alarms error:", err);
-                setAlarms([]);
+                console.error("Fetch fixed equipements error:", err);
+                setequipements([]);
             } finally {
                 setLoading(false);
             }
@@ -58,13 +58,13 @@ export const useFetchResolvedAlarms = (centralId, turbineId) => {
         fetchData();
     }, [centralId, turbineId, turbines]);
 
-    return { loading, alarms };
+    return { loading, equipements };
 };
 
 
 
-export const useFetchPendingAlarms = (centralId, turbineId) => {
-    const [alarms, setAlarms] = useState([]);
+export const useFetchPendingequipements = (centralId, turbineId) => {
+    const [equipements, setequipements] = useState([]);
     const [loading, setLoading] = useState(true);
     const { turbines } = useContext(TurbinesContext);
 
@@ -72,12 +72,12 @@ export const useFetchPendingAlarms = (centralId, turbineId) => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const data = await api.fetchPendingAlarms(centralId, turbineId);
+                const data = await api.fetchPendingequipement(centralId, turbineId);
                 const enrichedData = addTurbineName(data, turbines);
-                setAlarms(enrichedData);
+                setequipements(enrichedData);
             } catch (err) {
-                console.error("Error fetching pending alarms:", err);
-                setAlarms([]);
+                console.error("Error fetching pending equipements:", err);
+                setequipements([]);
             } finally {
                 setLoading(false);
             }
@@ -86,5 +86,5 @@ export const useFetchPendingAlarms = (centralId, turbineId) => {
         fetchData();
     }, [centralId, turbineId, turbines]);
 
-    return { loading, alarms };
+    return { loading, equipements };
 };

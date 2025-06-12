@@ -8,19 +8,25 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  Button, // Import Button
+  Button,
 } from '@mui/material';
 
 import { TurbinesContext } from '../../../../../context/turbinesContext';
 
-const AlarmsNavbar = ({ selectedTurbine, onTurbineChange, tabValue, onTabChange, onAddAlarm }) => {
+const DefectiveequipementsNavbar = ({
+  selectedTurbine,
+  onTurbineChange,
+  tabValue,
+  onTabChange,
+  onAddAlarm,
+}) => {
   const { turbines } = useContext(TurbinesContext);
 
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Typography variant="h5" component="h1" gutterBottom>
-          Alarms
+          Defective Equipements
         </Typography>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -60,6 +66,13 @@ const AlarmsNavbar = ({ selectedTurbine, onTurbineChange, tabValue, onTabChange,
           onChange={onTabChange}
           aria-label="alarm status tabs"
           variant="fullWidth"
+          sx={{
+            '& .MuiTabs-flexContainer': {
+              // Reduce the font size of the tab labels
+              fontSize: '14px', // Adjust as needed
+              textTransform: 'capitalize', // Optional: Capitalize the first letter of each word
+            },
+          }}
         >
           <Tab
             label={
@@ -75,7 +88,7 @@ const AlarmsNavbar = ({ selectedTurbine, onTurbineChange, tabValue, onTabChange,
                     mr: 1,
                   }}
                 />
-                Unresolved Alarms
+                Unfixed Equipements
               </Box>
             }
           />
@@ -93,7 +106,7 @@ const AlarmsNavbar = ({ selectedTurbine, onTurbineChange, tabValue, onTabChange,
                     mr: 1,
                   }}
                 />
-                Resolved Alarms
+                Fixed Equipements
               </Box>
             }
           />
@@ -111,7 +124,7 @@ const AlarmsNavbar = ({ selectedTurbine, onTurbineChange, tabValue, onTabChange,
                     mr: 1,
                   }}
                 />
-                Pending Alarms
+                Pending Equipements
               </Box>
             }
           />
@@ -124,11 +137,11 @@ const AlarmsNavbar = ({ selectedTurbine, onTurbineChange, tabValue, onTabChange,
           onClick={onAddAlarm}
           sx={{ ml: 2, whiteSpace: 'nowrap' }}
         >
-          Add Alarm
+          Add Defective Equipement
         </Button>
       </Box>
     </>
   );
 };
 
-export default AlarmsNavbar;
+export default DefectiveequipementsNavbar;

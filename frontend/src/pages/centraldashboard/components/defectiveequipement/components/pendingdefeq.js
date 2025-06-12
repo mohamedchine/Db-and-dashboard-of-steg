@@ -1,13 +1,13 @@
 import React from "react";
-import Alamrsmdl from "./alarmsmodel";
+import Equipementsmdl from "./equipementmdl";
 import { Box, CircularProgress } from "@mui/material";
 import useAuth from "../../../../../context/useAuth";
-import { useFetchPendingAlarms } from "../hooks/fetchalarms";
+import {  useFetchPendingequipements } from "../hooks/fetchequipements";
 
 
 const Pending = ({ turbineId }) => {
     const { user } = useAuth();
-    const { loading, alarms } = useFetchPendingAlarms(user.central_id, turbineId);
+    const { loading, equipements } = useFetchPendingequipements(user.central_id, turbineId);
 
     if (loading) {
         return (
@@ -18,10 +18,10 @@ const Pending = ({ turbineId }) => {
     }
 
     return (
-        <Alamrsmdl
-            alarms={alarms}
-            title="Pending Alarms"
-            subtitle="Alarms under maintenance"
+        <Equipementsmdl
+            equipements={equipements}
+            title="Pending Equipements"
+            subtitle="Equipements under maintenance"
         />
     );
 };

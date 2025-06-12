@@ -30,7 +30,6 @@ const CentralDashboard = () => {
   return (
     <Box sx={{ display: 'flex', height: '100vh' }}>
       <Sidebbar />
-     
         <Box
           component="main"
           sx={{
@@ -45,7 +44,7 @@ const CentralDashboard = () => {
             <Route path="performance" element={<Performance />} />
             <Route path="alarms/*" element={<Alarms />} />
             <Route path="activity-log" element={<ActivityLog />} />
-            <Route path="defective-equipement" element={<DefectiveEquipement />} />
+            <Route path="defective-equipement/*" element={<DefectiveEquipement />} />
             <Route path="maintenance" element={<Maintenance />} />
             <Route
               path="account-management"

@@ -11,9 +11,9 @@ export const useAlarmsNavigation = () => {
     const lastSegment = path[path.length - 1];
     
     if (lastSegment === 'add') return false;
-    if (lastSegment === 'resolved') return 1;
+    if (lastSegment === 'fixed') return 1;
     if (lastSegment === 'pending') return 2;
-    return 0; // unresolved
+    return 0; // unfixed
   };
 
   const [tabValue, setTabValue] = useState(getActiveTab());
@@ -21,9 +21,9 @@ export const useAlarmsNavigation = () => {
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
-    if (newValue === 0) navigate('/central/dashboard/alarms');
-    else if (newValue === 1) navigate('/central/dashboard/alarms/resolved');
-    else if (newValue === 2) navigate('/central/dashboard/alarms/pending');
+    if (newValue === 0) navigate('/central/dashboard/defective-equipement');
+    else if (newValue === 1) navigate('/central/dashboard/defective-equipement/fixed');
+    else if (newValue === 2) navigate('/central/dashboard/defective-equipement/pending');
   };
 
   const handleTurbineChange = (event) => {
@@ -32,7 +32,7 @@ export const useAlarmsNavigation = () => {
   };
   const handleselectedaddalarm = ()=>{
         setTabValue(false);
-       navigate('/central/dashboard/alarms/add');
+       navigate('/central/dashboard/defective-equipement/add');
   }
 
   return {

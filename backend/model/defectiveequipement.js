@@ -4,24 +4,22 @@ const addDefectiveEquipment = async ({
   turbine_id, 
   kks, 
   description, 
-  comments, 
   reported_at, 
   fixed_at,
   central_id
 }) => {
   const [result] = await db.execute(
     `INSERT INTO defective_equipment 
-     (central_id, turbine_id, kks, description, comments, reported_at, fixed_at,status) 
-     VALUES (?, ?, ?, ?, ?, ?, ?,?)`,
+     (central_id, turbine_id, kks, description, reported_at, fixed_at, status) 
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
     [
       central_id,
       turbine_id,
       kks,
       description,
-      comments,
       reported_at,
-      fixed_at === undefined ? null : fixed_at , 
-      fixed_at === undefined? "Active" : "Fixed" 
+      fixed_at === undefined ? null : fixed_at,
+      fixed_at === undefined ? "Not Fixed" : "Fixed"
     ]
   );
 
@@ -32,8 +30,9 @@ const addDefectiveEquipment = async ({
     [insertedId]
   );
 
-  return rows[0]; // return the inserted defective equipment entry
+  return rows[0]; 
 };
+
 
 const findDefectiveEquipmentById = async (id) => {
   const [rows] = await db.execute(
@@ -62,29 +61,6 @@ const getDefectiveEquipmentByTurbine = async (turbine_id) => {
 };
 
 
-const getunfixeddefectiveequipments = async (centralid, page = 1, limit = 10, turbine_id = null) => {
-  const offset = (page - 1) * limit;
-
-  let query = `
-    SELECT * 
-    FROM defective_equipment
-    WHERE defective_equipment.fixed_at IS NULL
-      AND defective_equipment.central_id = ?
-  `;
-
-  const params = [centralid];
-
-  if (turbine_id) {
-    query += ` AND defective_equipment.turbine_id = ? `;
-    params.push(turbine_id);
-  }
-
-  query += ` ORDER BY defective_equipment.created_at DESC LIMIT ? OFFSET ? `;
-  params.push(limit, offset);
-
-  const [rows] = await db.execute(query, params);
-  return rows;
-};
 
 
 
@@ -114,17 +90,33 @@ const updateDefectiveEquipmentStatus = async (id, status, fixedat) => {
   };
 };
 
+const getunfixeddefectiveequipments = async (centralid, turbine_id = null) => {
+  let query = `
+    SELECT * 
+    FROM defective_equipment
+    WHERE defective_equipment.status = 'Not Fixed'
+      AND defective_equipment.central_id = ?
+  `;
+  const params = [centralid];
 
-const getfixeddefectiveequipments = async (centralid, page = 1, limit = 10, turbine_id = null) => {
-  const offset = (page - 1) * limit;
+  if (turbine_id) {
+    query += ` AND defective_equipment.turbine_id = ? `;
+    params.push(turbine_id);
+  }
 
+  query += ` ORDER BY defective_equipment.created_at DESC`;
+
+  const [rows] = await db.execute(query, params);
+  return rows;
+};
+
+const getfixeddefectiveequipments = async (centralid, turbine_id = null) => {
   let query = `
     SELECT * 
     FROM defective_equipment
     WHERE defective_equipment.fixed_at IS NOT NULL
       AND defective_equipment.central_id = ?
   `;
-
   const params = [centralid];
 
   if (turbine_id) {
@@ -132,24 +124,19 @@ const getfixeddefectiveequipments = async (centralid, page = 1, limit = 10, turb
     params.push(turbine_id);
   }
 
-  query += ` ORDER BY defective_equipment.created_at DESC LIMIT ? OFFSET ? `;
-  params.push(limit, offset);
+  query += ` ORDER BY defective_equipment.created_at DESC`;
 
   const [rows] = await db.execute(query, params);
   return rows;
 };
 
-
-const getpendingdefectiveequipments = async (centralid, page = 1, limit = 10, turbine_id = null) => {
-  const offset = (page - 1) * limit;
-
+const getpendingdefectiveequipments = async (centralid, turbine_id = null) => {
   let query = `
     SELECT * 
     FROM defective_equipment
     WHERE defective_equipment.status = 'Pending'
       AND defective_equipment.central_id = ?
   `;
-
   const params = [centralid];
 
   if (turbine_id) {
@@ -157,8 +144,7 @@ const getpendingdefectiveequipments = async (centralid, page = 1, limit = 10, tu
     params.push(turbine_id);
   }
 
-  query += ` ORDER BY defective_equipment.created_at DESC LIMIT ? OFFSET ? `;
-  params.push(limit, offset);
+  query += ` ORDER BY defective_equipment.created_at DESC`;
 
   const [rows] = await db.execute(query, params);
   return rows;

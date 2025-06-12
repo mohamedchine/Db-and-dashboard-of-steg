@@ -100,23 +100,16 @@ const deletedefectiveequipementCtrl = async (req, res) => {
 
 
 
-
-
 const getunfixeddefectiveequipementsCtrl = async (req, res) => {
   try {
     const { centralid } = req.params;
-    const { page, limit, turbine } = req.query;
-
-    const pageNum = parseInt(page) || 1;
-    const limitNum = parseInt(limit) || 10;
+    const { turbine } = req.query;
     const turbineId = turbine ? parseInt(turbine) : null;
 
-    const data = await getunfixeddefectiveequipments(centralid, pageNum, limitNum, turbineId);
+    const data = await getunfixeddefectiveequipments(centralid, turbineId);
 
     return res.status(200).json({
       message: "Successfully fetched unfixed defective equipment",
-      page: pageNum,
-      limit: limitNum,
       total: data.length,
       turbine_id: turbineId,
       data
@@ -128,25 +121,16 @@ const getunfixeddefectiveequipementsCtrl = async (req, res) => {
   }
 };
 
-
-
-
-
 const getfixeddefectiveequipementsCtrl = async (req, res) => {
   try {
     const { centralid } = req.params;
-    const { page, limit, turbine } = req.query;
-
-    const pageNum = parseInt(page) || 1;
-    const limitNum = parseInt(limit) || 10;
+    const { turbine } = req.query;
     const turbineId = turbine ? parseInt(turbine) : null;
 
-    const data = await getfixeddefectiveequipments(centralid, pageNum, limitNum, turbineId);
+    const data = await getfixeddefectiveequipments(centralid, turbineId);
 
     return res.status(200).json({
       message: "Successfully fetched fixed defective equipment",
-      page: pageNum,
-      limit: limitNum,
       total: data.length,
       turbine_id: turbineId,
       data
@@ -158,23 +142,16 @@ const getfixeddefectiveequipementsCtrl = async (req, res) => {
   }
 };
 
-
-
 const getpendingdefectiveequipementsCtrl = async (req, res) => {
   try {
     const { centralid } = req.params;
-    const { page, limit, turbine } = req.query;
-
-    const pageNum = parseInt(page) || 1;
-    const limitNum = parseInt(limit) || 10;
+    const { turbine } = req.query;
     const turbineId = turbine ? parseInt(turbine) : null;
 
-    const data = await getpendingdefectiveequipments(centralid, pageNum, limitNum, turbineId);
+    const data = await getpendingdefectiveequipments(centralid, turbineId);
 
     return res.status(200).json({
       message: "Successfully fetched pending defective equipment",
-      page: pageNum,
-      limit: limitNum,
       total: data.length,
       turbine_id: turbineId,
       data

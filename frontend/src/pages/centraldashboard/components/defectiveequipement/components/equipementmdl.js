@@ -18,31 +18,35 @@ import {
   StyledTableHead,
   StyledTableCell,
   StyledBodyCell,
-  AlarmCodeLabel,
   StatusLabel,
   DeleteButton,
-} from './AlarmTable.styles';
+} from './AlarmTable.styles'; 
 
 import formatdatetime from '../utils/formatdatetime';
-import useDeleteAlarm from '../hooks/deletealarms';
+import useDeleteEquipement from '../hooks/deleteequipement';
 import { useState } from 'react';
 import AddMaintenanceTaskForm from '../../maintenance/components/maintenanceForm';
 
 const { formatDate, formatTime } = formatdatetime;
 
-const Alamrsmdl = ({ alarms: initialAlarms = [], title = "Alarms", subtitle = "Alarm list" }) => {
-  const { alarms, deleteAlarm ,setAlarms} = useDeleteAlarm(initialAlarms);
+
+
+const Equipementsmdl = ({ equipements: initialEquipements = [],  title = "Equipements", subtitle = "Equipement list",}) => {
+
+   
+  const { equipements, deleteEquipement, setEquipements } = useDeleteEquipement(initialEquipements);
   const [showAddMaintenance, setShowAddMaintenance] = useState(false);
-  const [selectedAlarm, setSelectedAlarm] = useState(null);
-  const handleOpenMaintenance = (alarm) => {
-    setSelectedAlarm(alarm);
-  
+  const [selectedEquipement, setSelectedEquipement] = useState(null);
+
+
+  const handleOpenMaintenance = (equipement) => {
+    setSelectedEquipement(equipement);
     setShowAddMaintenance(true);
   };
 
   const handleCloseMaintenance = () => {
     setShowAddMaintenance(false);
-    setSelectedAlarm(null);
+    setSelectedEquipement(null);
   };
 
   return (
@@ -57,57 +61,57 @@ const Alamrsmdl = ({ alarms: initialAlarms = [], title = "Alarms", subtitle = "A
         </Typography>
       </Box>
 
-      {/* Alarm Table */}
+      {/* Equipement Table */}
       <StyledTableContainer component={Paper}>
         <Table>
           <StyledTableHead>
             <TableRow>
               <StyledTableCell>Turbine</StyledTableCell>
-              <StyledTableCell>Alarm Code</StyledTableCell>
+              <StyledTableCell>KKS</StyledTableCell>
               <StyledTableCell>Description</StyledTableCell>
               <StyledTableCell>Status</StyledTableCell>
               <StyledTableCell>Created At</StyledTableCell>
-              <StyledTableCell>Happened At</StyledTableCell>
-              <StyledTableCell>Resolved At</StyledTableCell>
+              <StyledTableCell>Reported At</StyledTableCell>
+              <StyledTableCell>Fixed At</StyledTableCell>
               <StyledTableCell>Actions</StyledTableCell>
             </TableRow>
           </StyledTableHead>
           <TableBody>
-            {alarms.length > 0 ? (
-              alarms.map((alarm) => (
-                <TableRow key={alarm.id} sx={{ '&:hover': { backgroundColor: '#fafafa' } }}>
-                  <StyledBodyCell>{alarm.turbine_name}</StyledBodyCell>
-                  <StyledBodyCell><AlarmCodeLabel>{alarm.alarm_code}</AlarmCodeLabel></StyledBodyCell>
-                  <StyledBodyCell>{alarm.description}</StyledBodyCell>
+            {equipements.length > 0 ? (
+              equipements.map((eq) => (
+                <TableRow key={eq.id} sx={{ '&:hover': { backgroundColor: '#fafafa' } }}>
+                  <StyledBodyCell>{eq.turbine_name}</StyledBodyCell>
+                  <StyledBodyCell>{eq.kks}</StyledBodyCell>
+                  <StyledBodyCell>{eq.description}</StyledBodyCell>
                   <StyledBodyCell>
                     <StatusLabel
                       sx={{
                         backgroundColor:
-                          alarm.status === 'Active'
+                          eq.status === 'Not Fixed'
                             ? '#ffebee'
-                            : alarm.status === 'Pending'
-                              ? '#fff3e0'
-                              : '#e8f5e9',
+                            : eq.status === 'Pending'
+                            ? '#fff3e0'
+                            : '#e8f5e9',
                         color:
-                          alarm.status === 'Active'
+                          eq.status === 'Not Fixed'
                             ? '#c62828'
-                            : alarm.status === 'Pending'
-                              ? '#ef6c00'
-                              : '#2e7d32',
+                            : eq.status === 'Pending'
+                            ? '#ef6c00'
+                            : '#2e7d32',
                       }}
                     >
-                      {alarm.status}
+                      {eq.status}
                     </StatusLabel>
                   </StyledBodyCell>
-                  <StyledBodyCell>{formatDate(alarm.created_at)} {formatTime(alarm.created_at)}</StyledBodyCell>
-                  <StyledBodyCell>{formatDate(alarm.happened_at)} {formatTime(alarm.happened_at)}</StyledBodyCell>
+                  <StyledBodyCell>{formatDate(eq.created_at)} {formatTime(eq.created_at)}</StyledBodyCell>
+                  <StyledBodyCell>{formatDate(eq.reported_at)} {formatTime(eq.reported_at)}</StyledBodyCell>
                   <StyledBodyCell>
-                    {alarm.resolved_at ? `${formatDate(alarm.resolved_at)} ${formatTime(alarm.resolved_at)}` : '-'}
+                    {eq.fixed_at ? `${formatDate(eq.fixed_at)} ${formatTime(eq.fixed_at)}` : '-'}
                   </StyledBodyCell>
                   <StyledBodyCell>
-                    {title === "Unresolved Alarms" && (
+                    {title === "Unfixed Equipements" && (
                       <Button
-                        onClick={() => handleOpenMaintenance(alarm)}
+                        onClick={() => handleOpenMaintenance(eq)}
                         size="small"
                         sx={{
                           textTransform: 'none',
@@ -121,7 +125,7 @@ const Alamrsmdl = ({ alarms: initialAlarms = [], title = "Alarms", subtitle = "A
                         Add Maintenance
                       </Button>
                     )}
-                    <DeleteButton onClick={() => deleteAlarm(alarm.id)} size="small">
+                    <DeleteButton onClick={() => deleteEquipement(eq.id)} size="small">
                       Delete
                     </DeleteButton>
                   </StyledBodyCell>
@@ -130,7 +134,7 @@ const Alamrsmdl = ({ alarms: initialAlarms = [], title = "Alarms", subtitle = "A
             ) : (
               <TableRow>
                 <StyledBodyCell colSpan={8} align="center">
-                  <Typography color="textSecondary">No alarms found</Typography>
+                  <Typography color="textSecondary">No equipment found</Typography>
                 </StyledBodyCell>
               </TableRow>
             )}
@@ -139,7 +143,6 @@ const Alamrsmdl = ({ alarms: initialAlarms = [], title = "Alarms", subtitle = "A
       </StyledTableContainer>
 
       {/* Maintenance Modal */}
-      {/* dialog knows when we click outside it  the onclose work when we click outside*/}
       <Dialog open={showAddMaintenance} onClose={handleCloseMaintenance} maxWidth="sm" fullWidth>
         <DialogTitle>
           <IconButton
@@ -150,19 +153,18 @@ const Alamrsmdl = ({ alarms: initialAlarms = [], title = "Alarms", subtitle = "A
             <CloseIcon />
           </IconButton>
         </DialogTitle>
-        <DialogContent >
-                  <AddMaintenanceTaskForm
+        <DialogContent>
+          <AddMaintenanceTaskForm
             type="Systematic"
-            related_item_type="Alarm"
-            related_item_id={selectedAlarm?.id}
+            related_item_type="DefectiveEquipement"
+            related_item_id={selectedEquipement?.id}
             handleCloseMaintenance={handleCloseMaintenance}
-            setAlarms={setAlarms} 
+            setAlarms={setEquipements} // You can rename this prop in the form to be more generic
           />
-
         </DialogContent>
       </Dialog>
     </Box>
   );
 };
 
-export default Alamrsmdl;
+export default Equipementsmdl;
