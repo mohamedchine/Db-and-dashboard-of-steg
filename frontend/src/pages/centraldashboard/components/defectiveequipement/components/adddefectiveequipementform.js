@@ -6,53 +6,48 @@ import {
   Typography,
   Paper,
   CircularProgress,
-
 } from '@mui/material';
 
 import SaveIcon from '@mui/icons-material/Save';
-import "./addalarmform.css"
+import "./addalarmform.css";
 import { toast } from 'react-toastify';
 import axs from '../../../../../api/customizedaxios';
-
 import useAuth from '../../../../../context/useAuth';
-import  toISOString from '../utils/formatdate';
+import toISOString from '../utils/formatdate';
 
+const DefectiveEquipmentForm = ({ turbineId }) => {
+  const { user } = useAuth();
 
-
-const DefectivequipementForm = ({turbineId}) => {
-  const {user} = useAuth();
-  const [happenedAt, setHappenedAt] = useState('');
-  const [resolvedAt, setResolvedAt] = useState('');
-  const [alarmCode, setAlarmCode] = useState('');
+  const [reportedAt, setReportedAt] = useState('');
+  const [fixedAt, setFixedAt] = useState('');
+  const [kks, setKks] = useState('');
   const [description, setDescription] = useState('');
-  const [loading,setloading]=useState(false);
- 
-  const handleSubmit = async(e) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-   
-    if(turbineId =='all'){
-      toast.error("please select a turbine from the top");
-      return ;
-    } 
-  
-    const alarmData = {
-      happened_at :toISOString(happenedAt) ,
-      resolved_at : toISOString(resolvedAt),
-      turbine_id:turbineId,
-      alarm_code: alarmCode,
+
+    if (turbineId === 'all') {
+      toast.error("Please select a turbine from the top.");
+      return;
+    }
+
+    const equipmentData = {
+      reported_at: toISOString(reportedAt),
+      fixed_at: toISOString(fixedAt),
+      turbine_id: turbineId,
+      kks,
       description,
     };
-  
+
     try {
-      setloading(true);
-      const response = await axs.post(`/alarms/add/${user.central_id}`, alarmData);
-      toast.success(response.data.message );
-    
-    } catch (e) {
-      const errorMessage = e.response.data.message || "Failed to add alarm";
-      toast.error(errorMessage);
+      setLoading(true);
+      const response = await axs.post(`/defectiveequipements/add/${user.central_id}`, equipmentData);
+      toast.success(response.data.message);
+    } catch (error) {
+     toast.error(error.response.data.message)
     } finally {
-      setloading(false);
+      setLoading(false);
     }
     
     
@@ -61,7 +56,7 @@ const DefectivequipementForm = ({turbineId}) => {
   return (
     <Paper sx={{ p: 3, borderRadius: 2, maxWidth: 600, margin: 'auto' }} className='addalarmform'>
       <Typography variant="h6" gutterBottom fontWeight="bold">
-        Add  Alarm
+        Add Defective Equipment
       </Typography>
 
       <Box
@@ -71,31 +66,26 @@ const DefectivequipementForm = ({turbineId}) => {
         onSubmit={handleSubmit}
         sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
       >
-        {/* Happened At */}
         <TextField
-          label="Happened At"
+          label="Reported At"
           type="datetime-local"
           fullWidth
           InputLabelProps={{ shrink: true }}
-          value={happenedAt}
-          onChange={(e) => setHappenedAt(e.target.value)}
+          value={reportedAt}
+          onChange={(e) => setReportedAt(e.target.value)}
         />
 
-       
-
-        {/* Alarm Code */}
         <TextField
-          label="Alarm Code"
+          label="KKS"
           placeholder="e.g. L30VS_A_ALM"
           fullWidth
-          value={alarmCode}
-          onChange={(e) => setAlarmCode(e.target.value)}
+          value={kks}
+          onChange={(e) => setKks(e.target.value)}
         />
 
-        {/* Description */}
         <TextField
           label="Description"
-          placeholder="Enter alarm description"
+          placeholder="Describe the issue"
           multiline
           rows={3}
           fullWidth
@@ -103,20 +93,18 @@ const DefectivequipementForm = ({turbineId}) => {
           onChange={(e) => setDescription(e.target.value)}
         />
 
-        {/* Resolved At */}
         <TextField
-          label="Resolved At"
+          label="Fixed At"
           type="datetime-local"
           fullWidth
           InputLabelProps={{ shrink: true }}
-          value={resolvedAt}
-          onChange={(e) => setResolvedAt(e.target.value)}
+          value={fixedAt}
+          onChange={(e) => setFixedAt(e.target.value)}
         />
 
-        {/* Save Button */}
         <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-          <Button variant="contained" startIcon={<SaveIcon />  } disabled={loading}  type="submit">
-            {loading ?   <CircularProgress  size={14}  sx={{ color: 'inherit' }}  /> : "Save" }
+          <Button variant="contained" startIcon={<SaveIcon />} disabled={loading} type="submit">
+            {loading ? <CircularProgress size={14} sx={{ color: 'inherit' }} /> : "Save"}
           </Button>
         </Box>
       </Box>
@@ -124,4 +112,4 @@ const DefectivequipementForm = ({turbineId}) => {
   );
 };
 
-export default DefectivequipementForm;
+export default DefectiveEquipmentForm;

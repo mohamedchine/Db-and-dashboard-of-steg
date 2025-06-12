@@ -5,8 +5,8 @@ const validateDefectiveEquipment = (data) => {
     turbine_id: joi.number().required(),
     kks: joi.string().required(),
     description: joi.string().required(),
-    reported_at: joi.date().required(),
-    fixed_at: joi.date().optional()
+    reported_at: joi.date().optional().allow(null),
+    fixed_at: joi.date().optional().allow(null)
       .min(joi.ref('reported_at'))
       .messages({
         'date.min': 'Fixed date must be equal to or after reported date'

@@ -155,11 +155,11 @@ const Equipementsmdl = ({ equipements: initialEquipements = [],  title = "Equipe
         </DialogTitle>
         <DialogContent>
           <AddMaintenanceTaskForm
-            type="Systematic"
-            related_item_type="DefectiveEquipement"
+            type="Curative"
+            related_item_type="Defective Equipment"
             related_item_id={selectedEquipement?.id}
             handleCloseMaintenance={handleCloseMaintenance}
-            setAlarms={setEquipements} // You can rename this prop in the form to be more generic
+            setAlarms={setEquipements} 
           />
         </DialogContent>
       </Dialog>

@@ -13,9 +13,9 @@ const { findMaintenanceByDefectiveEquipmentId, deleteMaintenance } = require('..
 const { addactivitylog } = require('../../model/activitylogs');
 
 const adddefectiveequipementCtrl = async(req,res)=>{
-     
+  if(req.body.reported_at && req.body.fixed_at && req.body.reported_at>req.body.fixed_at) return res.status(400).json({message: "reported must be greater than happened_at"}) ;
     const {error} = validateDefectiveEquipment(req.body);
-    if(error) return res.status(400).json(error.details[0].message);
+    if(error) return res.status(400).json({message : error.details[0].message});
 
     try{
     const addedeq = await addDefectiveEquipment({
