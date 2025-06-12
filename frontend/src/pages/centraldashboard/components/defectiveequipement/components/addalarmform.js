@@ -19,7 +19,7 @@ import  toISOString from '../utils/formatdate';
 
 
 
-const AlarmForm = ({turbineId}) => {
+const DefectivequipementForm = ({turbineId}) => {
   const {user} = useAuth();
   const [happenedAt, setHappenedAt] = useState('');
   const [resolvedAt, setResolvedAt] = useState('');
@@ -124,4 +124,4 @@ const AlarmForm = ({turbineId}) => {
   );
 };
 
-export default AlarmForm;
+export default DefectivequipementForm;
