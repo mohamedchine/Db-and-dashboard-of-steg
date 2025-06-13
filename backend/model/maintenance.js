@@ -64,56 +64,106 @@ const deleteMaintenance = async (id) => {
 };
 
 
-const getUndoneMaintenance = async (centralId, page = 1, limit = 10, turbine_id = null) => {
-  const offset = (page - 1) * limit;
-
+const getUndoneMaintenance = async (centralId, turbine_id = null) => {
   let query = `
     SELECT * 
-    FROM maintenance
-    WHERE central_id = ?
+    FROM maintenance 
+    WHERE central_id = ? 
       AND end IS NULL
   `;
 
   const params = [centralId];
-
-  if (turbine_id) {
-    query += ` AND turbine_id = ? `;
-    params.push(turbine_id);
-  }
-
-  query += ` ORDER BY start ASC LIMIT ? OFFSET ?`;
-  params.push(limit, offset);
+  query += ` ORDER BY created_at DESC`;
 
   const [rows] = await db.execute(query, params);
-  return rows;
+  
+  // Fetch related items for each maintenance record
+  const maintenanceWithRelatedItems = [];
+  
+  for (const maintenance of rows) {
+    let relatedItem = null;
+    
+    if (maintenance.related_item_type === 'Alarm' && maintenance.related_item_id) {
+      const [alarmRows] = await db.execute(
+        'SELECT * FROM alarms WHERE id = ?',
+        [maintenance.related_item_id]
+      );
+      relatedItem = alarmRows[0] || null;
+    } else if (maintenance.related_item_type === 'Defective Equipment' && maintenance.related_item_id) {
+      const [equipmentRows] = await db.execute(
+        'SELECT * FROM defective_equipment WHERE id = ?',
+        [maintenance.related_item_id]
+      );
+      relatedItem = equipmentRows[0] || null;
+    }
+    
+    maintenanceWithRelatedItems.push({
+      ...maintenance,
+      related_item: relatedItem
+    });
+  }
+
+  // Filter by turbine_id if provided
+  if (turbine_id) {
+    return maintenanceWithRelatedItems.filter(maintenance => 
+      maintenance.related_item && maintenance.related_item.turbine_id === turbine_id
+    );
+  }
+
+  return maintenanceWithRelatedItems;
 };
 
-
-
-const getDoneMaintenance = async (centralId, page = 1, limit = 10, turbine_id = null) => {
-  const offset = (page - 1) * limit;
-
+const getDoneMaintenance = async (centralId, turbine_id = null) => {
   let query = `
     SELECT * 
     FROM maintenance 
-   
-    WHERE central_id = ?
+    WHERE central_id = ? 
       AND end IS NOT NULL
   `;
 
   const params = [centralId];
-
-  if (turbine_id) {
-    query += ` AND turbine_id = ? `;
-    params.push(turbine_id);
-  }
-
-  query += ` ORDER BY end DESC LIMIT ? OFFSET ?`;
-  params.push(limit, offset);
+  query += ` ORDER BY created_at DESC`;
 
   const [rows] = await db.execute(query, params);
-  return rows;
+  
+  // Fetch related items for each maintenance record
+  const maintenanceWithRelatedItems = [];
+  
+  for (const maintenance of rows) {
+    let relatedItem = null;
+    
+    if (maintenance.related_item_type === 'Alarm' && maintenance.related_item_id) {
+      const [alarmRows] = await db.execute(
+        'SELECT * FROM alarms WHERE id = ?',
+        [maintenance.related_item_id]
+      );
+      relatedItem = alarmRows[0] || null;
+    } else if (maintenance.related_item_type === 'Defective Equipment' && maintenance.related_item_id) {
+      const [equipmentRows] = await db.execute(
+        'SELECT * FROM defective_equipment WHERE id = ?',
+        [maintenance.related_item_id]
+      );
+      relatedItem = equipmentRows[0] || null;
+    }
+    
+    maintenanceWithRelatedItems.push({
+      ...maintenance,
+      related_item: relatedItem
+    });
+  }
+
+  // Filter by turbine_id if provided
+  if (turbine_id) {
+    return maintenanceWithRelatedItems.filter(maintenance => 
+      maintenance.related_item && maintenance.related_item.turbine_id === turbine_id
+    );
+  }
+
+  return maintenanceWithRelatedItems;
 };
+
+
+
 
 const updateMaintenanceEndDate = async (id, endDate) => {
   await db.execute(

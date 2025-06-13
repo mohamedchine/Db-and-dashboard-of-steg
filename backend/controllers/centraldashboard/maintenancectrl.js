@@ -145,29 +145,36 @@ const deletemaintenanceCtrl = async(req,res)=>{
 const getundonemaintenancesCtrl = async (req, res) => {
     try {
       const { centralid } = req.params;
-      const { page, limit, turbine } = req.query;
+      const turbineId = req.query.turbine ? parseInt(req.query.turbine) : null;
   
-      const pageNum = parseInt(page) || 1;
-      const limitNum = parseInt(limit) || 10;
-      const turbineId = turbine ? parseInt(turbine) : null;
-  
-      const data = await getUndoneMaintenance(centralid, pageNum, limitNum, turbineId);
+      const data = await getUndoneMaintenance(centralid, turbineId);
   
       return res.status(200).json({
         message: "Successfully fetched undone maintenance tasks",
-        page: pageNum,
-        limit: limitNum,
-        turbine_id: turbineId,
-        total: data.length,
         data
       });
-  
     } catch (error) {
       console.error("Error fetching undone maintenance:", error);
       return res.status(500).json({ message: "Failed to fetch undone maintenance tasks" });
     }
   };
-
+  
+  const getdoneMaintenanceCtrl = async (req, res) => {
+    try {
+      const { centralid } = req.params;
+      const turbineId = req.query.turbine ? parseInt(req.query.turbine) : null;
+  
+      const data = await getDoneMaintenance(centralid, turbineId);
+  
+      return res.status(200).json({
+        message: "Successfully fetched done maintenance tasks",
+        data
+      });
+    } catch (error) {
+      console.error("Error fetching done maintenance:", error);
+      return res.status(500).json({ message: "Failed to fetch done maintenance tasks" });
+    }
+  };
 
 const setmaintenanceenddateCtrl = async (req, res) => {
     try {
@@ -258,32 +265,8 @@ const setmaintenanceenddateCtrl = async (req, res) => {
 
 
 
-const getdoneMaintenanceCtrl = async (req, res) => {
-    try {
-      const { centralid } = req.params;
-      const { page, limit, turbine } = req.query;
-  
-      const pageNum = parseInt(page) || 1;
-      const limitNum = parseInt(limit) || 10;
-      const turbineId = turbine ? parseInt(turbine) : null;
-  
-      const data = await getDoneMaintenance(centralid, pageNum, limitNum, turbineId);
-  
-      return res.status(200).json({
-        message: "Successfully fetched done maintenance tasks",
-        page: pageNum,
-        limit: limitNum,
-        turbine_id: turbineId,
-        total: data.length,
-        data
-      });
-  
-    } catch (error) {
-      console.error("Error fetching done maintenance:", error);
-      return res.status(500).json({ message: "Failed to fetch done maintenance tasks" });
-    }
-  };
 
+  
 
 
 
