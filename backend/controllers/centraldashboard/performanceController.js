@@ -183,9 +183,9 @@ const addPerformanceCtrl = async (req, res) => {
 const getPerformanceCtrl = async (req, res) => {
     const centralid = req.params.centralid;
     const date = req.query.date || new Date().toISOString().split('T')[0]; 
-  
+    const turbineid = req.params.turbineid;
     try {
-      const performances = await getPerformancesByCentralAndDate(centralid, date);
+      const performances = await getPerformancesByCentralAndDate(centralid, date , turbineid);
       return res.status(200).json({ date, performances });
     } catch (err) {
       console.error(err);

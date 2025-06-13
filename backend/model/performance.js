@@ -247,13 +247,13 @@ const addperformance = async (
     throw err;
   }
 };
-const getPerformancesByCentralAndDate = async (centralid, date) => {
+const getPerformancesByCentralAndDate = async (centralid, date,turbineid) => {
     try {
       const [rows] = await db.execute(
         `SELECT * FROM performance 
          WHERE central_id = ? 
-         AND DATE(performance_date) = DATE(?)`,
-        [centralid, date]
+         AND DATE(performance_date) = DATE(?) And  turbine_id = ?`,
+        [centralid, date , turbineid]
       );
   
       return rows;

@@ -7,7 +7,7 @@ const { verify_centralemployee_and_his_central } = require('../../middleware/ver
 
 performanceRouter.route('/:centralid/:turbineid' ).post( validatecentralid ,validateturbineid, verify_centralemployee_and_his_central ,addPerformanceCtrl);
 
-performanceRouter.route('/:centralid').get(validatecentralid,verify_centralemployee_and_his_central,getPerformanceCtrl);
+performanceRouter.route('/:centralid/:turbineid').get(validatecentralid,verify_centralemployee_and_his_central,getPerformanceCtrl);
 
 
 
