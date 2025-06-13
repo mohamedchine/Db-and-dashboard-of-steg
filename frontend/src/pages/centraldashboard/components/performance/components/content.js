@@ -14,6 +14,7 @@ import {
 import integerdata from '../utils/intergerthem';
 import useAuth from '../../../../../context/useAuth';
 import useAddPerformance from '../hooks/addperformance';
+import useGetPerformance from '../hooks/getperformance';
 const PerformanceForm = ({selectedDate,selectedTurbine}) => {
     const {user} =useAuth();
     const [formData, setFormData] = useState({
@@ -100,13 +101,21 @@ const PerformanceForm = ({selectedDate,selectedTurbine}) => {
     }));
   };
   const {addperformance} =useAddPerformance() ; 
+  const {getperformance,loading} =useGetPerformance();
+  
+  const processedData =  integerdata(formData);
+  processedData.performance_date = selectedDate.toISOString() ;
+
+
+
   const handleSubmit = async(e) => {
-    e.preventDefault();
-    const processedData =  integerdata(formData);
+    e.preventDefault();    
     // processedData.central_id = user.central_id ; 
     // processedData.turbine_id = selectedTurbine ; those two for the post 
-    processedData.performance_date = selectedDate.toISOString() ;
-    await addperformance(processedData , user.central_id,selectedTurbine)
+   
+    await addperformance(processedData , user.central_id,selectedTurbine);
+    // const gettedperformance = await getperformance(user.central_id,selectedDate.toISOString(),selectedTurbine);
+    // console.log(gettedperformance);
   };
   return (
     <Container maxWidth="md" sx={{ mt: 5 }}>

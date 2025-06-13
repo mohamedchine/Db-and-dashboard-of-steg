@@ -1,16 +1,22 @@
+import { useState } from 'react';
 import axios from '../../../../../api/customizedaxios'; 
 import { toast } from 'react-toastify';
 
 const useGetPerformance =  () => {
-    const getperformance = async( centralid , date)=>{
+    const [loading,setloading] = useState(false);
+    const getperformance = async( centralid , date,selectedTurbine)=>{
     try {
-        const response = await axios.get(`performance/${centralid}/` , {date});
+        setloading(true);
+        const response = await axios.get(`performance/${centralid}/${selectedTurbine}` , {date});
         return response.data.performances ; 
     } catch (error) {
         const errorMessage = error.response.data.message;
         toast.error(errorMessage)
+    }
+    finally{
+        setloading(false)
     }}
-    return {getperformance};
+    return {getperformance ,loading};
 };
 
 export default useGetPerformance;
