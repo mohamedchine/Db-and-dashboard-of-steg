@@ -1,22 +1,27 @@
-import { useState } from 'react';
-import axios from '../../../../../api/customizedaxios'; 
+import { useState, useCallback } from 'react';
+import axs from '../../../../../api/customizedaxios'; 
 import { toast } from 'react-toastify';
 
-const useGetPerformance =  () => {
-    const [loading,setloading] = useState(false);
-    const getperformance = async( centralid , date,selectedTurbine)=>{
-    try {
-        setloading(true);
-        const response = await axios.get(`performance/${centralid}/${selectedTurbine}` , {date});
-        return response.data.performances ; 
-    } catch (error) {
-        const errorMessage = error.response.data.message;
-        toast.error(errorMessage)
-    }
-    finally{
-        setloading(false)
-    }}
-    return {getperformance ,loading};
+const useGetPerformance = () => {
+    const [loading, setLoading] = useState(false);
+    
+    const getperformance = useCallback(async (centralid, date, selectedTurbine) => {
+        const formattedDate = date.toISOString().split('T')[0];
+       
+        try {
+            setLoading(true);
+            const response = await axs.post(`performance/get/${centralid}/${selectedTurbine}`, {date: formattedDate});
+            return response.data.performances; 
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || 'Error fetching performance data';
+            toast.error(errorMessage);
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+    
+    return { getperformance, loading };
 };
 
 export default useGetPerformance;

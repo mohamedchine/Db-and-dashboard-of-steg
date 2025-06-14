@@ -256,7 +256,7 @@ const getPerformancesByCentralAndDate = async (centralid, date,turbineid) => {
         [centralid, date , turbineid]
       );
   
-      return rows;
+      return rows.length > 0 ? rows : null;
     } catch (err) {
       console.error(err);
       throw err;
