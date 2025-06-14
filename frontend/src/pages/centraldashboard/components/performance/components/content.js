@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   TextField,
@@ -15,7 +15,6 @@ import {
 } from '@mui/material';
 
 import useGetPerformance from '../hooks/getperformance';
-
 import useAutoCalculations from '../hooks/autocalculatefields';
 import usePerformanceSubmit from '../hooks/handlesubmit';
 import usePerformanceData from '../hooks/handletabchangegetperformance';

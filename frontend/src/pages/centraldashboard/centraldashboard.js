@@ -43,7 +43,7 @@ const CentralDashboard = () => {
             <Route path="/" element={<Alarms />} />
             <Route path="performance/*" element={<Performance />} />
             <Route path="alarms/*" element={<Alarms />} />
-            <Route path="activity-log" element={<ActivityLog />} />
+            <Route path="activity-log/*" element={<ActivityLog />} />
             <Route path="defective-equipement/*" element={<DefectiveEquipement />} />
             <Route path="maintenance/*" element={<Maintenance />} />
             <Route
