@@ -13,16 +13,14 @@ import {
   Backdrop,
   CircularProgress,
 } from '@mui/material';
-import integerdata from '../utils/intergerthem';
-import useAuth from '../../../../../context/useAuth';
+
 import useGetPerformance from '../hooks/getperformance';
-import useAddPerformance from '../hooks/addperformance';
-import { toast } from 'react-toastify';
+
 import useAutoCalculations from '../hooks/autocalculatefields';
 import usePerformanceSubmit from '../hooks/handlesubmit';
 import usePerformanceData from '../hooks/handletabchangegetperformance';
 const PerformanceForm = ({selectedDate, selectedTurbine}) => {
-    const {user} = useAuth();
+    
     const { getperformance, loading: fetchLoading } = useGetPerformance();
     
     const [formData, setFormData] = useState({
@@ -62,8 +60,8 @@ const PerformanceForm = ({selectedDate, selectedTurbine}) => {
     useAutoCalculations(formData, setFormData);
    //save or update
     const { handleSubmit, loading } = usePerformanceSubmit(formData, selectedDate, selectedTurbine);
-
-    usePerformanceData(selectedDate, selectedTurbine, user, getperformance, setFormData); 
+    //fetches data when selectioin changes
+    usePerformanceData(selectedDate, selectedTurbine,  getperformance, setFormData); 
     
 
     const handleInputChange = (e) => {

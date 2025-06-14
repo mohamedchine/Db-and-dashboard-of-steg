@@ -1,12 +1,14 @@
 // hooks/usePerformanceData.js
 import { useEffect } from 'react';
+import useAuth from '../../../../../context/useAuth';
 
-const usePerformanceData = (selectedDate, selectedTurbine, user, getperformance, setFormData) => {
+const usePerformanceData = (selectedDate, selectedTurbine,  getperformance, setFormData) => {
+    const {user} = useAuth();
     useEffect(() => {
-        console.log('Effect triggered:', { selectedDate, selectedTurbine, centralId: user?.central_id });
+        console.log('Effect triggered:', { selectedDate, selectedTurbine, centralId: user.central_id });
 
         const fetchPerformanceData = async () => {
-            if (selectedDate && selectedTurbine && user?.central_id) {
+          
                 console.log('Fetching data...');
                 try {
                     const performanceData = await getperformance(user.central_id, selectedDate, selectedTurbine);
@@ -86,7 +88,6 @@ const usePerformanceData = (selectedDate, selectedTurbine, user, getperformance,
                 } catch (error) {
                     console.error('Error fetching performance data:', error);
                 }
-            }
         };
 
         fetchPerformanceData();
