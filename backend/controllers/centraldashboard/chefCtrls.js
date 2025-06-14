@@ -4,7 +4,7 @@ const getAllcentralUsersCtrl = async(req,res)=>{
     const users = await getalluserswithcentralid(req.params.centralid)
     //dont retunr the cheff 
     const filteredUsers = users.filter(user => user.id !== req.user.id);
-    res.status(200).json(filteredUsers);
+    res.status(200).json({accounts : filteredUsers});
 }
 
 

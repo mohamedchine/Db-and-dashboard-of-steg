@@ -1,6 +1,8 @@
 "use client"
-
-import React, { useState, useEffect } from "react"
+import transformActivities from './formatdatautils';
+import axs from '../../../../api/customizedaxios'
+import {TurbinesContext} from '../../../../context/turbinesContext';
+import React, { useState, useEffect, useContext } from "react"
 import {
   Table,
   TableBody,
@@ -20,8 +22,8 @@ import {
   Box,
   Pagination,
   CircularProgress,
-  Alert,
-  Tooltip,
+ 
+  Tooltip,Divider
 } from "@mui/material"
 import {
   Visibility as VisibilityIcon,
@@ -29,7 +31,7 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
 } from "@mui/icons-material"
-
+import useAuth from '../../../../context/useAuth'
 const ValueDialog = ({ open, onClose, title, oldValue, newValue }) => {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
@@ -64,11 +66,13 @@ const ValueDialog = ({ open, onClose, title, oldValue, newValue }) => {
     </Dialog>
   )
 }
-
 const ActivityLog = () => {
+  const { turbines } = useContext(TurbinesContext);
+  
+  const {user} = useAuth();
   const [activities, setActivities] = useState([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -78,30 +82,20 @@ const ActivityLog = () => {
     newValue: null,
   })
 
-  // Replace with your actual central ID
-  const centralId = "5"
+
+  const centralId = user.central_id;
 
   const fetchActivities = async (pageNum) => {
     try {
       setLoading(true)
-      const response = await fetch(`/api/activitylogs/${centralId}?page=${pageNum}`)
+      const response = await axs.get(`/activitylogs/${centralId}?page=${pageNum}`);
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch activities")
+      setActivities(transformActivities(response.data.data,turbines));
+      setTotalPages(response.data.total);
+      } catch(e){
+        console.log(e);
       }
-
-      const data = await response.json()
-
-      if (data.success) {
-        setActivities(data.data)
-        // Assuming 10 items per page, calculate total pages
-        setTotalPages(Math.ceil(data.data.length / 10) || 1)
-      } else {
-        throw new Error(data.message || "Failed to fetch activities")
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred")
-    } finally {
+      finally {
       setLoading(false)
     }
   }
@@ -160,12 +154,7 @@ const ActivityLog = () => {
     }
   }
 
-  const formatEmail = (email) => {
-    if (email.length > 20) {
-      return email.substring(0, 17) + "..."
-    }
-    return email
-  }
+ 
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString()
@@ -179,25 +168,19 @@ const ActivityLog = () => {
     )
   }
 
-  if (error) {
-    return (
-      <Box p={2}>
-        <Alert severity="error">{error}</Alert>
-      </Box>
-    )
-  }
+
 
   return (
     <Box p={2}>
       <Typography variant="h4" gutterBottom>
-        Activity Log
+        Activities Log
       </Typography>
-
+      <Divider sx={{ mb: 2 }} />
       <TableContainer component={Paper} elevation={3}>
         <Table>
           <TableHead>
             <TableRow sx={{ bgcolor: "primary.main" }}>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Email</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Employee Email</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>Action</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>Target</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>Consequence</TableCell>
@@ -209,14 +192,14 @@ const ActivityLog = () => {
               <TableRow key={activity.id} hover sx={{ "&:nth-of-type(odd)": { bgcolor: "action.hover" } }}>
                 <TableCell>
                   <Tooltip title={activity.central_user_email}>
-                    <Typography variant="body2">{formatEmail(activity.central_user_email)}</Typography>
+                    <Typography variant="body2">{activity.central_user_email}</Typography>
                   </Tooltip>
                 </TableCell>
 
                 <TableCell>
                   <Box display="flex" alignItems="center" gap={1}>
                     {getActionIcon(activity.action)}
-                    <Chip label={activity.action} color={getActionColor(activity.action)} size="small" />
+                    <Chip label={activity.action} color={getActionColor(activity.action)} size="small" onClick={(e) => e.stopPropagation()} sx={{ pointerEvents: 'none' }}    />
                   </Box>
                 </TableCell>
 

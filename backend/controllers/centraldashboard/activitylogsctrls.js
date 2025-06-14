@@ -7,11 +7,12 @@ const getallactivitiesCtrl = async (req, res) => {
      
       
       const result = await getallactivitylogsforcentral(centralid, page);
-      
+
       res.status(200).json({
         success: true,
         data: result.activities,
-        page
+        page ,
+        total : result.totalPages
       });
     } catch (error) {
       res.status(500).json({
