@@ -148,7 +148,7 @@ const PerformanceForm = ({selectedDate, selectedTurbine}) => {
         };
 
         fetchPerformanceData();
-    }, [selectedDate, selectedTurbine, user?.central_id]);
+    }, [selectedDate, selectedTurbine]);
 
     // Auto-calculate fields when relevant values change
     useEffect(() => {
