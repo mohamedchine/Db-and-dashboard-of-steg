@@ -255,7 +255,7 @@ const DirectionDashboard = () => {
 
           <Routes>
   {/* Default route redirects to performance */}
-  <Route path="/" element={<Navigate to="/groupement/dashboard/performance" replace />} />
+  <Route path="/" element={<Navigate to="/direction/dashboard/performance" replace />} />
 
   <Route
     path="/performance"
@@ -282,7 +282,7 @@ const DirectionDashboard = () => {
   />
 
   {/* Fallback route */}
-  <Route path="*" element={<Navigate to="/groupement/dashboard/performance" replace />} />
+  <Route path="*" element={<Navigate to="/direction/dashboard/performance" replace />} />
 </Routes>
         </Container>
       </Box>

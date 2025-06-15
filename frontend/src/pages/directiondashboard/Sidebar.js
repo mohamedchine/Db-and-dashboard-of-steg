@@ -39,8 +39,8 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle }) => {
   <ListItem disablePadding>
     <ListItemButton
       component={Link}
-      to="/groupement/dashboard/performance"
-      selected={location.pathname.includes('/performance') || location.pathname === '/groupement/dashboard' || location.pathname === '/groupement/dashboard/'}
+      to="/direction/dashboard/performance"
+      selected={location.pathname.includes('/performance') || location.pathname === '/direction/dashboard' || location.pathname === '/direction/dashboard/'}
     >
       <ListItemIcon>
         <PerformanceIcon />
@@ -53,7 +53,7 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle }) => {
   <ListItem disablePadding>
     <ListItemButton
       component={Link}
-      to="/groupement/dashboard/incidents"
+      to="/direction/dashboard/incidents"
       selected={location.pathname.includes('/incidents')}
     >
       <ListItemIcon>

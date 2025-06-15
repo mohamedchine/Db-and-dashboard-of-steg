@@ -17,11 +17,12 @@ import PersistingLogin from "./utils/persistinglogin";
 import AuthRedirect from "./utils/authredirect";
 import { TurbinesProvider } from "./context/turbinesContext";
 import { ScentralsProvider } from "./context/supervisedcentrals";
-import{AllcentralsProvider} from './context/allcentrals'
+import { AllcentralsProvider } from './context/allcentrals'
+
 function App() {
   return (
     <div className="App">
-       <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
         {/* Wrap everything in PersistingLogin to check auth status first */}
         <Route element={<PersistingLogin />}>
@@ -35,42 +36,47 @@ function App() {
             <Route path="request-reset-password" element={<RequestResetPassword />} />
             <Route path="reset-password" element={<Resetpassword />} />
           </Route>
-          
+
           {/* Protected routes */}
           <Route element={<RequireAuth allowedunittype={["central"]} />}> 
-          <Route path="/central/dashboard/*" element={
-            <TurbinesProvider>
-            <CentralDashboard />
-            </TurbinesProvider>
-             } />
+            <Route
+              path="/central/dashboard/*"
+              element={
+                <TurbinesProvider>
+                  <CentralDashboard />
+                </TurbinesProvider>
+              }
+            />
           </Route>
-          
+
           <Route element={<RequireAuth allowedunittype={["groupement"]} />}> 
-                  <Route
-                     path="/groupement/dashboard/*"
-                   element={
-                     <ScentralsProvider>
-                       <GroupementDashboard />
-                     </ScentralsProvider>
-                   }
-                 />
-             </Route>
-          
-             <Route
+            <Route
+              path="/groupement/dashboard/*"
+              element={
+                <ScentralsProvider>
+                  <GroupementDashboard />
+                </ScentralsProvider>
+              }
+            />
+          </Route>
+
+          <Route element={<RequireAuth allowedunittype={["direction"]} />}> 
+            <Route
+              path="/direction/dashboard/*"
               element={
                 <AllcentralsProvider>
-                  <RequireAuth allowedunittype={["direction"]} />
+                  <DirectionDashboard />
                 </AllcentralsProvider>
               }
             />
-            <Route path="/direction/dashboard/*" element={<DirectionDashboard />} />
           </Route>
-      
-        
+        </Route>
+
         {/* Not found page */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );
 }
+
 export default App;
