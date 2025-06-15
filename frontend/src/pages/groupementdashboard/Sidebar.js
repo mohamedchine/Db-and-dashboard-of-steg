@@ -45,7 +45,7 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle }) => {
       <ListItemIcon>
         <PerformanceIcon />
       </ListItemIcon>
-      <ListItemText primary="Performance" />
+      <ListItemText primary="Performance Monitoring" />
     </ListItemButton>
   </ListItem>
 
@@ -59,14 +59,15 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle }) => {
       <ListItemIcon>
         <WarningIcon />
       </ListItemIcon>
-      <ListItemText primary="Incidents" />
+      <ListItemText primary="Incidents Monitoring" />
     </ListItemButton>
   </ListItem>
 </List>
       
-      <Divider sx={{ mt: 2 }} />
-      
+     
+<Divider sx={{ mt: 2}} />
       <Box sx={{ p: 2, mt: 'auto' }}>
+      
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <Box
             sx={{

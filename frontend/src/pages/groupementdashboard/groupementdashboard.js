@@ -23,13 +23,14 @@ import Incidents from './Incidents';
 import Performance from './Performance';
 import axs from '../../api/customizedaxios';
 import { toast } from 'react-toastify';
+import ResetDateRange from './components/ResetDateRange';
 const drawerWidth = 240;
 
 const GroupementDashboard = () => {
   const { centrals } = useContext(ScentralsContext);
   const { loading } = useFetchCentrals();
   const location = useLocation();
-
+  const [previousPathname, setPreviousPathname] = useState('');
   const [selectedCentrals, setSelectedCentrals] = useState([]);
   const [dateRange, setDateRange] = useState({
     from: '',
@@ -42,6 +43,32 @@ const GroupementDashboard = () => {
   const [incidentsData, setIncidentsData] = useState(null);
   const [fetchLoading, setFetchLoading] = useState(false);
   
+  
+  
+  
+  
+  //to reset the stuff when tab changes did it because i did it in thesis 
+  useEffect(() => {
+    const currentRoute = location.pathname;
+    const isPerformanceRoute = currentRoute.includes('/performance');
+    const isIncidentsRoute = currentRoute.includes('/incidents');
+    const wasPreviousPerformance = previousPathname.includes('/performance');
+    const wasPreviousIncidents = previousPathname.includes('/incidents');
+    
+    // Only reset when switching between performance and incidents routes
+    const shouldReset = (
+      (isPerformanceRoute && wasPreviousIncidents) ||
+      (isIncidentsRoute && wasPreviousPerformance)
+    );
+    
+    if (shouldReset && previousPathname !== '') {
+      setDateRange({ from: '', to: '' });
+      setPerformanceData(null);
+      setIncidentsData(null);
+    }
+    
+    setPreviousPathname(currentRoute);
+  }, [location.pathname, previousPathname]);
 
   // Initialize selectedCentrals as an array of central_ids
   useEffect(() => {
@@ -50,17 +77,6 @@ const GroupementDashboard = () => {
       setSelectedCentrals(initialSelection);
     }
   }, [centrals]);
-
-  // Reset data and date range when route changes
-  useEffect(() => {
-    setDateRange({
-      from: '',
-      to: '',
-    });
-    setPerformanceData(null);
-    setIncidentsData(null);
-    
-  }, [location.pathname]);
 
   const handleCentralChange = (centralId, checked) => {
     if (checked) {
@@ -202,7 +218,7 @@ const GroupementDashboard = () => {
                   disabled={fetchLoading}
                   sx={{ minWidth: 120 }}
                 >
-                  {fetchLoading ? <CircularProgress size={20} color="inherit" /> : 'Monitor'}
+                  {fetchLoading ? <CircularProgress size={20} color="inherit" /> : 'Apply'}
                 </Button>
 
                 {dateRange.from && dateRange.to && (
@@ -237,33 +253,37 @@ const GroupementDashboard = () => {
             </CardContent>
           </Card>
 
-          {/* Routes for different sections */}
           <Routes>
-            {/* Default route redirects to performance */}
-            <Route path="/" element={<Navigate to="/groupement/dashboard/performance" replace />} />
-            <Route 
-              path="/performance" 
-              element={
-                <Performance 
-                  selectedCentrals={selectedCentrals} 
-                  performanceData={performanceData}
-                  loading={fetchLoading}
-                />
-              } 
-            />
-            <Route 
-              path="/incidents" 
-              element={
-                <Incidents 
-                  selectedCentrals={selectedCentrals}
-                  incidentsData={incidentsData}
-                  loading={fetchLoading}
-                />
-              } 
-            />
-            {/* Fallback route */}
-            <Route path="*" element={<Navigate to="/groupement/dashboard/performance" replace />} />
-          </Routes>
+  {/* Default route redirects to performance */}
+  <Route path="/" element={<Navigate to="/groupement/dashboard/performance" replace />} />
+
+  <Route
+    path="/performance"
+    element={
+              <Performance
+          selectedCentrals={selectedCentrals}
+          performanceData={performanceData}
+          loading={fetchLoading}
+        />
+      
+    }
+  />
+
+  <Route
+    path="/incidents"
+    element={
+              <Incidents
+          selectedCentrals={selectedCentrals}
+          incidentsData={incidentsData}
+          loading={fetchLoading}
+        />
+      
+    }
+  />
+
+  {/* Fallback route */}
+  <Route path="*" element={<Navigate to="/groupement/dashboard/performance" replace />} />
+</Routes>
         </Container>
       </Box>
     </Box>
