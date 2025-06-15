@@ -145,7 +145,7 @@ const getmaintenancedefectiveequipementalarmsCtrl = async (req, res) => {
   try {
     const periode = req.body;
     const centrals = req.centralids;
-
+  
     // Validate period
     if (!periode || !periode.start || !periode.end) {
       return res.status(400).json({

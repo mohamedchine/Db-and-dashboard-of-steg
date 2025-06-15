@@ -178,7 +178,6 @@ const getDefectiveEquipmentByPeriodAndCentralId = async (centralId, startDate, e
         d.central_id,
         d.kks,
         d.description,
-        d.comments,
         d.status as original_status,
         d.reported_at,
         d.fixed_at,

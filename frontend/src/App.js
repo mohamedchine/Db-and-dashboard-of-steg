@@ -16,6 +16,7 @@ import RequireAuth from "./protectedornotroutes/requireAuth";
 import PersistingLogin from "./utils/persistinglogin";
 import AuthRedirect from "./utils/authredirect";
 import { TurbinesProvider } from "./context/turbinesContext";
+import { ScentralsProvider } from "./context/supervisedcentrals";
 function App() {
   return (
     <div className="App">
@@ -44,8 +45,15 @@ function App() {
           </Route>
           
           <Route element={<RequireAuth allowedunittype={["groupement"]} />}> 
-            <Route path="/groupement/dashboard/*" element={<GroupementDashboard />} />
-          </Route>
+                  <Route
+                     path="/groupement/dashboard/*"
+                   element={
+                     <ScentralsProvider>
+                       <GroupementDashboard />
+                     </ScentralsProvider>
+                   }
+                 />
+             </Route>
           
           <Route element={<RequireAuth allowedunittype={["direction"]} />}>
             <Route path="/direction/dashboard/*" element={<DirectionDashboard />} />
