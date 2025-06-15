@@ -108,7 +108,7 @@ const Incidents = ({ selectedCentrals, incidentsData, loading }) => {
     return (
       <Box py={4}>
         <Alert severity="info">
-          No data loaded. Please select a date range and click "Apply" to load incidents data.
+          No data loaded. Please select a date range and click "Monitor" to load incidents data.
         </Alert>
       </Box>
     );

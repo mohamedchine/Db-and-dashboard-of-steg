@@ -419,7 +419,7 @@ const Performance = ({ selectedCentrals, performanceData, loading }) => {
     return (
       <Box py={4}>
         <Alert severity="info">
-          No data loaded. Please select a date range and click "Apply" to load performance data.
+          No data loaded. Please select a date range and click "Monitor" to load performance data.
         </Alert>
       </Box>
     );

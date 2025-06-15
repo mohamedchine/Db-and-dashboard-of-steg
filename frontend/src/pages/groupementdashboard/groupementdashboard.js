@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import {
   Box,
   Card,
@@ -22,12 +22,14 @@ import Navbar from './Navbar';
 import Incidents from './Incidents';
 import Performance from './Performance';
 import axs from '../../api/customizedaxios';
+import { toast } from 'react-toastify';
 
 const drawerWidth = 240;
 
 const GroupementDashboard = () => {
   const { centrals } = useContext(ScentralsContext);
   const { loading } = useFetchCentrals();
+  const location = useLocation();
 
   const [selectedCentrals, setSelectedCentrals] = useState([]);
   const [dateRange, setDateRange] = useState({
@@ -40,7 +42,7 @@ const GroupementDashboard = () => {
   const [performanceData, setPerformanceData] = useState(null);
   const [incidentsData, setIncidentsData] = useState(null);
   const [fetchLoading, setFetchLoading] = useState(false);
-  const [fetchError, setFetchError] = useState(null);
+  
 
   // Initialize selectedCentrals as an array of central_ids
   useEffect(() => {
@@ -49,6 +51,17 @@ const GroupementDashboard = () => {
       setSelectedCentrals(initialSelection);
     }
   }, [centrals]);
+
+  // Reset data and date range when route changes
+  useEffect(() => {
+    setDateRange({
+      from: '',
+      to: '',
+    });
+    setPerformanceData(null);
+    setIncidentsData(null);
+    
+  }, [location.pathname]);
 
   const handleCentralChange = (centralId, checked) => {
     if (checked) {
@@ -73,42 +86,52 @@ const GroupementDashboard = () => {
 
   const handleApplyData = async () => {
     if (!dateRange.from || !dateRange.to) {
-      setFetchError('Please select both start and end dates');
+      toast.error('Please select both start and end dates');
       return;
     }
 
     if (new Date(dateRange.from) > new Date(dateRange.to)) {
-      setFetchError('Start date cannot be after end date');
+      toast.error('Start date cannot be after end date');
       return;
     }
 
     setFetchLoading(true);
-    setFetchError(null);
+    
 
     try {
-      // Fetch performance data
-      const performanceResponse = await axs.post('/groupement/centralsdata/byperiode', {
-        start: dateRange.from,
-        end: dateRange.to
-      });
+      // Determine which data to fetch based on current route
+      const isPerformanceRoute = location.pathname.includes('/performance');
+      const isIncidentsRoute = location.pathname.includes('/incidents');
 
-      // Fetch incidents data
-      const incidentsResponse = await axs.post('/groupement/defeq-alarms-maintenance/byperiode', {
-        start: dateRange.from,
-        end: dateRange.to
-      });
+      if (isPerformanceRoute) {
+        // Clear incidents data and fetch only performance data
+        setIncidentsData(null);
+        
+        const performanceResponse = await axs.post('/groupement/centralsdata/byperiode', {
+          start: dateRange.from,
+          end: dateRange.to
+        });
 
-      if (performanceResponse.data.success) {
-        setPerformanceData(performanceResponse.data.data);
-      }
+        if (performanceResponse.data.success) {
+          setPerformanceData(performanceResponse.data.data);
+        }
+      } else if (isIncidentsRoute) {
+        // Clear performance data and fetch only incidents data
+        setPerformanceData(null);
+        
+        const incidentsResponse = await axs.post('/groupement/defeq-alarms-maintenance/byperiode', {
+          start: dateRange.from,
+          end: dateRange.to
+        });
 
-      if (incidentsResponse.data.success) {
-        setIncidentsData(incidentsResponse.data.data);
+        if (incidentsResponse.data.success) {
+          setIncidentsData(incidentsResponse.data.data);
+        }
       }
 
     } catch (error) {
       console.error('Error fetching data:', error);
-      setFetchError('Failed to fetch data. Please try again.');
+      toast.error('Failed to fetch data. Please try again.');
     } finally {
       setFetchLoading(false);
     }
@@ -180,7 +203,7 @@ const GroupementDashboard = () => {
                   disabled={fetchLoading}
                   sx={{ minWidth: 120 }}
                 >
-                  {fetchLoading ? <CircularProgress size={20} color="inherit" /> : 'Apply'}
+                  {fetchLoading ? <CircularProgress size={20} color="inherit" /> : 'Monitor'}
                 </Button>
 
                 {dateRange.from && dateRange.to && (
@@ -190,11 +213,7 @@ const GroupementDashboard = () => {
                 )}
               </Box>
 
-              {fetchError && (
-                <Typography color="error" sx={{ mt: 2 }}>
-                  {fetchError}
-                </Typography>
-              )}
+              
             </CardContent>
           </Card>
 
