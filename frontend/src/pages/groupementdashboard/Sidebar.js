@@ -30,12 +30,12 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle }) => {
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Toolbar>
         <Typography variant="h6" noWrap component="div">
-          Navigation
+          Sections
         </Typography>
       </Toolbar>
       <Divider />
       <List>
-  {/* PERFORMANCE FIRST */}
+  
   <ListItem disablePadding>
     <ListItemButton
       component={Link}

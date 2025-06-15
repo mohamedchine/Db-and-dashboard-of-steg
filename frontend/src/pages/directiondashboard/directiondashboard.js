@@ -218,7 +218,7 @@ const DirectionDashboard = () => {
                   disabled={fetchLoading}
                   sx={{ minWidth: 120 }}
                 >
-                  {fetchLoading ? <CircularProgress size={20} color="inherit" /> : 'Apply'}
+                  {fetchLoading ? <CircularProgress size={20} color="inherit" /> : 'Monitor'}
                 </Button>
 
                 {dateRange.from && dateRange.to && (

@@ -30,7 +30,7 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle }) => {
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Toolbar>
         <Typography variant="h6" noWrap component="div">
-          Navigation
+          Sections
         </Typography>
       </Toolbar>
       <Divider />
@@ -66,47 +66,57 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle }) => {
       
      
 <Divider sx={{ mt: 2}} />
-      <Box sx={{ p: 2, mt: 'auto' }}>
-      
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Box
-            sx={{
-              width: 40,
-              height: 40,
-              borderRadius: '50%',
-              backgroundColor: '#e0e0e0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Typography sx={{ fontWeight: 'bold' }}>OP</Typography>
-          </Box>
-          <Box>
-            <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
-              {user.fullname}
-            </Typography>
-            <Typography variant="body2" sx={{ color: '#666' }}>
-              {user.steg_email}
-            </Typography>
-          </Box>
-        </Box>
-        <Box 
-          sx={{ 
-            display: 'flex', 
-            justifyContent: 'flex-end', 
-            alignItems: 'center', 
-            gap: 1, 
-            mt: 2, 
-            color: '#ff002d' 
-          }}
-        >
-          <Typography variant="body2" sx={{ fontWeight: 500, cursor: 'pointer' }} onClick={() => logout()}>
-            Logout
-          </Typography>
-          <LogoutIcon fontSize="small" sx={{ cursor: 'pointer' }} onClick={() => logout()} />
-        </Box> 
-      </Box>
+<Box sx={{ p: 2, mt: 'auto' }}>
+  <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+    {/* Avatar */}
+    <Box
+      sx={{
+        width: 40,
+        height: 40,
+        borderRadius: '50%',
+        backgroundColor: '#e0e0e0',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexShrink: 0,
+      }}
+    >
+      <Typography sx={{ fontWeight: 'bold' }}>OP</Typography>
+    </Box>
+
+    {/* User Info */}
+    <Box sx={{ wordBreak: 'break-word' }}>
+      <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+        {user.fullname}
+      </Typography>
+      <Typography variant="body2" sx={{ color: '#666' }}>
+        {user.steg_email}
+      </Typography>
+    </Box>
+  </Box>
+
+  {/* Logout */}
+  <Box
+    sx={{
+      display: 'flex',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      gap: 1,
+      mt: 2,
+      color: '#ff002d',
+    }}
+  >
+    <Typography
+      variant="body2"
+      sx={{ fontWeight: 500, cursor: 'pointer' }}
+      onClick={() => logout()}
+    >
+      Logout
+    </Typography>
+    <LogoutIcon fontSize="small" sx={{ cursor: 'pointer' }} onClick={() => logout()} />
+  </Box>
+</Box>
+
     </div>
   );
 
