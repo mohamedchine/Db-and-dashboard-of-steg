@@ -120,11 +120,21 @@ const GroupementDashboard = () => {
             <Route path="/" element={<Navigate to="/groupement/dashboard/performance" replace />} />
             <Route 
               path="/performance" 
-              element={<Performance selectedCentrals={selectedCentrals} />} 
+              element={
+                <Performance 
+                  selectedCentrals={selectedCentrals} 
+                  dateRange={dateRange}
+                />
+              } 
             />
             <Route 
               path="/incidents" 
-              element={<Incidents selectedCentrals={selectedCentrals} />} 
+              element={
+                <Incidents 
+                  selectedCentrals={selectedCentrals}
+                  dateRange={dateRange}
+                />
+              } 
             />
             {/* Fallback route */}
             <Route path="*" element={<Navigate to="/groupement/dashboard/performance" replace />} />
@@ -136,3 +146,4 @@ const GroupementDashboard = () => {
 };
 
 export default GroupementDashboard;
+

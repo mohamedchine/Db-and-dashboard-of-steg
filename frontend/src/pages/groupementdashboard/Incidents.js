@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Box,
   Card,
@@ -13,392 +13,72 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Chip
+  Chip,
+  CircularProgress,
+  Alert,
+  Button,
+  Snackbar
 } from '@mui/material';
+import {
+  Refresh as RefreshIcon
+} from '@mui/icons-material';
+import useFetchIncidentsData from './hooks/useFetchIncidentsData';
 
-const Incidents = ({ selectedCentrals }) => {
+const Incidents = ({ selectedCentrals, dateRange }) => {
   const [activeTab, setActiveTab] = useState(0);
+  const [triggerFetch, setTriggerFetch] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
-  // Alarms data for each turbine by central
-  const alarmsData = [
-    {
-      central: 'KSR',
-      turbines: [
-        { name: 'TG1', alarms: [] },
-        { name: 'TG2', alarms: [] },
-      ],
-    },
-    {
-      central: 'FRA',
-      turbines: [
-        { name: 'TG1', alarms: [] },
-        {
-          name: 'TG2',
-          alarms: [
-            {
-              id: 1,
-              date: '2025-05-05 14:30:45',
-              type: 'Critical',
-              code: 'ALM-T-003',
-              description: 'Excessive temperature in exhaust system',
-              status: 'Resolved',
-            },
-            {
-              id: 2,
-              date: '2025-05-02 08:15:22',
-              type: 'Warning',
-              code: 'ALM-T-001',
-              description: 'High vibration detected on bearing #2',
-              status: 'Resolved',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      central: 'BMA',
-      turbines: [
-        {
-          name: 'TG3',
-          alarms: [
-            {
-              id: 3,
-              date: '2025-05-04 09:10:05',
-              type: 'Critical',
-              code: 'ALM-C-004',
-              description: 'Compressor surge detected',
-              status: 'Resolved',
-            },
-          ],
-        },
-        { name: 'TG4', alarms: [] },
-        {
-          name: 'TG5',
-          alarms: [
-            {
-              id: 4,
-              date: '2025-05-08 11:25:40',
-              type: 'Warning',
-              code: 'ALM-F-002',
-              description: 'Fuel system pressure fluctuation',
-              status: 'Active',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      central: 'THY',
-      turbines: [
-        { name: 'TG1', alarms: [] },
-        {
-          name: 'TG2',
-          alarms: [
-            {
-              id: 5,
-              date: '2025-05-03 10:22:18',
-              type: 'Warning',
-              code: 'ALM-P-002',
-              description: 'Low oil pressure in lubrication system',
-              status: 'Resolved',
-            },
-          ],
-        },
-        {
-          name: 'TG3',
-          alarms: [
-            {
-              id: 6,
-              date: '2025-05-07 16:45:33',
-              type: 'Emergency',
-              code: 'ALM-E-001',
-              description: 'Emergency shutdown triggered - overspeed protection',
-              status: 'Resolved',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      central: 'RBA',
-      turbines: [{ name: 'TG', alarms: [] }],
-    },
-    {
-      central: 'ZAR',
-      turbines: [{ name: 'TG', alarms: [] }],
-    },
-  ];
+  // Use the incidents data fetching hook
+  const { incidentsData, loading, error } = useFetchIncidentsData(dateRange, triggerFetch);
 
-  // Defective Equipment data for each turbine by central
-  const defectiveEquipmentData = [
-    {
-      central: 'KSR',
-      turbines: [
-        { name: 'TG1', equipment: [] },
-        { name: 'TG2', equipment: [] },
-      ],
-    },
-    {
-      central: 'FRA',
-      turbines: [
-        { name: 'TG1', equipment: [] },
-        {
-          name: 'TG2',
-          equipment: [
-            {
-              id: 1,
-              component: 'Vibration Sensor 96VC-12',
-              detected: '2025-05-02',
-              severity: 'Medium',
-              description: 'Vibration sensor providing inconsistent readings',
-              status: 'Repaired',
-              impact: 'Potential for missed early warning of bearing issues',
-            },
-            {
-              id: 2,
-              component: 'Exhaust Temperature Sensor',
-              detected: '2025-05-05',
-              severity: 'High',
-              description: 'Temperature sensor failure causing false alarms',
-              status: 'Repaired',
-              impact: 'Risk of unnecessary shutdowns',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      central: 'BMA',
-      turbines: [
-        {
-          name: 'TG3',
-          equipment: [
-            {
-              id: 5,
-              component: 'Compressor Inlet Guide Vanes',
-              detected: '2025-05-04',
-              severity: 'High',
-              description: 'Guide vanes not positioning correctly',
-              status: 'Repaired',
-              impact: 'Reduced efficiency and risk of compressor surge',
-            },
-          ],
-        },
-        { name: 'TG4', equipment: [] },
-        {
-          name: 'TG5',
-          equipment: [
-            {
-              id: 6,
-              component: 'Fuel Control Valve',
-              detected: '2025-05-08',
-              severity: 'Medium',
-              description: 'Fuel control valve showing erratic behavior',
-              status: 'Under Analysis',
-              impact: 'Unstable combustion and power output',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      central: 'THY',
-      turbines: [
-        { name: 'TG1', equipment: [] },
-        {
-          name: 'TG2',
-          equipment: [
-            {
-              id: 3,
-              component: 'Oil Pressure Regulator',
-              detected: '2025-05-03',
-              severity: 'Medium',
-              description: 'Oil pressure regulator sticking intermittently',
-              status: 'Repaired',
-              impact: 'Reduced lubrication efficiency',
-            },
-          ],
-        },
-        {
-          name: 'TG3',
-          equipment: [
-            {
-              id: 4,
-              component: 'Overspeed Protection System',
-              detected: '2025-05-07',
-              severity: 'Critical',
-              description: 'Overspeed protection triggered at normal speed',
-              status: 'Under Repair',
-              impact: 'Turbine cannot operate until fixed',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      central: 'RBA',
-      turbines: [{ name: 'TG', equipment: [] }],
-    },
-    {
-      central: 'ZAR',
-      turbines: [{ name: 'TG', equipment: [] }],
-    },
-  ];
+  // Auto-fetch data on component mount
+  useEffect(() => {
+    if (!triggerFetch) {
+      setTriggerFetch(true);
+    }
+  }, [dateRange]);
 
-  // Maintenance data for each turbine by central
-  const maintenanceData = [
-    {
-      central: 'KSR',
-      turbines: [
-        { name: 'TG1', maintenance: [] },
-        { name: 'TG2', maintenance: [] },
-      ],
-    },
-    {
-      central: 'FRA',
-      turbines: [
-        { name: 'TG1', maintenance: [] },
-        {
-          name: 'TG2',
-          maintenance: [
-            {
-              id: 1,
-              type: 'Corrective',
-              description: 'Replace vibration sensor 96VC-12 and calibrate',
-              scheduled: '2025-05-04',
-              start: '2025-05-04',
-              end: '2025-05-04',
-              status: 'Completed',
-              duration: 2.5,
-              team: 'Maintenance Team A',
-            },
-            {
-              id: 2,
-              type: 'Corrective',
-              description: 'Replace and recalibrate exhaust temperature sensor',
-              scheduled: '2025-05-06',
-              start: '2025-05-06',
-              end: '2025-05-06',
-              status: 'Completed',
-              duration: 3.25,
-              team: 'Maintenance Team B',
-            },
-            {
-              id: 7,
-              type: 'Preventive',
-              description: 'Annual inspection of hot gas path',
-              scheduled: '2025-05-15',
-              start: null,
-              end: null,
-              status: 'Scheduled',
-              duration: 24,
-              team: 'Specialist Team',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      central: 'BMA',
-      turbines: [
-        {
-          name: 'TG3',
-          maintenance: [
-            {
-              id: 5,
-              type: 'Corrective',
-              description: 'Adjust and realign compressor inlet guide vanes',
-              scheduled: '2025-05-07',
-              start: '2025-05-07',
-              end: '2025-05-07',
-              status: 'Completed',
-              duration: 5.5,
-              team: 'Maintenance Team A',
-            },
-          ],
-        },
-        { name: 'TG4', maintenance: [] },
-        {
-          name: 'TG5',
-          maintenance: [
-            {
-              id: 6,
-              type: 'Preventive',
-              description: 'Inspect and test fuel control system',
-              scheduled: '2025-05-12',
-              start: null,
-              end: null,
-              status: 'Scheduled',
-              duration: 4,
-              team: 'Maintenance Team B',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      central: 'THY',
-      turbines: [
-        { name: 'TG1', maintenance: [] },
-        {
-          name: 'TG2',
-          maintenance: [
-            {
-              id: 3,
-              type: 'Corrective',
-              description: 'Clean and adjust oil pressure regulator',
-              scheduled: '2025-05-05',
-              start: '2025-05-05',
-              end: '2025-05-05',
-              status: 'Completed',
-              duration: 4,
-              team: 'Maintenance Team C',
-            },
-          ],
-        },
-        {
-          name: 'TG3',
-          maintenance: [
-            {
-              id: 4,
-              type: 'Corrective',
-              description: 'Overhaul overspeed protection system',
-              scheduled: '2025-05-11',
-              start: '2025-05-11',
-              end: null,
-              status: 'In Progress',
-              duration: null,
-              team: 'Specialist Team',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      central: 'RBA',
-      turbines: [{ name: 'TG', maintenance: [] }],
-    },
-    {
-      central: 'ZAR',
-      turbines: [{ name: 'TG', maintenance: [] }],
-    },
-  ];
+  // Handle fetch completion
+  useEffect(() => {
+    if (triggerFetch && !loading) {
+      if (error) {
+        setSnackbarMessage(`Error: ${error}`);
+        setSnackbarSeverity('error');
+      } else if (incidentsData) {
+        setSnackbarMessage('Incidents data refreshed successfully');
+        setSnackbarSeverity('success');
+      }
+      setSnackbarOpen(true);
+      setTriggerFetch(false);
+    }
+  }, [triggerFetch, loading, error, incidentsData]);
 
-  // Filter data based on selected centrals
-  const getFilteredData = (data) => {
-    return data.filter((item) => selectedCentrals[item.central.toLowerCase()]);
+  // Filter incidents data based on selected centrals
+  const filteredData = useMemo(() => {
+    if (!incidentsData || !selectedCentrals) return [];
+    
+    return incidentsData.filter(central => 
+      selectedCentrals.includes(central.central_id)
+    );
+  }, [incidentsData, selectedCentrals]);
+
+  const handleRefreshData = () => {
+    setTriggerFetch(true);
   };
 
-  const filteredAlarmsData = getFilteredData(alarmsData);
-  const filteredDefectiveEquipmentData = getFilteredData(defectiveEquipmentData);
-  const filteredMaintenanceData = getFilteredData(maintenanceData);
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
 
   const getStatusColor = (status) => {
-    switch (status.toLowerCase()) {
+    switch (status?.toLowerCase()) {
       case 'active':
         return 'error';
       case 'resolved':
@@ -415,13 +95,19 @@ const Incidents = ({ selectedCentrals }) => {
         return 'warning';
       case 'under analysis':
         return 'warning';
+      case 'fixed':
+        return 'success';
+      case 'pending':
+        return 'warning';
+      case 'not fixed':
+        return 'error';
       default:
         return 'default';
     }
   };
 
   const getSeverityColor = (severity) => {
-    switch (severity.toLowerCase()) {
+    switch (severity?.toLowerCase()) {
       case 'critical':
         return 'error';
       case 'high':
@@ -439,12 +125,52 @@ const Incidents = ({ selectedCentrals }) => {
     }
   };
 
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" py={8}>
+        <CircularProgress />
+        <Typography variant="h6" sx={{ ml: 2 }}>
+          Loading incidents data...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (!incidentsData || filteredData.length === 0) {
+    return (
+      <Box py={4}>
+        <Alert severity="info">
+          No incidents data available. Please click "Refresh Data" to load the latest information.
+        </Alert>
+      </Box>
+    );
+  }
+
   return (
     <Box>
       <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant="h4" component="h2">
           Incidents Management
         </Typography>
+        
+        {/* Refresh Button */}
+        <Button
+          variant="contained"
+          startIcon={loading ? <CircularProgress size={16} color="inherit" /> : <RefreshIcon />}
+          onClick={handleRefreshData}
+          disabled={loading}
+          sx={{ 
+            backgroundColor: 'primary.main',
+            '&:hover': {
+              backgroundColor: 'primary.dark'
+            },
+            '&:disabled': {
+              backgroundColor: 'grey.300'
+            }
+          }}
+        >
+          {loading ? 'Loading...' : 'Refresh Data'}
+        </Button>
       </Box>
 
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -460,10 +186,10 @@ const Incidents = ({ selectedCentrals }) => {
           <Typography variant="h5" component="h3" sx={{ mb: 3 }}>
             Alarms
           </Typography>
-          {filteredAlarmsData.map((central) => (
-            <Card key={central.central} sx={{ mb: 3 }}>
+          {filteredData.map((central) => (
+            <Card key={central.central_id} sx={{ mb: 3 }}>
               <CardHeader
-                title={`${central.central} Central`}
+                title={`${central.central_name} Central - ${central.alarms.summary.total} Total Alarms`}
                 sx={{ backgroundColor: 'grey.100' }}
               />
               <CardContent sx={{ p: 0 }}>
@@ -472,46 +198,37 @@ const Incidents = ({ selectedCentrals }) => {
                     <TableHead>
                       <TableRow>
                         <TableCell>Turbine</TableCell>
-                        <TableCell>Date/Time</TableCell>
-                        <TableCell>Type</TableCell>
-                        <TableCell>Code</TableCell>
+                        <TableCell>Alarm Code</TableCell>
                         <TableCell>Description</TableCell>
                         <TableCell>Status</TableCell>
+                        <TableCell>Happened At</TableCell>
+                        <TableCell>Resolved At</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {central.turbines.map((turbine) =>
-                        turbine.alarms.length > 0 ? (
-                          turbine.alarms.map((alarm) => (
-                            <TableRow key={alarm.id}>
-                              <TableCell sx={{ fontWeight: 'bold' }}>{turbine.name}</TableCell>
-                              <TableCell>{alarm.date}</TableCell>
-                              <TableCell>
-                                <Chip
-                                  label={alarm.type}
-                                  color={getSeverityColor(alarm.type)}
-                                  size="small"
-                                />
-                              </TableCell>
-                              <TableCell>{alarm.code}</TableCell>
-                              <TableCell>{alarm.description}</TableCell>
-                              <TableCell>
-                                <Chip
-                                  label={alarm.status}
-                                  color={getStatusColor(alarm.status)}
-                                  size="small"
-                                />
-                              </TableCell>
-                            </TableRow>
-                          ))
-                        ) : (
-                          <TableRow key={turbine.name}>
-                            <TableCell sx={{ fontWeight: 'bold' }}>{turbine.name}</TableCell>
-                            <TableCell colSpan={5} sx={{ fontStyle: 'italic', color: 'text.secondary' }}>
-                              No alarms recorded
+                      {central.alarms.details && central.alarms.details.length > 0 ? (
+                        central.alarms.details.map((alarm, index) => (
+                          <TableRow key={`${central.central_id}-alarm-${index}`}>
+                            <TableCell sx={{ fontWeight: 'bold' }}>{alarm.turbine_name || 'N/A'}</TableCell>
+                            <TableCell>{alarm.alarm_code || 'N/A'}</TableCell>
+                            <TableCell>{alarm.description || 'No description'}</TableCell>
+                            <TableCell>
+                              <Chip
+                                label={alarm.status || 'Unknown'}
+                                color={getStatusColor(alarm.status)}
+                                size="small"
+                              />
                             </TableCell>
+                            <TableCell>{alarm.happened_at || 'N/A'}</TableCell>
+                            <TableCell>{alarm.resolved_at || 'N/A'}</TableCell>
                           </TableRow>
-                        )
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={6} sx={{ fontStyle: 'italic', color: 'text.secondary', textAlign: 'center' }}>
+                            No alarms recorded for this period
+                          </TableCell>
+                        </TableRow>
                       )}
                     </TableBody>
                   </Table>
@@ -527,10 +244,10 @@ const Incidents = ({ selectedCentrals }) => {
           <Typography variant="h5" component="h3" sx={{ mb: 3 }}>
             Defective Equipment
           </Typography>
-          {filteredDefectiveEquipmentData.map((central) => (
-            <Card key={central.central} sx={{ mb: 3 }}>
+          {filteredData.map((central) => (
+            <Card key={central.central_id} sx={{ mb: 3 }}>
               <CardHeader
-                title={`${central.central} Central`}
+                title={`${central.central_name} Central - ${central.defective_equipment.summary.total} Total Issues`}
                 sx={{ backgroundColor: 'grey.100' }}
               />
               <CardContent sx={{ p: 0 }}>
@@ -539,48 +256,37 @@ const Incidents = ({ selectedCentrals }) => {
                     <TableHead>
                       <TableRow>
                         <TableCell>Turbine</TableCell>
-                        <TableCell>Component</TableCell>
-                        <TableCell>Detected</TableCell>
-                        <TableCell>Severity</TableCell>
+                        <TableCell>KKS</TableCell>
                         <TableCell>Description</TableCell>
                         <TableCell>Status</TableCell>
-                        <TableCell>Impact</TableCell>
+                        <TableCell>Reported At</TableCell>
+                        <TableCell>Fixed At</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {central.turbines.map((turbine) =>
-                        turbine.equipment.length > 0 ? (
-                          turbine.equipment.map((equipment) => (
-                            <TableRow key={equipment.id}>
-                              <TableCell sx={{ fontWeight: 'bold' }}>{turbine.name}</TableCell>
-                              <TableCell>{equipment.component}</TableCell>
-                              <TableCell>{equipment.detected}</TableCell>
-                              <TableCell>
-                                <Chip
-                                  label={equipment.severity}
-                                  color={getSeverityColor(equipment.severity)}
-                                  size="small"
-                                />
-                              </TableCell>
-                              <TableCell>{equipment.description}</TableCell>
-                              <TableCell>
-                                <Chip
-                                  label={equipment.status}
-                                  color={getStatusColor(equipment.status)}
-                                  size="small"
-                                />
-                              </TableCell>
-                              <TableCell>{equipment.impact}</TableCell>
-                            </TableRow>
-                          ))
-                        ) : (
-                          <TableRow key={turbine.name}>
-                            <TableCell sx={{ fontWeight: 'bold' }}>{turbine.name}</TableCell>
-                            <TableCell colSpan={6} sx={{ fontStyle: 'italic', color: 'text.secondary' }}>
-                              No defective equipment reported
+                      {central.defective_equipment.details && central.defective_equipment.details.length > 0 ? (
+                        central.defective_equipment.details.map((equipment, index) => (
+                          <TableRow key={`${central.central_id}-equipment-${index}`}>
+                            <TableCell sx={{ fontWeight: 'bold' }}>{equipment.turbine_name || 'N/A'}</TableCell>
+                            <TableCell>{equipment.kks || 'N/A'}</TableCell>
+                            <TableCell>{equipment.description || 'No description'}</TableCell>
+                            <TableCell>
+                              <Chip
+                                label={equipment.status || 'Unknown'}
+                                color={getStatusColor(equipment.status)}
+                                size="small"
+                              />
                             </TableCell>
+                            <TableCell>{equipment.reported_at || 'N/A'}</TableCell>
+                            <TableCell>{equipment.fixed_at || 'N/A'}</TableCell>
                           </TableRow>
-                        )
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={6} sx={{ fontStyle: 'italic', color: 'text.secondary', textAlign: 'center' }}>
+                            No defective equipment recorded for this period
+                          </TableCell>
+                        </TableRow>
                       )}
                     </TableBody>
                   </Table>
@@ -596,10 +302,10 @@ const Incidents = ({ selectedCentrals }) => {
           <Typography variant="h5" component="h3" sx={{ mb: 3 }}>
             Maintenance
           </Typography>
-          {filteredMaintenanceData.map((central) => (
-            <Card key={central.central} sx={{ mb: 3 }}>
+          {filteredData.map((central) => (
+            <Card key={central.central_id} sx={{ mb: 3 }}>
               <CardHeader
-                title={`${central.central} Central`}
+                title={`${central.central_name} Central - ${central.maintenance.summary.total} Total Maintenance Tasks`}
                 sx={{ backgroundColor: 'grey.100' }}
               />
               <CardContent sx={{ p: 0 }}>
@@ -608,52 +314,39 @@ const Incidents = ({ selectedCentrals }) => {
                     <TableHead>
                       <TableRow>
                         <TableCell>Turbine</TableCell>
-                        <TableCell>Type</TableCell>
+                        <TableCell>KKS</TableCell>
+                        <TableCell>OT Number</TableCell>
                         <TableCell>Description</TableCell>
-                        <TableCell>Scheduled</TableCell>
+                        <TableCell>Type</TableCell>
                         <TableCell>Start</TableCell>
                         <TableCell>End</TableCell>
-                        <TableCell>Status</TableCell>
-                        <TableCell>Duration (h)</TableCell>
-                        <TableCell>Team</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {central.turbines.map((turbine) =>
-                        turbine.maintenance.length > 0 ? (
-                          turbine.maintenance.map((maintenance) => (
-                            <TableRow key={maintenance.id}>
-                              <TableCell sx={{ fontWeight: 'bold' }}>{turbine.name}</TableCell>
-                              <TableCell>
-                                <Chip
-                                  label={maintenance.type}
-                                  color={maintenance.type === 'Corrective' ? 'warning' : 'info'}
-                                  size="small"
-                                />
-                              </TableCell>
-                              <TableCell>{maintenance.description}</TableCell>
-                              <TableCell>{maintenance.scheduled}</TableCell>
-                              <TableCell>{maintenance.start || '-'}</TableCell>
-                              <TableCell>{maintenance.end || '-'}</TableCell>
-                              <TableCell>
-                                <Chip
-                                  label={maintenance.status}
-                                  color={getStatusColor(maintenance.status)}
-                                  size="small"
-                                />
-                              </TableCell>
-                              <TableCell>{maintenance.duration || '-'}</TableCell>
-                              <TableCell>{maintenance.team}</TableCell>
-                            </TableRow>
-                          ))
-                        ) : (
-                          <TableRow key={turbine.name}>
-                            <TableCell sx={{ fontWeight: 'bold' }}>{turbine.name}</TableCell>
-                            <TableCell colSpan={8} sx={{ fontStyle: 'italic', color: 'text.secondary' }}>
-                              No maintenance activities scheduled
+                      {central.maintenance.details && central.maintenance.details.length > 0 ? (
+                        central.maintenance.details.map((maintenance, index) => (
+                          <TableRow key={`${central.central_id}-maintenance-${index}`}>
+                            <TableCell sx={{ fontWeight: 'bold' }}>{maintenance.turbine_name || 'N/A'}</TableCell>
+                            <TableCell>{maintenance.kks || 'N/A'}</TableCell>
+                            <TableCell>{maintenance.ot_number || 'N/A'}</TableCell>
+                            <TableCell>{maintenance.description || 'No description'}</TableCell>
+                            <TableCell>
+                              <Chip
+                                label={maintenance.type || 'Unknown'}
+                                color={maintenance.type === 'Systematic' ? 'info' : 'warning'}
+                                size="small"
+                              />
                             </TableCell>
+                            <TableCell>{maintenance.start || 'N/A'}</TableCell>
+                            <TableCell>{maintenance.end || 'N/A'}</TableCell>
                           </TableRow>
-                        )
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={7} sx={{ fontStyle: 'italic', color: 'text.secondary', textAlign: 'center' }}>
+                            No maintenance activities recorded for this period
+                          </TableCell>
+                        </TableRow>
                       )}
                     </TableBody>
                   </Table>
@@ -663,6 +356,22 @@ const Incidents = ({ selectedCentrals }) => {
           ))}
         </Box>
       )}
+
+      {/* Snackbar for notifications */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert 
+          onClose={handleSnackbarClose} 
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

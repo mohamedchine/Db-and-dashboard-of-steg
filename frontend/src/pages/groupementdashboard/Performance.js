@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Box,
   Card,
@@ -14,7 +14,11 @@ import {
   TableHead,
   TableRow,
   IconButton,
-  Popover
+  Popover,
+  CircularProgress,
+  Alert,
+  Button,
+  Snackbar
 } from '@mui/material';
 import {
   BarChart,
@@ -27,183 +31,85 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import {
-  Info as InfoIcon
+  Info as InfoIcon,
+  Refresh as RefreshIcon
 } from '@mui/icons-material';
+import useFetchPerformanceData from './hooks/useFetchPerformanceData';
 
-const Performance = ({ selectedCentrals }) => {
+const Performance = ({ selectedCentrals, dateRange }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [triggerFetch, setTriggerFetch] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
-  // Production data for each turbine by central
-  const productionData = [
-    {
-      central: 'KSR',
-      turbines: [
-        { name: 'TG1', production: 0, auxiliaries: 0, net: 0 },
-        { name: 'TG2', production: 0, auxiliaries: 0, net: 0 },
-      ],
-    },
-    {
-      central: 'FRA',
-      turbines: [
-        { name: 'TG1', production: 0, auxiliaries: 0, net: 0 },
-        { name: 'TG2', production: 65810, auxiliaries: 1576, net: 64234 },
-      ],
-    },
-    {
-      central: 'BMA',
-      turbines: [
-        { name: 'TG3', production: 5539, auxiliaries: 650, net: 4889 },
-        { name: 'TG4', production: 2460, auxiliaries: 500, net: 1960 },
-        { name: 'TG5', production: 2048, auxiliaries: 290, net: 1758 },
-      ],
-    },
-    {
-      central: 'THY',
-      turbines: [
-        { name: 'TG1', production: 6323, auxiliaries: 1686, net: 4637 },
-        { name: 'TG2', production: 2790, auxiliaries: 859, net: 1931 },
-        { name: 'TG3', production: 1239, auxiliaries: 278, net: 961 },
-      ],
-    },
-    {
-      central: 'RBA',
-      turbines: [{ name: 'TG', production: 0, auxiliaries: 0, net: 0 }],
-    },
-    {
-      central: 'ZAR',
-      turbines: [{ name: 'TG', production: 0, auxiliaries: 0, net: 0 }],
-    },
-  ];
+  // Use the performance data fetching hook
+  const { performanceData, loading, error } = useFetchPerformanceData(dateRange, triggerFetch);
 
-  // Availability data for each turbine by central
-  const availabilityData = [
-    {
-      central: 'KSR',
-      turbines: [
-        { name: 'TG1', availability: 0, hours: 0, rate: '0.00%' },
-        { name: 'TG2', availability: 744, hours: 0, rate: '100.00%' },
-      ],
-    },
-    {
-      central: 'FRA',
-      turbines: [
-        { name: 'TG1', availability: 0, hours: 744, rate: '0.00%' },
-        { name: 'TG2', availability: 744, hours: 336.12, rate: '100.00%' },
-      ],
-    },
-    {
-      central: 'BMA',
-      turbines: [
-        { name: 'TG3', availability: 741.15, hours: 26.12, rate: '99.63%' },
-        { name: 'TG4', availability: 743.28, hours: 11.42, rate: '99.93%' },
-        { name: 'TG5', availability: 744, hours: 28.42, rate: '100.00%' },
-      ],
-    },
-    {
-      central: 'THY',
-      turbines: [
-        { name: 'TG1', availability: 709.3, hours: 29.24, rate: '95.36%' },
-        { name: 'TG2', availability: 742.3, hours: 4.18, rate: '99.80%' },
-        { name: 'TG3', availability: 742.3, hours: 72.42, rate: '99.80%' },
-      ],
-    },
-    {
-      central: 'RBA',
-      turbines: [{ name: 'TG', availability: 744, hours: 0, rate: '100.00%' }],
-    },
-    {
-      central: 'ZAR',
-      turbines: [{ name: 'TG', availability: 744, hours: 0, rate: '100.00%' }],
-    },
-  ];
+  // Auto-fetch data on component mount
+  useEffect(() => {
+    if (!triggerFetch) {
+      setTriggerFetch(true);
+    }
+  }, [dateRange]);
 
-  // Consumption data for each turbine by central
-  const consumptionData = [
-    {
-      central: 'KSR',
-      turbines: [
-        { name: 'TG1', consumption: 0, specific: 0 },
-        { name: 'TG2', consumption: 0, specific: 0 },
-      ],
-    },
-    {
-      central: 'FRA',
-      turbines: [
-        { name: 'TG1', consumption: 0, specific: 0 },
-        { name: 'TG2', consumption: 13790, specific: 0.215 },
-      ],
-    },
-    {
-      central: 'BMA',
-      turbines: [
-        { name: 'TG3', consumption: 5474, specific: 1.12 },
-        { name: 'TG4', consumption: 2410, specific: 1.23 },
-        { name: 'TG5', consumption: 2019, specific: 1.149 },
-      ],
-    },
-    {
-      central: 'THY',
-      turbines: [
-        { name: 'TG1', consumption: 6306, specific: 1.36 },
-        { name: 'TG2', consumption: 2781, specific: 1.44 },
-        { name: 'TG3', consumption: 1236, specific: 1.286 },
-      ],
-    },
-    {
-      central: 'RBA',
-      turbines: [{ name: 'TG', consumption: 0, specific: 0 }],
-    },
-    {
-      central: 'ZAR',
-      turbines: [{ name: 'TG', consumption: 0, specific: 0 }],
-    },
-  ];
+  // Handle fetch completion
+  useEffect(() => {
+    if (triggerFetch && !loading) {
+      if (error) {
+        setSnackbarMessage(`Error: ${error}`);
+        setSnackbarSeverity('error');
+      } else if (performanceData) {
+        setSnackbarMessage('Performance data refreshed successfully');
+        setSnackbarSeverity('success');
+      }
+      setSnackbarOpen(true);
+      setTriggerFetch(false);
+    }
+  }, [triggerFetch, loading, error, performanceData]);
 
-  // Filter data based on selected centrals
-  const getFilteredData = (data) => {
-    return data.filter((item) => selectedCentrals[item.central.toLowerCase()]);
+  // Filter performance data based on selected centrals
+  const filteredData = useMemo(() => {
+    if (!performanceData || !selectedCentrals) return [];
+    
+    return performanceData.filter(central => 
+      selectedCentrals.includes(central.central_id)
+    );
+  }, [performanceData, selectedCentrals]);
+
+  const handleRefreshData = () => {
+    setTriggerFetch(true);
   };
 
-  const filteredProductionData = getFilteredData(productionData);
-  const filteredAvailabilityData = getFilteredData(availabilityData);
-  const filteredConsumptionData = getFilteredData(consumptionData);
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   // Prepare chart data functions
   const prepareProductionChartData = () => {
-    return filteredProductionData.map((central) => ({
-      name: central.central,
-      gross: central.turbines.reduce((sum, t) => sum + t.production, 0),
-      auxiliaries: central.turbines.reduce((sum, t) => sum + t.auxiliaries, 0),
-      net: central.turbines.reduce((sum, t) => sum + t.net, 0),
+    return filteredData.map((central) => ({
+      name: central.central_name,
+      gross: central.production.total.gross_production,
+      auxiliaries: central.production.total.auxiliaries_consumption,
+      net: central.production.total.net_production,
     }));
   };
 
   const prepareAvailabilityChartData = () => {
-    return filteredAvailabilityData.map((central) => {
-      const avgRate =
-        central.turbines.reduce((sum, t) => sum + parseFloat(t.rate.replace('%', '')), 0) /
-        central.turbines.length;
-      return {
-        name: central.central,
-        rate: avgRate,
-        hours: central.turbines.reduce((sum, t) => sum + t.hours, 0) / central.turbines.length,
-      };
-    });
+    return filteredData.map((central) => ({
+      name: central.central_name,
+      rate: parseFloat(central.availability.average.availability_rate),
+      hours: parseFloat(central.availability.average.operating_hours),
+    }));
   };
 
   const prepareConsumptionChartData = () => {
-    return filteredConsumptionData.map((central) => {
-      const activeTurbines = central.turbines.filter((t) => t.specific > 0);
-      const avgSpecific =
-        activeTurbines.length > 0 ? activeTurbines.reduce((sum, t) => sum + t.specific, 0) / activeTurbines.length : 0;
-
-      return {
-        name: central.central,
-        consumption: central.turbines.reduce((sum, t) => sum + t.consumption, 0),
-        specific: avgSpecific,
-      };
-    });
+    return filteredData.map((central) => ({
+      name: central.central_name,
+      consumption: central.consumption.total.fuel_consumption,
+      specific: parseFloat(central.consumption.average.specific_consumption),
+    }));
   };
 
   const handleTabChange = (event, newValue) => {
@@ -283,10 +189,10 @@ const Performance = ({ selectedCentrals }) => {
             </Card>
 
             {/* Production Tables */}
-            {filteredProductionData.map((central) => (
-              <Card key={central.central} sx={{ mb: 3 }}>
+            {filteredData.map((central) => (
+              <Card key={central.central_id} sx={{ mb: 3 }}>
                 <CardHeader
-                  title={`${central.central} Central`}
+                  title={`${central.central_name} Central`}
                   sx={{ backgroundColor: 'grey.100' }}
                 />
                 <CardContent sx={{ p: 0 }}>
@@ -301,24 +207,24 @@ const Performance = ({ selectedCentrals }) => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {central.turbines.map((turbine) => (
-                          <TableRow key={`${central.central}-${turbine.name}`}>
-                            <TableCell sx={{ fontWeight: 'bold' }}>{turbine.name}</TableCell>
-                            <TableCell align="right">{turbine.production.toLocaleString()}</TableCell>
-                            <TableCell align="right">{turbine.auxiliaries.toLocaleString()}</TableCell>
-                            <TableCell align="right">{turbine.net.toLocaleString()}</TableCell>
+                        {Object.entries(central.production.turbines).map(([turbineName, data]) => (
+                          <TableRow key={`${central.central_id}-${turbineName}`}>
+                            <TableCell sx={{ fontWeight: 'bold' }}>{turbineName}</TableCell>
+                            <TableCell align="right">{Number(data.gross_production).toLocaleString()}</TableCell>
+                            <TableCell align="right">{Number(data.auxiliaries_consumption).toLocaleString()}</TableCell>
+                            <TableCell align="right">{Number(data.net_production).toLocaleString()}</TableCell>
                           </TableRow>
                         ))}
                         <TableRow sx={{ backgroundColor: 'grey.50' }}>
                           <TableCell sx={{ fontWeight: 'bold' }}>Total</TableCell>
                           <TableCell align="right" sx={{ fontWeight: 'bold' }}>
-                            {central.turbines.reduce((sum, t) => sum + t.production, 0).toLocaleString()}
+                            {Number(central.production.total.gross_production).toLocaleString()}
                           </TableCell>
                           <TableCell align="right" sx={{ fontWeight: 'bold' }}>
-                            {central.turbines.reduce((sum, t) => sum + t.auxiliaries, 0).toLocaleString()}
+                            {Number(central.production.total.auxiliaries_consumption).toLocaleString()}
                           </TableCell>
                           <TableCell align="right" sx={{ fontWeight: 'bold' }}>
-                            {central.turbines.reduce((sum, t) => sum + t.net, 0).toLocaleString()}
+                            {Number(central.production.total.net_production).toLocaleString()}
                           </TableCell>
                         </TableRow>
                       </TableBody>
@@ -378,7 +284,7 @@ const Performance = ({ selectedCentrals }) => {
                     <BarChart data={prepareAvailabilityChartData()} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="name" />
-                      <YAxis domain={[90, 100]} />
+                      <YAxis domain={[0, 100]} />
                       <Tooltip formatter={(value) => value.toFixed(2) + "%"} />
                       <Legend />
                       <Bar dataKey="rate" name="Availability Rate (%)" fill="#8884d8" />
@@ -389,10 +295,10 @@ const Performance = ({ selectedCentrals }) => {
             </Card>
 
             {/* Availability Tables */}
-            {filteredAvailabilityData.map((central) => (
-              <Card key={central.central} sx={{ mb: 3 }}>
+            {filteredData.map((central) => (
+              <Card key={central.central_id} sx={{ mb: 3 }}>
                 <CardHeader
-                  title={`${central.central} Central`}
+                  title={`${central.central_name} Central`}
                   sx={{ backgroundColor: 'grey.100' }}
                 />
                 <CardContent sx={{ p: 0 }}>
@@ -407,30 +313,24 @@ const Performance = ({ selectedCentrals }) => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {central.turbines.map((turbine) => (
-                          <TableRow key={`${central.central}-${turbine.name}`}>
-                            <TableCell sx={{ fontWeight: 'bold' }}>{turbine.name}</TableCell>
-                            <TableCell align="right">{turbine.availability.toLocaleString()}</TableCell>
-                            <TableCell align="right">{turbine.hours.toLocaleString()}</TableCell>
-                            <TableCell align="right">{turbine.rate}</TableCell>
+                        {Object.entries(central.availability.turbines).map(([turbineName, data]) => (
+                          <TableRow key={`${central.central_id}-${turbineName}`}>
+                            <TableCell sx={{ fontWeight: 'bold' }}>{turbineName}</TableCell>
+                            <TableCell align="right">{Number(data.available_hours).toLocaleString()}</TableCell>
+                            <TableCell align="right">{Number(data.operating_hours).toLocaleString()}</TableCell>
+                            <TableCell align="right">{data.availability_rate}%</TableCell>
                           </TableRow>
                         ))}
                         <TableRow sx={{ backgroundColor: 'grey.50' }}>
                           <TableCell sx={{ fontWeight: 'bold' }}>Average</TableCell>
                           <TableCell align="right" sx={{ fontWeight: 'bold' }}>
-                            {(
-                              central.turbines.reduce((sum, t) => sum + t.availability, 0) / central.turbines.length
-                            ).toFixed(2)}
+                            {Number(central.availability.average.available_hours).toFixed(2)}
                           </TableCell>
                           <TableCell align="right" sx={{ fontWeight: 'bold' }}>
-                            {(central.turbines.reduce((sum, t) => sum + t.hours, 0) / central.turbines.length).toFixed(2)}
+                            {Number(central.availability.average.operating_hours).toFixed(2)}
                           </TableCell>
                           <TableCell align="right" sx={{ fontWeight: 'bold' }}>
-                            {(
-                              central.turbines.reduce((sum, t) => sum + parseFloat(t.rate.replace('%', '')), 0) /
-                              central.turbines.length
-                            ).toFixed(2)}
-                            %
+                            {central.availability.average.availability_rate}%
                           </TableCell>
                         </TableRow>
                       </TableBody>
@@ -447,7 +347,7 @@ const Performance = ({ selectedCentrals }) => {
           <Box sx={{ mt: 3 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
               <Typography variant="h5" component="h3">
-                Consumption Data
+                Fuel Consumption Data
               </Typography>
               <IconButton onClick={handleInfoClick}>
                 <InfoIcon />
@@ -466,13 +366,10 @@ const Performance = ({ selectedCentrals }) => {
                     Consumption Calculations:
                   </Typography>
                   <Typography variant="body2" sx={{ mb: 1 }}>
-                    <strong>Fuel Consumption</strong> = Total amount of fuel used (Nm³ for gas or kg for liquid fuel)
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    <strong>Specific Consumption (mth/kWh)</strong> = Fuel Consumption ÷ Net Production
+                    <strong>Fuel Consumption</strong> = Total fuel consumed during the period
                   </Typography>
                   <Typography variant="body2">
-                    Lower specific consumption indicates better efficiency
+                    <strong>Specific Consumption</strong> = Fuel consumption per unit of energy produced
                   </Typography>
                 </Box>
               </Popover>
@@ -481,7 +378,7 @@ const Performance = ({ selectedCentrals }) => {
             {/* Consumption Chart */}
             <Card sx={{ mb: 3 }}>
               <CardHeader
-                title="Specific Consumption by Central"
+                title="Fuel Consumption by Central"
                 sx={{ backgroundColor: 'grey.100' }}
               />
               <CardContent>
@@ -491,9 +388,9 @@ const Performance = ({ selectedCentrals }) => {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="name" />
                       <YAxis />
-                      <Tooltip formatter={(value) => value.toFixed(3)} />
+                      <Tooltip />
                       <Legend />
-                      <Bar dataKey="specific" name="Specific Consumption (mth/kWh)" fill="#82ca9d" />
+                      <Bar dataKey="consumption" name="Total Consumption" fill="#8884d8" />
                     </BarChart>
                   </ResponsiveContainer>
                 </Box>
@@ -501,10 +398,10 @@ const Performance = ({ selectedCentrals }) => {
             </Card>
 
             {/* Consumption Tables */}
-            {filteredConsumptionData.map((central) => (
-              <Card key={central.central} sx={{ mb: 3 }}>
+            {filteredData.map((central) => (
+              <Card key={central.central_id} sx={{ mb: 3 }}>
                 <CardHeader
-                  title={`${central.central} Central`}
+                  title={`${central.central_name} Central`}
                   sx={{ backgroundColor: 'grey.100' }}
                 />
                 <CardContent sx={{ p: 0 }}>
@@ -514,29 +411,24 @@ const Performance = ({ selectedCentrals }) => {
                         <TableRow>
                           <TableCell>Turbine</TableCell>
                           <TableCell align="right">Fuel Consumption</TableCell>
-                          <TableCell align="right">Specific Consumption (mth/kWh)</TableCell>
+                          <TableCell align="right">Specific Consumption</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {central.turbines.map((turbine) => (
-                          <TableRow key={`${central.central}-${turbine.name}`}>
-                            <TableCell sx={{ fontWeight: 'bold' }}>{turbine.name}</TableCell>
-                            <TableCell align="right">{turbine.consumption.toLocaleString()}</TableCell>
-                            <TableCell align="right">{turbine.specific.toFixed(3)}</TableCell>
+                        {Object.entries(central.consumption.turbines).map(([turbineName, data]) => (
+                          <TableRow key={`${central.central_id}-${turbineName}`}>
+                            <TableCell sx={{ fontWeight: 'bold' }}>{turbineName}</TableCell>
+                            <TableCell align="right">{Number(data.fuel_consumption).toLocaleString()}</TableCell>
+                            <TableCell align="right">{data.specific_consumption}</TableCell>
                           </TableRow>
                         ))}
                         <TableRow sx={{ backgroundColor: 'grey.50' }}>
                           <TableCell sx={{ fontWeight: 'bold' }}>Total/Average</TableCell>
                           <TableCell align="right" sx={{ fontWeight: 'bold' }}>
-                            {central.turbines.reduce((sum, t) => sum + t.consumption, 0).toLocaleString()}
+                            {Number(central.consumption.total.fuel_consumption).toLocaleString()}
                           </TableCell>
                           <TableCell align="right" sx={{ fontWeight: 'bold' }}>
-                            {(() => {
-                              const activeTurbines = central.turbines.filter((t) => t.specific > 0);
-                              return activeTurbines.length > 0
-                                ? (activeTurbines.reduce((sum, t) => sum + t.specific, 0) / activeTurbines.length).toFixed(3)
-                                : "0.000";
-                            })()}
+                            {central.consumption.average.specific_consumption}
                           </TableCell>
                         </TableRow>
                       </TableBody>
@@ -553,12 +445,52 @@ const Performance = ({ selectedCentrals }) => {
     }
   };
 
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" py={8}>
+        <CircularProgress />
+        <Typography variant="h6" sx={{ ml: 2 }}>
+          Loading performance data...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (!performanceData || filteredData.length === 0) {
+    return (
+      <Box py={4}>
+        <Alert severity="info">
+          No performance data available. Please click "Refresh Data" to load the latest information.
+        </Alert>
+      </Box>
+    );
+  }
+
   return (
     <Box>
       <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant="h4" component="h2">
-          Turbine Performance
+          Performance Dashboard
         </Typography>
+        
+        {/* Refresh Button */}
+        <Button
+          variant="contained"
+          startIcon={loading ? <CircularProgress size={16} color="inherit" /> : <RefreshIcon />}
+          onClick={handleRefreshData}
+          disabled={loading}
+          sx={{ 
+            backgroundColor: 'primary.main',
+            '&:hover': {
+              backgroundColor: 'primary.dark'
+            },
+            '&:disabled': {
+              backgroundColor: 'grey.300'
+            }
+          }}
+        >
+          {loading ? 'Loading...' : 'Refresh Data'}
+        </Button>
       </Box>
 
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -570,6 +502,22 @@ const Performance = ({ selectedCentrals }) => {
       </Box>
 
       {getTabContent()}
+
+      {/* Snackbar for notifications */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert 
+          onClose={handleSnackbarClose} 
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
