@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Box,
   Card,
@@ -16,9 +16,7 @@ import {
   IconButton,
   Popover,
   CircularProgress,
-  Alert,
-  Button,
-  Snackbar
+  Alert
 } from '@mui/material';
 import {
   BarChart,
@@ -31,43 +29,12 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import {
-  Info as InfoIcon,
-  Refresh as RefreshIcon
+  Info as InfoIcon
 } from '@mui/icons-material';
-import useFetchPerformanceData from './hooks/useFetchPerformanceData';
 
-const Performance = ({ selectedCentrals, dateRange }) => {
+const Performance = ({ selectedCentrals, performanceData, loading }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [triggerFetch, setTriggerFetch] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-
-  // Use the performance data fetching hook
-  const { performanceData, loading, error } = useFetchPerformanceData(dateRange, triggerFetch);
-
-  // Auto-fetch data on component mount
-  useEffect(() => {
-    if (!triggerFetch) {
-      setTriggerFetch(true);
-    }
-  }, [dateRange]);
-
-  // Handle fetch completion
-  useEffect(() => {
-    if (triggerFetch && !loading) {
-      if (error) {
-        setSnackbarMessage(`Error: ${error}`);
-        setSnackbarSeverity('error');
-      } else if (performanceData) {
-        setSnackbarMessage('Performance data refreshed successfully');
-        setSnackbarSeverity('success');
-      }
-      setSnackbarOpen(true);
-      setTriggerFetch(false);
-    }
-  }, [triggerFetch, loading, error, performanceData]);
 
   // Filter performance data based on selected centrals
   const filteredData = useMemo(() => {
@@ -77,14 +44,6 @@ const Performance = ({ selectedCentrals, dateRange }) => {
       selectedCentrals.includes(central.central_id)
     );
   }, [performanceData, selectedCentrals]);
-
-  const handleRefreshData = () => {
-    setTriggerFetch(true);
-  };
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
 
   // Prepare chart data functions
   const prepareProductionChartData = () => {
@@ -456,11 +415,21 @@ const Performance = ({ selectedCentrals, dateRange }) => {
     );
   }
 
-  if (!performanceData || filteredData.length === 0) {
+  if (!performanceData) {
     return (
       <Box py={4}>
         <Alert severity="info">
-          No performance data available. Please click "Refresh Data" to load the latest information.
+          No data loaded. Please select a date range and click "Apply" to load performance data.
+        </Alert>
+      </Box>
+    );
+  }
+
+  if (filteredData.length === 0) {
+    return (
+      <Box py={4}>
+        <Alert severity="warning">
+          No performance data available for the selected centrals and date range.
         </Alert>
       </Box>
     );
@@ -468,30 +437,9 @@ const Performance = ({ selectedCentrals, dateRange }) => {
 
   return (
     <Box>
-      <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h4" component="h2">
-          Performance Dashboard
-        </Typography>
-        
-        {/* Refresh Button */}
-        <Button
-          variant="contained"
-          startIcon={loading ? <CircularProgress size={16} color="inherit" /> : <RefreshIcon />}
-          onClick={handleRefreshData}
-          disabled={loading}
-          sx={{ 
-            backgroundColor: 'primary.main',
-            '&:hover': {
-              backgroundColor: 'primary.dark'
-            },
-            '&:disabled': {
-              backgroundColor: 'grey.300'
-            }
-          }}
-        >
-          {loading ? 'Loading...' : 'Refresh Data'}
-        </Button>
-      </Box>
+      <Typography variant="h4" component="h2" sx={{ mb: 4 }}>
+        Performance Dashboard
+      </Typography>
 
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={activeTab} onChange={handleTabChange} aria-label="performance tabs">
@@ -502,22 +450,6 @@ const Performance = ({ selectedCentrals, dateRange }) => {
       </Box>
 
       {getTabContent()}
-
-      {/* Snackbar for notifications */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={4000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      >
-        <Alert 
-          onClose={handleSnackbarClose} 
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };
