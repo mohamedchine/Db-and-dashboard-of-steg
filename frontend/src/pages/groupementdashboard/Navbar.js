@@ -8,8 +8,9 @@ import {
 import {
   Menu as MenuIcon
 } from '@mui/icons-material';
-
+import useAuth from '../../context/useAuth';
 const Navbar = ({ handleDrawerToggle }) => {
+  const {user} = useAuth();
   return (
     <AppBar
       position="fixed"
@@ -31,7 +32,7 @@ const Navbar = ({ handleDrawerToggle }) => {
         </IconButton>
 
         <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-          Groupement Dashboard
+          {user.unitname}
         </Typography>
       </Toolbar>
     </AppBar>
