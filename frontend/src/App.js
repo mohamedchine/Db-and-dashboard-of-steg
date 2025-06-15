@@ -17,6 +17,7 @@ import PersistingLogin from "./utils/persistinglogin";
 import AuthRedirect from "./utils/authredirect";
 import { TurbinesProvider } from "./context/turbinesContext";
 import { ScentralsProvider } from "./context/supervisedcentrals";
+import{AllcentralsProvider} from './context/allcentrals'
 function App() {
   return (
     <div className="App">
@@ -55,10 +56,16 @@ function App() {
                  />
              </Route>
           
-          <Route element={<RequireAuth allowedunittype={["direction"]} />}>
+             <Route
+              element={
+                <AllcentralsProvider>
+                  <RequireAuth allowedunittype={["direction"]} />
+                </AllcentralsProvider>
+              }
+            />
             <Route path="/direction/dashboard/*" element={<DirectionDashboard />} />
           </Route>
-        </Route>
+      
         
         {/* Not found page */}
         <Route path="*" element={<NotFound />} />
