@@ -37,6 +37,7 @@ const adddefectiveequipementCtrl = async(req,res)=>{
 
    return res.json({message : "added successfuly" ,insertedrow :addedeq});
 } catch(e){
+  console.log(e);
     return res.status(500).json({message : "sorry an error has hapend"  });
 }
 

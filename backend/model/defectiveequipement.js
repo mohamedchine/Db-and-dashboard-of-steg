@@ -17,8 +17,8 @@ const addDefectiveEquipment = async ({
       turbine_id,
       kks,
       description,
-      reported_at ? toISOString(reported_at) : new Date().toISOString(),//in utc
-      !fixed_at ? null : fixed_at,
+      reported_at || new Date(),//in utc
+      fixed_at || null,
       !fixed_at  ? "Not Fixed" : "Fixed"
     ]
   );

@@ -45,7 +45,7 @@ const DefectiveEquipmentForm = ({ turbineId }) => {
       const response = await axs.post(`/defectiveequipements/add/${user.central_id}`, equipmentData);
       toast.success(response.data.message);
     } catch (error) {
-     toast.error(error.response.data.message)
+     toast.error(error.response.data.message);
     } finally {
       setLoading(false);
     }
