@@ -89,7 +89,7 @@ const ActivityLog = () => {
     try {
       setLoading(true)
       const response = await axs.get(`/activitylogs/${centralId}?page=${pageNum}`);
-
+      console.log(response.data.data);
       setActivities(transformActivities(response.data.data,turbines));
       setTotalPages(response.data.total);
       } catch(e){

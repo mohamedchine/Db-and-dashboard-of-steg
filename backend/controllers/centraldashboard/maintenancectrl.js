@@ -133,6 +133,8 @@ const deletemaintenanceCtrl = async(req,res)=>{
        const {Old,New} = await deleteMaintenance(req.maintenance.id) ;
        activity.target_table_old_value = Old;
        activity.target_table_new_value = New;
+       await addactivitylog(activity);
+
        return res.status(201).json({ message: "Successfully deleted maintenance" });
 }
 
