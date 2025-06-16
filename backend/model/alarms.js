@@ -273,6 +273,7 @@ const getAlarmsByPeriodAndCentralId = async (centralId, startDate, endDate) => {
 
   } catch (error) {
     console.error('Error fetching alarm data:', error);
+    console.log('hi');
     throw error;
   }
 };
