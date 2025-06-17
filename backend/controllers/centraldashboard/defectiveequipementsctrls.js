@@ -14,7 +14,19 @@ const { addactivitylog } = require('../../model/activitylogs');
 
 const adddefectiveequipementCtrl = async(req,res)=>{
   if(req.body.reported_at && req.body.fixed_at && req.body.reported_at>req.body.fixed_at) return res.status(400).json({message: "reported must be greater than happened_at"}) ;
-    const {error} = validateDefectiveEquipment(req.body);
+
+  if (req.body.reported_at && new Date(req.body.reported_at) > new Date()) {
+    return res.status(400).json({ message: "reported_at cannot be in the future" });
+  }
+
+  // Check if resolved_at is in the future
+  if (req.body.fixed_at && new Date(req.body.fixed_at) > new Date()) {
+    return res.status(400).json({ message: "fixed_at cannot be in the future" });
+  }
+  
+  
+  
+  const {error} = validateDefectiveEquipment(req.body);
     if(error) return res.status(400).json({message : error.details[0].message});
 
     try{

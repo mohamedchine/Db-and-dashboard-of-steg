@@ -6,6 +6,14 @@ const { validateAddAlarm } = require("../../utils/dailyreportValidation");
 const addalarmCtrl = async (req, res) => {
   if(req.body.happened_at && req.body.resolved_at && req.body.happened_at>req.body.resolved_at) return res.status(400).json({message: "resolved_at must be greater than happened_at"}) ;
    //validation of the data
+   if (req.body.happened_at && new Date(req.body.happened_at) > new Date()) {
+    return res.status(400).json({ message: "happened_at cannot be in the future" });
+  }
+
+  // Check if resolved_at is in the future
+  if (req.body.resolved_at && new Date(req.body.resolved_at) > new Date()) {
+    return res.status(400).json({ message: "resolved_at cannot be in the future" });
+  }
    const { error } = validateAddAlarm(req.body);
   
    if (error) {

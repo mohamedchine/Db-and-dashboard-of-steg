@@ -7,9 +7,17 @@ const { addactivitylog } = require('../../model/activitylogs');
 
 
 const addmaintenanceCtrl = async(req, res) => {
+
     const {error} = validateMaintenance(req.body);
     if(error) return res.status(400).json({message: error.details[0].message});
+    if (req.body.start && new Date(req.body.start) > new Date()) {
+        return res.status(400).json({ message: "start cannot be in the future" });
+      }
     
+      // Check if resolved_at is in the future
+      if (req.body.end && new Date(req.body.end) > new Date()) {
+        return res.status(400).json({ message: "end cannot be in the future" });
+      }
     const {valid, message} = await validatesomemaintancecstuff(
         req, 
         req.body.type, 
