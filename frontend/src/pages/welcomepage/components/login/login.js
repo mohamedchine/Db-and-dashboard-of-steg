@@ -58,7 +58,7 @@ const Login = () => {
                     value={password}
                     onChange={(e) => setpassword(e.target.value)}
                 />
-                <Link to="/welcomepage/request-reset-password" className="frgpslink">Forgot password?</Link>
+                <Link to="/request-reset-password" className="frgpslink">Forgot password?</Link>
                 <button onClick={handleLogin} className="loginbtn" disabled={loadingg}>
                     {loadingg ? "loadingg .. " : "Login"}
                 </button>

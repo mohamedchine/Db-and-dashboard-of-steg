@@ -22,7 +22,7 @@ const requestPasswordResetCtrl = async (req, res) => {
 
     const token = genjwt({ userid: user.id, steg_email: user.steg_email, unittype }, "10m");
 
-    const resetLink = `${process.env.client_url}/reset-password?token=${token}`;
+    const resetLink = `http://localhost:3000/reset-password?token=${token}`;
     await sendmail(
         steg_email,
         'Password Reset',
@@ -37,7 +37,7 @@ const resetPasswordCtrl = async (req, res) => {
    
     const payload = verifyjwt(token);
     if (!payload) {
-        return res.status(400).json({ message: "Invalid or expired reset link , we will redirect you to request a new link" ,redirect : "/welcomepage/request-reset-password"  });
+        return res.status(400).json({ message: "Invalid or expired reset link , we will redirect you to request a new link" ,redirect : "/request-reset-password"  });
     }
     
     const { userid, steg_email, unittype } = payload;

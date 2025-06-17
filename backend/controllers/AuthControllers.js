@@ -91,7 +91,7 @@ const verifyAccountCtrl = async (req, res) => {
             [email, id]
             
         );
-        if (checkResult.length>0 && checkResult[0][0].is_verified==1
+        if (checkResult.length>0 && checkResult[0].is_verified==1
         ) {
             return res.status(200).send(`
                 <!DOCTYPE html>

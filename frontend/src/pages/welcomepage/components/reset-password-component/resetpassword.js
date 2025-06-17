@@ -21,7 +21,7 @@ const Resetpassword = () => {
   const [loading, setLoading] = useState(false);
 
   const handleRequestReset = async () => {
-    console.log(password)
+ 
     if (password != confirmpassword) {
       toast.error("Passwords do not match");
       return;
@@ -37,7 +37,7 @@ const Resetpassword = () => {
 
       toast.success(response.data.message);
       setTimeout(() => {
-        navigate("login" ,{replace:true}); 
+        navigate("/login" ,{replace:true}); 
       }, 3000);
     } catch (e) {
       toast.error(e.response.data.message );
