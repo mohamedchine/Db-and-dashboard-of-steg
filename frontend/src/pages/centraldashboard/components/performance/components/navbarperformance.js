@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 
 import { TurbinesContext } from '../../../../../context/turbinesContext';
+import { toast } from 'react-toastify';
 
 const PerformanceNaveBar = ({
   selectedTurbine,
@@ -70,7 +71,18 @@ const PerformanceNaveBar = ({
                 type="date"
                 id="date-input"
                 value={selectedDate.toISOString().split('T')[0]}
-                onChange={(e) => onDateChange(new Date(e.target.value))}
+                onChange={(e) => {
+                  const pickedDate = new Date(e.target.value);
+                  const today = new Date();
+                  today.setHours(0, 0, 0, 0); // Normalize today's date
+              
+                  if (pickedDate > today) {
+                    toast.error('You cannot choose a future date.');
+                    return;
+                  }
+              
+                  onDateChange(pickedDate);
+                }}
                 style={{
                   padding: '10px',
                   fontSize: '1rem',
