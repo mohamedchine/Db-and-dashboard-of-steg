@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 23, 2025 at 01:12 AM
+-- Generation Time: Jul 26, 2025 at 01:45 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -53,7 +53,18 @@ INSERT INTO `activity_logs` (`id`, `central_user_email`, `action`, `target_table
 (28, 'arkanmsss80@gmail.com', 'add', 'defective_equipement', 'added a defecitve_equipement', '2025-05-21 00:41:29', NULL, '{\"id\":33,\"central_id\":5,\"turbine_id\":1,\"kks\":\"KKS12345\",\"description\":\"Broken rotor blade\",\"comments\":\"Needs immediate replacement\",\"reported_at\":\"2023-05-15T07:00:00.000Z\",\"fixed_at\":null,\"created_at\":\"2025-05-20T23:41:29.000Z\",\"status\":\"\"}', NULL, NULL, NULL),
 (29, 'arkanmsss80@gmail.com', 'add', 'maintenances', 'added a maintenance', '2025-05-21 01:11:43', NULL, '{\"id\":33,\"central_id\":5,\"kks\":\"KKS123\",\"ot_number\":\"OT-001\",\"description\":\"Repair done\",\"type\":\"Systematic\",\"related_item_type\":\"Alarm\",\"related_item_id\":45,\"start\":\"2025-05-10T07:00:00.000Z\",\"end\":null,\"created_at\":\"2025-05-21T00:11:43.000Z\",\"updated_at\":null}', 'alarms', '{\"id\":45,\"turbine_id\":64,\"central_id\":5,\"alarm_code\":\"ALM-K003\",\"description\":\"Vibration threshold exceeded\",\"status\":\"Active\",\"happened_at\":\"2025-05-03T08:45:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-05-15T21:53:05.000Z\"}', '{\"id\":45,\"turbine_id\":64,\"central_id\":5,\"alarm_code\":\"ALM-K003\",\"description\":\"Vibration threshold exceeded\",\"status\":\"Pending\",\"happened_at\":\"2025-05-03T08:45:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-05-15T21:53:05.000Z\"}'),
 (30, 'arkanmsss80@gmail.com', 'add', 'alarms', 'added an alarm', '2025-05-22 23:12:00', NULL, '{\"id\":54,\"turbine_id\":2,\"central_id\":5,\"alarm_code\":\"B2\",\"description\":\"Low oil pressure\",\"status\":\"Active\",\"happened_at\":\"2023-05-15T07:00:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-05-22T22:12:00.000Z\"}', NULL, NULL, NULL),
-(31, 'arkanmsss80@gmail.com', 'update', 'performances', 'updated a performance record', '2025-05-22 23:27:55', '{\"id\":2,\"central_id\":5,\"turbine_id\":64,\"performance_date\":\"2025-04-30T23:00:00.000Z\",\"fuel_type\":\"Gas\",\"load_status\":\"Loaded\",\"period\":\"Day\",\"fuel_consumption\":\"125.50\",\"gross_energy_production\":\"3100.00\",\"auxiliaries_consumption\":\"155.00\",\"net_active_energy_production\":\"2945.00\",\"reactive_energy_production\":\"210.00\",\"startups\":0,\"ignitions\":0,\"couplings\":0,\"load_trips\":0,\"net_energy_distribution\":null,\"starts_since_last_inspection\":null,\"max_power_peak\":null,\"flame_hours\":null,\"production_hours\":\"20.50\",\"daily_availability\":\"23.00\",\"average_hourly_power\":null,\"gas_calorific_value\":null,\"gasoil_calorific_value\":null,\"specific_consumption\":\"0.43\",\"daily_availability_rate\":\"95.83\",\"cumulative_availability_rate\":null,\"operating_hours_last_inspection\":null,\"starts_since_first_coupling\":null,\"operating_hours_since_first_coupling\":null,\"pumpable_gasoil_stock\":null,\"autonomy_at_pmc\":null,\"mwh_peak\":null,\"mwh_tlr\":null,\"created_at\":\"2025-05-14T21:36:50.000Z\",\"updated_at\":\"2025-05-14T21:36:50.000Z\"}', '{\"id\":2,\"central_id\":\"5\",\"turbine_id\":\"64\",\"performance_date\":\"2025-05-01\",\"fuel_type\":\"Gas\",\"load_status\":\"Loaded\",\"period\":\"Day\",\"fuel_consumption\":120.55,\"gross_energy_production\":3000.75,\"auxiliaries_consumption\":150.25,\"net_active_energy_production\":2850.5,\"reactive_energy_production\":200,\"startups\":4,\"ignitions\":3,\"couplings\":1,\"load_trips\":0,\"net_energy_distribution\":2750.45,\"starts_since_last_inspection\":10,\"max_power_peak\":450.75,\"flame_hours\":18.25,\"production_hours\":20,\"daily_availability\":98.5,\"average_hourly_power\":142.53,\"gas_calorific_value\":45.78,\"gasoil_calorific_value\":42.3,\"specific_consumption\":0.43,\"daily_availability_rate\":97.25,\"cumulative_availability_rate\":96,\"operating_hours_last_inspection\":2500,\"starts_since_first_coupling\":80,\"operating_hours_since_first_coupling\":10500,\"pumpable_gasoil_stock\":1200.6,\"autonomy_at_pmc\":15.75,\"mwh_peak\":120.5,\"mwh_tlr\":85.25}', NULL, NULL, NULL);
+(31, 'arkanmsss80@gmail.com', 'update', 'performances', 'updated a performance record', '2025-05-22 23:27:55', '{\"id\":2,\"central_id\":5,\"turbine_id\":64,\"performance_date\":\"2025-04-30T23:00:00.000Z\",\"fuel_type\":\"Gas\",\"load_status\":\"Loaded\",\"period\":\"Day\",\"fuel_consumption\":\"125.50\",\"gross_energy_production\":\"3100.00\",\"auxiliaries_consumption\":\"155.00\",\"net_active_energy_production\":\"2945.00\",\"reactive_energy_production\":\"210.00\",\"startups\":0,\"ignitions\":0,\"couplings\":0,\"load_trips\":0,\"net_energy_distribution\":null,\"starts_since_last_inspection\":null,\"max_power_peak\":null,\"flame_hours\":null,\"production_hours\":\"20.50\",\"daily_availability\":\"23.00\",\"average_hourly_power\":null,\"gas_calorific_value\":null,\"gasoil_calorific_value\":null,\"specific_consumption\":\"0.43\",\"daily_availability_rate\":\"95.83\",\"cumulative_availability_rate\":null,\"operating_hours_last_inspection\":null,\"starts_since_first_coupling\":null,\"operating_hours_since_first_coupling\":null,\"pumpable_gasoil_stock\":null,\"autonomy_at_pmc\":null,\"mwh_peak\":null,\"mwh_tlr\":null,\"created_at\":\"2025-05-14T21:36:50.000Z\",\"updated_at\":\"2025-05-14T21:36:50.000Z\"}', '{\"id\":2,\"central_id\":\"5\",\"turbine_id\":\"64\",\"performance_date\":\"2025-05-01\",\"fuel_type\":\"Gas\",\"load_status\":\"Loaded\",\"period\":\"Day\",\"fuel_consumption\":120.55,\"gross_energy_production\":3000.75,\"auxiliaries_consumption\":150.25,\"net_active_energy_production\":2850.5,\"reactive_energy_production\":200,\"startups\":4,\"ignitions\":3,\"couplings\":1,\"load_trips\":0,\"net_energy_distribution\":2750.45,\"starts_since_last_inspection\":10,\"max_power_peak\":450.75,\"flame_hours\":18.25,\"production_hours\":20,\"daily_availability\":98.5,\"average_hourly_power\":142.53,\"gas_calorific_value\":45.78,\"gasoil_calorific_value\":42.3,\"specific_consumption\":0.43,\"daily_availability_rate\":97.25,\"cumulative_availability_rate\":96,\"operating_hours_last_inspection\":2500,\"starts_since_first_coupling\":80,\"operating_hours_since_first_coupling\":10500,\"pumpable_gasoil_stock\":1200.6,\"autonomy_at_pmc\":15.75,\"mwh_peak\":120.5,\"mwh_tlr\":85.25}', NULL, NULL, NULL),
+(32, 'arkanmsss80@gmail.com', 'add', 'alarms', 'added an alarm', '2025-07-25 18:37:55', NULL, '{\"id\":55,\"turbine_id\":64,\"central_id\":5,\"alarm_code\":\"LV30S\",\"description\":\"an alarm keep blinking in  turbine 1 \",\"status\":\"Active\",\"happened_at\":\"2025-07-25T16:37:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-07-25T17:37:55.000Z\"}', NULL, NULL, NULL),
+(33, 'arkanmsss80@gmail.com', 'delete', 'alarms', 'deleted an alarm', '2025-07-25 18:46:36', '{\"id\":45,\"turbine_id\":64,\"central_id\":5,\"alarm_code\":\"ALM-K003\",\"description\":\"Vibration threshold exceeded\",\"status\":\"Pending\",\"happened_at\":\"2025-05-03T08:45:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-05-15T21:53:05.000Z\"}', NULL, 'maintenance', '{\"id\":33,\"central_id\":5,\"kks\":\"KKS123\",\"ot_number\":\"OT-001\",\"description\":\"Repair done\",\"type\":\"Systematic\",\"related_item_type\":\"Alarm\",\"related_item_id\":45,\"start\":\"2025-05-10T07:00:00.000Z\",\"end\":null,\"created_at\":\"2025-05-21T00:11:43.000Z\",\"updated_at\":null}', NULL),
+(34, 'arkanmsss80@gmail.com', 'delete', 'alarms', 'deleted an alarm', '2025-07-25 18:46:37', '{\"id\":37,\"turbine_id\":65,\"central_id\":5,\"alarm_code\":\"B2\",\"description\":\"Low oil pressure\",\"status\":\"Pending\",\"happened_at\":\"2023-05-15T07:00:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-05-12T21:59:10.000Z\"}', NULL, 'maintenance', '{\"id\":18,\"central_id\":5,\"kks\":\"KKS123\",\"ot_number\":\"OT-001\",\"description\":\"Repair done\",\"type\":\"Systematic\",\"related_item_type\":\"Alarm\",\"related_item_id\":37,\"start\":\"2025-05-10T07:00:00.000Z\",\"end\":null,\"created_at\":\"2025-05-13T16:24:33.000Z\",\"updated_at\":null}', NULL),
+(35, 'arkanmsss80@gmail.com', 'delete', 'defective_equipement', 'deleted a defective_equipement', '2025-07-25 18:46:41', '{\"id\":23,\"central_id\":5,\"turbine_id\":65,\"kks\":\"KKS-K003\",\"description\":\"Leaking oil seal\",\"comments\":null,\"reported_at\":\"2025-05-03T09:30:00.000Z\",\"fixed_at\":null,\"created_at\":\"2025-05-15T21:53:05.000Z\",\"status\":\"Pending\"}', NULL, 'maintenance', '{\"id\":32,\"central_id\":5,\"kks\":\"KKS-DEF023\",\"ot_number\":\"OT-DEF023\",\"description\":\"Repair for defective equipment #23\",\"type\":\"Curative\",\"related_item_type\":\"Defective Equipment\",\"related_item_id\":23,\"start\":\"2025-05-18T08:00:00.000Z\",\"end\":\"2025-05-18T13:30:00.000Z\",\"created_at\":\"2025-05-17T18:43:31.000Z\",\"updated_at\":null}', NULL),
+(36, 'arkanmsss80@gmail.com', 'delete', 'defective_equipement', 'deleted a defective_equipement', '2025-07-25 18:46:41', '{\"id\":24,\"central_id\":5,\"turbine_id\":64,\"kks\":\"KKS-K004\",\"description\":\"Cracked valve housing\",\"comments\":null,\"reported_at\":\"2025-05-04T08:15:00.000Z\",\"fixed_at\":null,\"created_at\":\"2025-05-15T21:53:05.000Z\",\"status\":\"Pending\"}', NULL, NULL, NULL, NULL),
+(37, 'arkanmsss80@gmail.com', 'add', 'defective_equipement', 'added a defecitve_equipement', '2025-07-25 18:47:09', NULL, '{\"id\":34,\"central_id\":5,\"turbine_id\":64,\"kks\":\"As8082\",\"description\":\"abcd1234\",\"comments\":null,\"reported_at\":\"2025-07-25T17:47:09.000Z\",\"fixed_at\":null,\"created_at\":\"2025-07-25T17:47:09.000Z\",\"status\":\"Not Fixed\"}', NULL, NULL, NULL),
+(38, 'arkanmsss80@gmail.com', 'add', 'maintenances', 'added a maintenance', '2025-07-25 23:46:29', NULL, '{\"id\":34,\"central_id\":5,\"kks\":\"kks846\",\"ot_number\":\"ot8000\",\"description\":\"abcd hi\",\"type\":\"Systematic\",\"related_item_type\":\"Alarm\",\"related_item_id\":55,\"start\":\"2025-07-25T21:46:00.000Z\",\"end\":null,\"created_at\":\"2025-07-25T22:46:29.000Z\",\"updated_at\":null}', 'alarms', '{\"id\":55,\"turbine_id\":64,\"central_id\":5,\"alarm_code\":\"LV30S\",\"description\":\"an alarm keep blinking in  turbine 1 \",\"status\":\"Active\",\"happened_at\":\"2025-07-25T16:37:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-07-25T17:37:55.000Z\"}', '{\"id\":55,\"turbine_id\":64,\"central_id\":5,\"alarm_code\":\"LV30S\",\"description\":\"an alarm keep blinking in  turbine 1 \",\"status\":\"Pending\",\"happened_at\":\"2025-07-25T16:37:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-07-25T17:37:55.000Z\"}'),
+(39, 'arkanmsss80@gmail.com', 'delete', 'maintenances', 'deleted a maintenance', '2025-07-25 23:46:45', '{\"id\":34,\"central_id\":5,\"kks\":\"kks846\",\"ot_number\":\"ot8000\",\"description\":\"abcd hi\",\"type\":\"Systematic\",\"related_item_type\":\"Alarm\",\"related_item_id\":55,\"start\":\"2025-07-25T21:46:00.000Z\",\"end\":null,\"created_at\":\"2025-07-25T22:46:29.000Z\",\"updated_at\":null}', NULL, 'alarms', '{\"id\":55,\"turbine_id\":64,\"central_id\":5,\"alarm_code\":\"LV30S\",\"description\":\"an alarm keep blinking in  turbine 1 \",\"status\":\"Pending\",\"happened_at\":\"2025-07-25T16:37:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-07-25T17:37:55.000Z\"}', '{\"id\":55,\"turbine_id\":64,\"central_id\":5,\"alarm_code\":\"LV30S\",\"description\":\"an alarm keep blinking in  turbine 1 \",\"status\":\"Active\",\"happened_at\":\"2025-07-25T16:37:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-07-25T17:37:55.000Z\"}'),
+(40, 'zus32192@gmail.com', 'add', 'alarms', 'added an alarm', '2025-07-26 00:06:20', NULL, '{\"id\":56,\"turbine_id\":65,\"central_id\":5,\"alarm_code\":\"Lvv879s\",\"description\":\"alarm keep doing voices in this turbine\",\"status\":\"Active\",\"happened_at\":\"2025-07-25T22:05:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-07-25T23:06:20.000Z\"}', NULL, NULL, NULL),
+(41, 'zus32192@gmail.com', 'add', 'maintenances', 'added a maintenance', '2025-07-26 00:07:29', NULL, '{\"id\":35,\"central_id\":5,\"kks\":\"84KTBx\",\"ot_number\":\"Ot800\",\"description\":\"maintenance on this alarm \",\"type\":\"Systematic\",\"related_item_type\":\"Alarm\",\"related_item_id\":56,\"start\":\"2025-07-25T22:07:00.000Z\",\"end\":null,\"created_at\":\"2025-07-25T23:07:29.000Z\",\"updated_at\":null}', 'alarms', '{\"id\":56,\"turbine_id\":65,\"central_id\":5,\"alarm_code\":\"Lvv879s\",\"description\":\"alarm keep doing voices in this turbine\",\"status\":\"Active\",\"happened_at\":\"2025-07-25T22:05:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-07-25T23:06:20.000Z\"}', '{\"id\":56,\"turbine_id\":65,\"central_id\":5,\"alarm_code\":\"Lvv879s\",\"description\":\"alarm keep doing voices in this turbine\",\"status\":\"Pending\",\"happened_at\":\"2025-07-25T22:05:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-07-25T23:06:20.000Z\"}'),
+(42, 'zus32192@gmail.com', 'delete', 'maintenances', 'deleted a maintenance', '2025-07-26 00:08:05', '{\"id\":35,\"central_id\":5,\"kks\":\"84KTBx\",\"ot_number\":\"Ot800\",\"description\":\"maintenance on this alarm \",\"type\":\"Systematic\",\"related_item_type\":\"Alarm\",\"related_item_id\":56,\"start\":\"2025-07-25T22:07:00.000Z\",\"end\":null,\"created_at\":\"2025-07-25T23:07:29.000Z\",\"updated_at\":null}', NULL, 'alarms', '{\"id\":56,\"turbine_id\":65,\"central_id\":5,\"alarm_code\":\"Lvv879s\",\"description\":\"alarm keep doing voices in this turbine\",\"status\":\"Pending\",\"happened_at\":\"2025-07-25T22:05:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-07-25T23:06:20.000Z\"}', '{\"id\":56,\"turbine_id\":65,\"central_id\":5,\"alarm_code\":\"Lvv879s\",\"description\":\"alarm keep doing voices in this turbine\",\"status\":\"Active\",\"happened_at\":\"2025-07-25T22:05:00.000Z\",\"resolved_at\":null,\"created_at\":\"2025-07-25T23:06:20.000Z\"}');
 
 -- --------------------------------------------------------
 
@@ -78,20 +89,20 @@ CREATE TABLE `alarms` (
 --
 
 INSERT INTO `alarms` (`id`, `turbine_id`, `central_id`, `alarm_code`, `description`, `status`, `happened_at`, `resolved_at`, `created_at`) VALUES
-(35, 2, 5, 'B2', 'Low oil pressure', 'Resolved', '2023-05-15 08:00:00', '2023-05-15 10:30:00', '2025-05-12 21:56:16'),
-(37, 2, 5, 'B2', 'Low oil pressure', 'Pending', '2023-05-15 08:00:00', NULL, '2025-05-12 21:59:10'),
-(38, 2, 5, 'B2', 'Low oil pressure', 'Resolved', '2023-05-15 08:00:00', '2025-05-10 08:11:00', '2025-05-13 13:51:21'),
-(42, 2, 5, 'B2', 'Low oil pressure', 'Resolved', '2023-05-15 08:00:00', '2025-05-01 14:30:00', '2025-05-13 17:11:57'),
+(35, 64, 5, 'B2', 'Low oil pressure', 'Resolved', '2023-05-15 08:00:00', '2023-05-15 10:30:00', '2025-05-12 21:56:16'),
+(38, 65, 5, 'B2', 'Low oil pressure', 'Resolved', '2023-05-15 08:00:00', '2025-05-10 08:11:00', '2025-05-13 13:51:21'),
+(42, 64, 5, 'B2', 'Low oil pressure', 'Resolved', '2023-05-15 08:00:00', '2025-05-01 14:30:00', '2025-05-13 17:11:57'),
 (43, 64, 5, 'ALM-K001', 'High temperature in generator', 'Resolved', '2025-05-01 08:30:00', '2025-05-01 14:45:00', '2025-05-15 21:53:05'),
 (44, 65, 5, 'ALM-K002', 'Low oil pressure', 'Resolved', '2025-05-02 10:15:00', '2025-05-02 16:20:00', '2025-05-15 21:53:05'),
-(45, 64, 5, 'ALM-K003', 'Vibration threshold exceeded', 'Pending', '2025-05-03 09:45:00', NULL, '2025-05-15 21:53:05'),
 (46, 65, 5, 'ALM-K004', 'Cooling system malfunction', 'Active', '2025-05-04 11:30:00', NULL, '2025-05-15 21:53:05'),
 (47, 65, 5, 'ALM-K005', 'Emergency shutdown triggered', 'Resolved', '2025-05-01 07:15:00', '2025-05-01 12:30:00', '2025-05-15 21:53:05'),
-(48, 2, 5, 'xyz', 'terks', 'Resolved', '2025-04-01 16:12:16', '2025-05-07 16:12:16', '2025-05-17 15:15:28'),
-(51, 2, 5, 'B2', 'Low oil pressure', 'Active', '2023-05-15 08:00:00', NULL, '2025-05-20 23:00:21'),
-(52, 2, 5, 'B2', 'Low oil pressure', 'Active', '2023-05-15 08:00:00', NULL, '2025-05-20 23:03:30'),
-(53, 2, 5, 'B2', 'Low oil pressure', 'Active', '2023-05-15 08:00:00', NULL, '2025-05-20 23:16:44'),
-(54, 2, 5, 'B2', 'Low oil pressure', 'Active', '2023-05-15 08:00:00', NULL, '2025-05-22 22:12:00');
+(48, 64, 5, 'xyz', 'terks', 'Resolved', '2025-04-01 16:12:16', '2025-05-07 16:12:16', '2025-05-17 15:15:28'),
+(51, 65, 5, 'B2', 'Low oil pressure', 'Active', '2023-05-15 08:00:00', NULL, '2025-05-20 23:00:21'),
+(52, 64, 5, 'B2', 'Low oil pressure', 'Active', '2023-05-15 08:00:00', NULL, '2025-05-20 23:03:30'),
+(53, 65, 5, 'B2', 'Low oil pressure', 'Active', '2023-05-15 08:00:00', NULL, '2025-05-20 23:16:44'),
+(54, 64, 5, 'B2', 'Low oil pressure', 'Active', '2023-05-15 08:00:00', NULL, '2025-05-22 22:12:00'),
+(55, 64, 5, 'LV30S', 'an alarm keep blinking in  turbine 1 ', 'Active', '2025-07-25 17:37:00', NULL, '2025-07-25 17:37:55'),
+(56, 65, 5, 'Lvv879s', 'alarm keep doing voices in this turbine', 'Active', '2025-07-25 23:05:00', NULL, '2025-07-25 23:06:20');
 
 -- --------------------------------------------------------
 
@@ -153,8 +164,9 @@ INSERT INTO `central_accounts` (`id`, `fullname`, `steg_email`, `password`, `is_
 (7, 'mohamed chine', 'raouf.benammar@steg.com.tn', '$2b$10$OO0aFKIU9lSM1cjZRNCAbO5VybxbeQ9hg6yk2pu0S8CrFiNprpnQG', 0, 1, 1),
 (13, 'iheb  lahmer', 'ilahmar@steg.com.tn', '$2b$10$b9xuWKChqZifAb40gxlbI.SZN140Dh3TamYWjjAvjQbLiuJZi63r2', 0, 5, 1),
 (22, 'mohamed chinne', 'nizar.chaabane@steg.com.tn', '$2b$10$7zj8U6nv2jnbapNglTbaCe3OHGS8WTK7QAqG//kxmGAK/AlE69TM.', 0, 4, 1),
-(26, 'iheb  lahmer', 'arkanmsss80@gmail.com', '$2b$10$ShItMZM/vN1QMMtFYvkeZedO0BUudd9dmSWwX7J2mYf3MaYr02pHC', 1, 5, 1),
-(28, 'iheb  lahmer', 'trettr973@gmail.com', '$2b$10$aFT6e8EtWORa3v/tfrhVUe.K/qsKQdjRWYgHdftlttiXPo8TqvAYK', 0, 5, 0);
+(28, 'iheb  lahmer', 'trettr973@gmail.com', '$2b$10$aFT6e8EtWORa3v/tfrhVUe.K/qsKQdjRWYgHdftlttiXPo8TqvAYK', 0, 5, 0),
+(29, 'chine mohamed', 'arkanmsss80@gmail.com', '$2b$10$s21Aa974xIS4ZlDkQHJx8OGH.kOGZZQG/qe1WItvgRytdP6OdnPBe', 1, 5, 1),
+(34, 'mouhamed chine', 'zus32192@gmail.com', '$2b$10$BBojquLXSYwhCeEqai/XDOLkHh6j9IPyXNxXEGsE.j1knXN2F4cNC', 1, 5, 1);
 
 -- --------------------------------------------------------
 
@@ -186,7 +198,8 @@ INSERT INTO `central_employee_emails` (`employee_email`, `central_id`, `is_chef`
 ('omar.khalifa@steg.com.tn', 6, 0),
 ('raouf.benammar@steg.com.tn', 1, 0),
 ('slim.hajji@steg.com.tn', 7, 0),
-('trettr973@gmail.com', 5, 0);
+('trettr973@gmail.com', 5, 0),
+('zus32192@gmail.com', 5, 0);
 
 -- --------------------------------------------------------
 
@@ -212,23 +225,22 @@ CREATE TABLE `defective_equipment` (
 --
 
 INSERT INTO `defective_equipment` (`id`, `central_id`, `turbine_id`, `kks`, `description`, `comments`, `reported_at`, `fixed_at`, `created_at`, `status`) VALUES
-(13, 5, 1, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', '2023-05-17 14:30:00', '2025-05-12 23:10:48', 'Fixed'),
-(15, 5, 1, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', '2023-05-17 14:30:00', '2025-05-13 12:59:02', 'Fixed'),
-(16, 5, 1, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', '2023-05-17 14:30:00', '2025-05-13 12:59:04', 'Fixed'),
-(17, 5, 1, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', '2023-05-17 14:30:00', '2025-05-13 12:59:05', 'Fixed'),
-(18, 5, 1, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-13 12:59:16', ''),
-(19, 5, 1, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-13 12:59:18', ''),
-(20, 5, 1, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-13 12:59:19', ''),
+(13, 5, 64, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', '2023-05-17 14:30:00', '2025-05-12 23:10:48', 'Fixed'),
+(15, 5, 64, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', '2023-05-17 14:30:00', '2025-05-13 12:59:02', 'Fixed'),
+(16, 5, 65, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', '2023-05-17 14:30:00', '2025-05-13 12:59:04', 'Fixed'),
+(17, 5, 65, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', '2023-05-17 14:30:00', '2025-05-13 12:59:05', 'Fixed'),
+(18, 5, 65, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-13 12:59:16', ''),
+(19, 5, 65, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-13 12:59:18', ''),
+(20, 5, 65, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-13 12:59:19', ''),
 (21, 5, 64, 'KKS-K001', 'Faulty pressure sensor', NULL, '2025-05-01 09:00:00', '2025-05-02 15:30:00', '2025-05-15 21:53:05', 'Fixed'),
-(22, 5, 65, 'KKS-K002', 'Damaged bearing', NULL, '2025-05-02 08:45:00', '2025-05-03 14:00:00', '2025-05-15 21:53:05', 'Fixed'),
-(23, 5, 64, 'KKS-K003', 'Leaking oil seal', NULL, '2025-05-03 10:30:00', NULL, '2025-05-15 21:53:05', 'Pending'),
-(24, 5, 65, 'KKS-K004', 'Cracked valve housing', NULL, '2025-05-04 09:15:00', NULL, '2025-05-15 21:53:05', 'Pending'),
+(22, 5, 64, 'KKS-K002', 'Damaged bearing', NULL, '2025-05-02 08:45:00', '2025-05-03 14:00:00', '2025-05-15 21:53:05', 'Fixed'),
 (25, 5, 65, 'KKS-K005', 'Worn out coupling', NULL, '2025-05-01 11:45:00', '2025-05-02 16:30:00', '2025-05-15 21:53:05', 'Fixed'),
-(29, 5, 1, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-20 20:23:28', ''),
-(30, 5, 1, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-20 23:37:54', ''),
-(31, 5, 1, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-20 23:38:17', ''),
-(32, 5, 1, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-20 23:40:22', ''),
-(33, 5, 1, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-20 23:41:29', '');
+(29, 5, 65, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-20 20:23:28', ''),
+(30, 5, 65, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-20 23:37:54', ''),
+(31, 5, 64, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-20 23:38:17', ''),
+(32, 5, 64, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-20 23:40:22', ''),
+(33, 5, 64, 'KKS12345', 'Broken rotor blade', 'Needs immediate replacement', '2023-05-15 08:00:00', NULL, '2025-05-20 23:41:29', ''),
+(34, 5, 64, 'As8082', 'abcd1234', NULL, '2025-07-25 18:47:09', NULL, '2025-07-25 17:47:09', 'Not Fixed');
 
 -- --------------------------------------------------------
 
@@ -396,24 +408,6 @@ CREATE TABLE `maintenance` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `maintenance`
---
-
-INSERT INTO `maintenance` (`id`, `central_id`, `kks`, `ot_number`, `description`, `type`, `related_item_type`, `related_item_id`, `start`, `end`, `created_at`, `updated_at`) VALUES
-(18, 5, 'KKS123', 'OT-001', 'Repair done', 'Systematic', 'Alarm', 37, '2025-05-10 08:00:00', NULL, '2025-05-13 16:24:33', NULL),
-(20, 5, 'KKS123', 'OT-001', 'Repair done', 'Systematic', 'Alarm', 38, '2025-05-10 08:00:00', '2025-05-10 08:11:00', '2025-05-13 17:31:15', NULL),
-(21, 5, 'KKS123', 'OT-001', 'Repair done', 'Systematic', 'Alarm', 42, '2025-05-10 08:00:00', '2025-05-01 14:30:00', '2025-05-13 19:55:19', '2025-05-13 19:56:05'),
-(22, 5, 'KKS-M001', 'OT-K001', 'Generator cooling system repair', '', 'Alarm', 1, '2025-05-01 15:00:00', '2025-05-01 20:30:00', '2025-05-01 13:50:00', NULL),
-(23, 5, 'KKS-M002', 'OT-K002', 'Oil pressure system maintenance', '', 'Alarm', 2, '2025-05-02 16:30:00', '2025-05-02 21:45:00', '2025-05-02 15:25:00', NULL),
-(25, 5, 'KKS-M004', 'OT-K004', 'Cooling system overhaul', '', 'Alarm', 4, '2025-05-04 12:00:00', NULL, '2025-05-04 10:45:00', NULL),
-(26, 5, 'KKS-M005', 'OT-K005', 'Pressure sensor replacement', '', 'Defective Equipment', 1, '2025-05-01 10:00:00', '2025-05-02 15:30:00', '2025-05-01 08:45:00', NULL),
-(27, 5, 'KKS-M006', 'OT-K006', 'Bearing replacement', '', 'Defective Equipment', 2, '2025-05-02 09:30:00', '2025-05-03 14:00:00', '2025-05-02 08:15:00', NULL),
-(28, 5, 'KKS-M007', 'OT-K007', 'Oil seal replacement', '', 'Defective Equipment', 3, '2025-05-03 11:00:00', NULL, '2025-05-03 09:45:00', NULL),
-(29, 5, 'KKS-M008', 'OT-K008', 'Valve housing replacement', '', 'Defective Equipment', 4, '2025-05-04 10:00:00', NULL, '2025-05-04 08:45:00', NULL),
-(32, 5, 'KKS-DEF023', 'OT-DEF023', 'Repair for defective equipment #23', 'Curative', 'Defective Equipment', 23, '2025-05-18 09:00:00', '2025-05-18 14:30:00', '2025-05-17 18:43:31', NULL),
-(33, 5, 'KKS123', 'OT-001', 'Repair done', 'Systematic', 'Alarm', 45, '2025-05-10 08:00:00', NULL, '2025-05-21 00:11:43', NULL);
 
 -- --------------------------------------------------------
 
@@ -745,13 +739,13 @@ ALTER TABLE `turbine`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `alarms`
 --
 ALTER TABLE `alarms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `central`
@@ -763,13 +757,13 @@ ALTER TABLE `central`
 -- AUTO_INCREMENT for table `central_accounts`
 --
 ALTER TABLE `central_accounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `defective_equipment`
 --
 ALTER TABLE `defective_equipment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `direction`
@@ -799,7 +793,7 @@ ALTER TABLE `groupement_accounts`
 -- AUTO_INCREMENT for table `maintenance`
 --
 ALTER TABLE `maintenance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `performance`

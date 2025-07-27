@@ -37,7 +37,7 @@ const registerCtrl = async(req,res)=>{
          
     //check if the user email exist in the stegdb(the email was giving from the steg or not) 
     const isemailgfs = await db.execute("select * from "+unit+"_employee_emails where employee_email = ?  and "+unit+"_id =? " ,[steg_email,unitid]);
-    if(isemailgfs[0].length ==0) return res.status(403).json({message : "we couldn't find the email u provided inside the  "+unit_exist[0][0]["name"]+" contact the hr in ur "+unit+" to add it if u want"}) ;
+    if(isemailgfs[0].length ==0) return res.status(403).json({message : "we couldn't find the email u provided inside the  "+unit+" of "+unit_exist[0][0]["name"]+" contact the hr in ur "+unit+" to add it if u want"}) ;
   
     
     
