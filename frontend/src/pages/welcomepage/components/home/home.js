@@ -14,13 +14,13 @@ const features =
       icon: "📊",
       title: "Automated Data Consolidation",
       description:
-        "No more manual file merging. The system automatically consolidates energy data from every central. Groupement staff can instantly view aggregated reports for their supervised facilities,  Direction has full nationwide visibility—all generated dynamically based on selected filters.",
+        "No more manual file merging. The system automatically consolidates energy data from every central. Groupement staff can instantly view aggregated reports for their supervised centrals,  Direction has full nationwide visibility—all generated dynamically based on selected filters.",
     },
     {
       icon: "🛠️",
       title: "Tools for Every Role",
       description:
-        "Each user gets a tailored experience. From machine operators to supervisors and directors, every role has access to the specific tools and dashboards needed for their daily operations and decision-making.",
+        "Each user gets a tailored experience. From machine operators to centrals chiefs to supervisors and directors, every role has access to the specific tools and dashboards needed for their daily operations and decision-making.",
     },
     {
       icon: "🔐",
@@ -32,7 +32,7 @@ const features =
       icon: "🧩",
       title: "Error Correction and Dynamic Reporting",
       description:
-        "If a central submits incorrect data, users can easily correct it without restarting the entire process. Reports automatically update based on the latest entries, ensuring accuracy and eliminating the need for manual re-consolidation.",
+        "If a central submits incorrect data, central employee can easily correct it without restarting the entire process. Reports automatically update based on the latest entries, ensuring accuracy and eliminating the need for manual re-consolidation.",
     },
   ]  
 ;
