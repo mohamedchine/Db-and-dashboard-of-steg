@@ -4,7 +4,7 @@
 --
 -- Host: 127.0.0.1
 -- Generation Time: Jul 26, 2025 at 01:45 AM
--- Server version: 10.4.32-MariaDB
+-- Server version: Standard SQL Compatible
 -- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -12,10 +12,6 @@ START TRANSACTION;
 SET time_zone = "+00:00";
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `steg_db`
@@ -33,13 +29,12 @@ CREATE TABLE `activity_logs` (
   `action` varchar(50) NOT NULL,
   `target_table` varchar(50) NOT NULL,
   `description` text DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `target_table_old_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`target_table_old_value`)),
-  `target_table_new_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`target_table_new_value`)),
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `target_table_old_value` longtext  DEFAULT NULL,
+  `target_table_new_value` longtext  DEFAULT NULL,
   `consequence_table` varchar(50) DEFAULT NULL,
-  `consequence_table_old_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`consequence_table_old_value`)),
-  `consequence_table_new_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`consequence_table_new_value`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `consequence_table_old_value` longtext  DEFAULT NULL,
+  `consequence_table_new_value` longtext  DEFAULT NULL);
 
 --
 -- Dumping data for table `activity_logs`
@@ -79,10 +74,10 @@ CREATE TABLE `alarms` (
   `alarm_code` varchar(50) DEFAULT NULL,
   `description` text DEFAULT NULL,
   `status` enum('Active','Resolved','Pending') DEFAULT 'Active',
-  `happened_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `happened_at` datetime NOT NULL,
   `resolved_at` datetime DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
 --
 -- Dumping data for table `alarms`
@@ -114,7 +109,7 @@ CREATE TABLE `central` (
   `central_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `groupement_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Dumping data for table `central`
@@ -152,7 +147,7 @@ CREATE TABLE `central_accounts` (
   `is_verified` tinyint(1) DEFAULT 0,
   `central_id` int(11) DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Dumping data for table `central_accounts`
@@ -178,7 +173,7 @@ CREATE TABLE `central_employee_emails` (
   `employee_email` varchar(50) NOT NULL,
   `central_id` int(11) NOT NULL,
   `is_chef` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Dumping data for table `central_employee_emails`
@@ -216,9 +211,9 @@ CREATE TABLE `defective_equipment` (
   `comments` text DEFAULT NULL,
   `reported_at` datetime DEFAULT NULL,
   `fixed_at` datetime DEFAULT NULL COMMENT 'Only set when status is Fixed',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` enum('Fixed','Not Fixed','Pending') DEFAULT 'Not Fixed'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Dumping data for table `defective_equipment`
@@ -255,7 +250,7 @@ CREATE TABLE `direction` (
   `headquarters_address` varchar(255) DEFAULT NULL,
   `contact_phone` varchar(20) DEFAULT NULL,
   `contact_email` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Dumping data for table `direction`
@@ -277,7 +272,7 @@ CREATE TABLE `direction_accounts` (
   `password` varchar(70) NOT NULL,
   `direction_id` int(11) NOT NULL,
   `is_verified` tinyint(1) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 -- --------------------------------------------------------
 
@@ -288,7 +283,7 @@ CREATE TABLE `direction_accounts` (
 CREATE TABLE `direction_employee_emails` (
   `employee_email` varchar(50) NOT NULL,
   `direction_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Dumping data for table `direction_employee_emails`
@@ -318,7 +313,7 @@ CREATE TABLE `groupement` (
   `groupement_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `id_direction` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Dumping data for table `groupement`
@@ -343,7 +338,7 @@ CREATE TABLE `groupement_accounts` (
   `password` varchar(70) NOT NULL,
   `is_verified` tinyint(1) DEFAULT 0,
   `groupement_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Dumping data for table `groupement_accounts`
@@ -369,7 +364,7 @@ INSERT INTO `groupement_accounts` (`id`, `fullname`, `steg_email`, `password`, `
 CREATE TABLE `groupement_employee_emails` (
   `employee_email` varchar(50) NOT NULL,
   `groupement_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Dumping data for table `groupement_employee_emails`
@@ -405,9 +400,9 @@ CREATE TABLE `maintenance` (
   `related_item_id` int(11) DEFAULT NULL,
   `start` datetime NOT NULL,
   `end` datetime DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
+);
 
 -- --------------------------------------------------------
 
@@ -451,9 +446,9 @@ CREATE TABLE `performance` (
   `autonomy_at_pmc` decimal(10,2) DEFAULT NULL,
   `mwh_peak` decimal(12,2) DEFAULT NULL,
   `mwh_tlr` decimal(12,2) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
 
 --
 -- Dumping data for table `performance`
@@ -542,14 +537,13 @@ CREATE TABLE `request_modification` (
   `id` int(11) NOT NULL,
   `table_name` varchar(100) NOT NULL COMMENT 'Name of the table where the record exists',
   `record_id` int(11) NOT NULL COMMENT 'ID of the record being modified',
-  `old_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'Original value of the field (JSON format)' CHECK (json_valid(`old_value`)),
-  `new_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'Requested new value (JSON format)' CHECK (json_valid(`new_value`)),
+  `old_value` longtext  DEFAULT NULL COMMENT 'Original value of the field (JSON format)',
+  `new_value` longtext  DEFAULT NULL COMMENT 'Requested new value (JSON format)',
   `receiver_groupement_id` int(11) DEFAULT NULL COMMENT 'Groupement ID of the receiver',
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `raison` varchar(500) DEFAULT NULL COMMENT 'Reason for the modification request',
   `method` enum('update','delete','insert') NOT NULL DEFAULT 'update' COMMENT 'Type of modification requested',
-  `requester` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'Requester information in JSON format (id, central_id, name, etc.)' CHECK (json_valid(`requester`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `requester` longtext  NOT NULL COMMENT 'Requester information in JSON format (id, central_id, name, etc.)');
 
 --
 -- Dumping data for table `request_modification`
@@ -570,9 +564,9 @@ CREATE TABLE `turbine` (
   `central_id` int(11) NOT NULL,
   `manufacturer` varchar(100) DEFAULT NULL,
   `fuel_type` varchar(100) DEFAULT NULL,
-  `commissioning_year` year(4) DEFAULT NULL,
+  `commissioning_year` SMALLINT DEFAULT NULL,
   `net_power_at_commissioning` decimal(6,2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Dumping data for table `turbine`
@@ -892,6 +886,3 @@ ALTER TABLE `turbine`
   ADD CONSTRAINT `turbine_ibfk_1` FOREIGN KEY (`central_id`) REFERENCES `central` (`central_id`);
 COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

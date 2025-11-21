@@ -12,25 +12,25 @@ const About = () => {
     {
       icon: <UsersIcon style={{ height: 48, width: 48, color: "#2563EB", marginBottom: 16 }} />,
       title: "Our Mission",
-      text: "To revolutionize energy management in Tunisia by fostering seamless collaboration and data-driven optimization across Direction, Groupements, and Centrales. We aim to build a connected energy ecosystem.",
+      text: "To modernize energy management in Tunisia by enabling seamless collaboration and data-driven decision-making between the Direction, Groupements, and Centrals. Our goal is to create a truly connected and efficient energy ecosystem.",
     },
     {
       icon: <BoltIcon style={{ height: 48, width: 48, color: "#FACC15", marginBottom: 16 }} />,
-      title: "The Challenge We Address",
-      text: "Traditional energy management often faces hurdles like fragmented data, communication silos, and delayed insights. This can hinder optimal production, resource allocation, and responsiveness to the dynamic energy landscape.",
+      title: "The Challenge We Solve",
+      text: "The old Excel-based reporting system was time-consuming and error-prone. Each central had to send its own file, which the Groupement and Direction manually consolidated. A single mistake meant repeating the entire process, causing delays, inconsistencies, and unnecessary effort.",
     },
     {
       icon: <ShareIcon style={{ height: 48, width: 48, color: "#22C55E", marginBottom: 16 }} />,
-      title: "Our Innovative Solution",
-      text: "Our platform provides a centralized, real-time hub that connects all key stakeholders. It enables efficient data collection, secure sharing, and powerful analytics, empowering informed decision-making at every level.",
+      title: "Our Digital Solution",
+      text: "We’ve built a centralized, real-time platform that eliminates manual consolidation. It automatically gathers  data from all centrals , dynamicly generates  reports, and allows each central to correct its own errors instantly without restarting the whole process.",
     },
     {
       icon: <ChartBarIcon style={{ height: 48, width: 48, color: "#A855F7", marginBottom: 16 }} />,
       title: "Key Benefits & Impact",
-      text: "By leveraging our solution, Tunisia can achieve enhanced operational efficiency, improved resource management, proactive incident response, and a significant stride towards a more sustainable and resilient energy future.",
+      text: "With our system, Tunisia can achieve greater efficiency, fewer human errors, and more reliable consolidated data. The platform ensures up-to-date, accurate reporting and saves significant time for both the Groupement and the Direction.",
     },
   ];
-
+  
   return (
     <Box
       sx={{

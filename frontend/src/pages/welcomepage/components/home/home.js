@@ -2,32 +2,40 @@ import React from "react";
 import { Box, Typography, Grid, Paper } from "@mui/material";
 import { motion } from "framer-motion";
 
-const features = [
-  {
-    icon: "⚡",
-    title: "National Energy Oversight",
-    description:
-      "This platform enables STEG to monitor and analyze electricity production across all centrales in Tunisia.",
-  },
-  {
-    icon: "📊",
-    title: "Data-Driven Decisions",
-    description:
-      "Centralized reporting and dashboards allow teams to make informed operational and strategic decisions.",
-  },
-  {
-    icon: "🛠️",
-    title: "Tools for Every Role",
-    description:
-      "From machine operators to supervisors, each team member gets tailored tools based on their responsibilities.",
-  },
-  {
-    icon: "🔐",
-    title: "Secure Access",
-    description:
-      "Only authorized STEG personnel may log in. Roles define access to reporting, validation, and dashboards.",
-  },
-];
+const features = 
+  [
+    {
+      icon: "⚡",
+      title: "National Energy Oversight",
+      description:
+        "Our platform replaces the outdated Excel-based reporting system with a modern digitalized solution. Instead of manually collecting and consolidating excel files from each central, data is now accessible and managed efficiently across all Tunisian centrals in real time.",
+    },
+    {
+      icon: "📊",
+      title: "Automated Data Consolidation",
+      description:
+        "No more manual file merging. The system automatically consolidates energy data from every central. Groupement staff can instantly view aggregated reports for their supervised facilities,  Direction has full nationwide visibility—all generated dynamically based on selected filters.",
+    },
+    {
+      icon: "🛠️",
+      title: "Tools for Every Role",
+      description:
+        "Each user gets a tailored experience. From machine operators to supervisors and directors, every role has access to the specific tools and dashboards needed for their daily operations and decision-making.",
+    },
+    {
+      icon: "🔐",
+      title: "Secure Access and Activity Tracking",
+      description:
+        "Only authorized STEG personnel can log in. User roles define access to reports, dashboards, and actions. Every operation performed on the platform is securely logged and tracked to ensure transparency and accountability.",
+    },
+    {
+      icon: "🧩",
+      title: "Error Correction and Dynamic Reporting",
+      description:
+        "If a central submits incorrect data, users can easily correct it without restarting the entire process. Reports automatically update based on the latest entries, ensuring accuracy and eliminating the need for manual re-consolidation.",
+    },
+  ]  
+;
 
 const fadeInVariant = {
   hidden: { opacity: 0, y: 40 },
