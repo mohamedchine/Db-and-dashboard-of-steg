@@ -28,7 +28,7 @@ db.execute('select 1 ').then(async()=>{ //select is just to check if the connect
     app.use( //let localhost 3000 send receive request && send and receive cookies
       //browser policy dont allow request to different domain(http://localhost:3000) , so we gotta allow it by using cors 
         cors({
-          origin: 'http://localhost:3000', 
+          origin: process.env.client_url, 
           credentials: true, 
         })
       );
