@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./requestresetpassword.css";
-import axios from "axios";
+import axs from "../../../../api/customizedaxios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -12,7 +12,7 @@ const RequestResetPassword = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:3004/password/request-password-reset", { steg_email: email }, {
+      const response = await axs.post("/password/request-password-reset", { steg_email: email }, {
         headers: { "Content-Type": "application/json" },
       });
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axs from "../../../../api/customizedaxios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSearchParams, useNavigate } from "react-router-dom";
@@ -29,8 +29,8 @@ const Resetpassword = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(
-        "http://localhost:3004/password/reset-password",
+      const response = await axs.post(
+        "/password/reset-password",
         { newPassword:password, token },
         { headers: { "Content-Type": "application/json" } }
       );

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Box, CircularProgress } from "@mui/material";
-import axios from "axios";
+import axs from "../api/customizedaxios";
 import useAuth from "../context/useAuth";
 
 const PersistLogin = () => {
@@ -14,7 +14,7 @@ const PersistLogin = () => {
     const verifyUser = async () => {
       try {
       
-        const res = await axios.get("http://localhost:3004/auth/check", {
+        const res = await axs.get("/auth/check", {
           withCredentials: true,
         });
         setuser(res.data.user); 

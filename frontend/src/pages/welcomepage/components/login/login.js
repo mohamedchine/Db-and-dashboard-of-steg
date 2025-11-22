@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./login.css";
-import axios from "axios";
+import axs from "../../../../api/customizedaxios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -19,7 +19,7 @@ const Login = () => {
     const handleLogin = async () => {
         setloadinggg(true);
         try {
-            const response = await axios.post("http://localhost:3004/auth/login", {
+            const response = await axs.post("/auth/login", {
                 steg_email: email,
                 password: password
             }, {

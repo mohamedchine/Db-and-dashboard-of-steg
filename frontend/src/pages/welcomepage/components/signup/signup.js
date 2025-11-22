@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./signup.css";
-import axios from "axios";
+import axs from "../../../../api/customizedaxios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const Signup = () => {
@@ -41,7 +41,7 @@ const Signup = () => {
     //fetch units from server
     useEffect(() => {
          const fetchunits = async()=>{
-            const response = await axios.get("http://localhost:3004/units/");
+            const response = await axs.get("/units/");
           setcentrals(response.data.centrals);
             setgroups(response.data.groups);
          }
@@ -60,7 +60,7 @@ const Signup = () => {
             }
            
             try{
-                const response  = await axios.post("http://localhost:3004/auth/register",user,  {
+                const response  = await axs.post("/auth/register",user,  {
                     headers: {
                         'Content-Type': 'application/json'
                     }
