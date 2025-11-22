@@ -22,7 +22,7 @@ const sendmail = async(email , subject,content) =>{
 }
 const gen_email_verification_Link = (email , id)=>{
       token = genjwt({email,id},'15m') ; 
-        const link = process.env.domain+process.env.port+'/auth/verify-email?token='+token;
+        const link = process.env.BACKEND_URL+'/auth/verify-email?token='+token;
         return link ; 
 
 }
