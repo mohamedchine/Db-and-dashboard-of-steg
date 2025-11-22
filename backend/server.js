@@ -52,8 +52,9 @@ db.execute('select 1 ').then(async()=>{ //select is just to check if the connect
     app.all('*',(req,res)=>{
         res.status(404).json({message : 'not found'})
     })
-    app.listen(process.env.port , ()=>{
-        console.log('server is running on port '+process.env.port);
+    const port=process.env.port ; //render problem
+    app.listen(port , ()=>{
+        console.log('server is running on port '+port);
     })
 
 }).catch((e)=>console.log(e.message))
