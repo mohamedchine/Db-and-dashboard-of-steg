@@ -36,7 +36,7 @@ const Sidebbar = () => {
         if (path === 'account-management') {
             try {
                 //we check the user might no longer be an admin(i didnt do it in report i only did if(user.is_chief))
-                const res = await axs.get("auth/check");
+                const res = await axs.get("/auth/check");
                 setuser(res.data.user); 
     
                 if (res.data.user.is_chief) {
