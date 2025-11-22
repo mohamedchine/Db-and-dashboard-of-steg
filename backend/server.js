@@ -16,6 +16,8 @@ const chefRouter = require('./routes/centraldashboard/chefRoutes.js')
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const activitylogRouter = require('./routes/centraldashboard/activityLogsRoutes.js');
+const { securityHeaders } = require('./middleware/security');
+const { generalLimiter } = require('./middleware/rateLimiter');
 
 
 
@@ -23,18 +25,31 @@ const activitylogRouter = require('./routes/centraldashboard/activityLogsRoutes.
 
 
 const app = express();
+
+// Security middleware - Helmet for security headers
+app.use(securityHeaders);
+
+// Body parser limits to prevent DoS attacks
+app.use(express.json({ limit: '10mb' })); // Limit JSON payload size
+app.use(express.urlencoded({ extended: true, limit: '10mb' })); // Limit URL-encoded payload size
+
 db.execute('select 1 ').then(async()=>{ //select is just to check if the connection is good
     console.log('connected to db');
-    // app.use( //let localhost 3000 send receive request && send and receive cookies
-    //   //browser policy dont allow request to different domain(http://localhost:3000) , so we gotta allow it by using cors 
-    //     cors({
-    //       origin: process.env.client_url, 
-    //       credentials: true, 
-    //     })
-    //   );
+    
+    // CORS configuration
+    app.use( //let localhost 3000 send receive request && send and receive cookies
+      //browser policy dont allow request to different domain(http://localhost:3000) , so we gotta allow it by using cors 
+        cors({
+          origin: process.env.client_url , 
+          credentials: true, 
+        })
+      );
    
     app.use(cookieParser());
-    app.use(express.json());
+    
+    // Apply general rate limiting to all routes
+    app.use(generalLimiter);
+    
     app.use('/auth',AuthRouter);
     app.use('/units',UnitsRouter);
     app.use('/turbines',TurbinesRouter);
@@ -52,7 +67,7 @@ db.execute('select 1 ').then(async()=>{ //select is just to check if the connect
     app.all('*',(req,res)=>{
         res.status(404).json({message : 'not found'})
     })
-    const port=process.env.PORT ; //render problem
+    const port=process.env.PORT ; 
     app.listen(port , ()=>{
         console.log('server is running on port '+port);
     })
