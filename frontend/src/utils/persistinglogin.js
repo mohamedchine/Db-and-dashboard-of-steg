@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Box, CircularProgress } from "@mui/material";
-import axs from "../api/customizedaxios";
+import axios from "axios";
 import useAuth from "../context/useAuth";
 
 const PersistLogin = () => {
@@ -13,8 +13,8 @@ const PersistLogin = () => {
     
     const verifyUser = async () => {
       try {
-      
-        const res = await axs.get("/auth/check", {
+        //i didn't use axs cause i dont want that message to show and we be redirected to the login each time we oppen the app (check the axs)
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/auth/check`, {
           withCredentials: true,
         });
         setuser(res.data.user); 
