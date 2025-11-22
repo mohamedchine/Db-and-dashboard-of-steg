@@ -13,7 +13,7 @@ alarmRouter.route('/add/:centralid').post(validatecentralid ,verify_centralemplo
 
 
 
-//delete alarm access garanted only to alarm within the user central dailyreport
+//delete alarm access garanted only to alarm within the user central 
 alarmRouter.route('/delete/:alarmid').delete(validatealarmid ,verify_centralemployee_and_his_central ,  deletealarmCtrl);
 
 

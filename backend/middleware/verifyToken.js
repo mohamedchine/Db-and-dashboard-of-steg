@@ -73,8 +73,11 @@ const verifyToken = async(req,res,next)=>{
 const verify_centralemployee_and_his_central = (req,res,next)=>{
     
     verifyCentralEmployee(req,res,async()=>{
+        // Convert both to numbers for strict comparison (URL params are strings)
+        const userCentralId = Number(req.user.central_id);
+        const paramCentralId = Number(req.params.centralid);
         
-        if(req.user.central_id == req.params.centralid){
+        if(userCentralId === paramCentralId){
             return next();
         }
         

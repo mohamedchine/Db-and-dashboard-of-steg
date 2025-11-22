@@ -90,11 +90,13 @@ const addPerformanceCtrl = async (req, res) => {
         mwh_peak,
         mwh_tlr
       );
+      // Remove central_id and turbine_id from req.body to prevent override
+      const { central_id, turbine_id, ...bodyWithoutIds } = req.body;
       const updatedPerformance = {
         id: existingPerformance.id,
         central_id: centralid,
         turbine_id: turbineid,
-        ...req.body
+        ...bodyWithoutIds
       };
 
       const activity = {
@@ -150,11 +152,13 @@ const addPerformanceCtrl = async (req, res) => {
         mwh_peak,
         mwh_tlr
       );
+      // Remove central_id and turbine_id from req.body to prevent override
+      const { central_id, turbine_id, ...bodyWithoutIds } = req.body;
       const newPerformance = {
         id: newPerformanceId,
         central_id: centralid,
         turbine_id: turbineid,
-        ...req.body
+        ...bodyWithoutIds
       };
 
       const activity = {
