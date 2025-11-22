@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
-
+const baseURL = process.env.REACT_APP_API_BASE_URL;
+console.log(baseURL);
 const axs = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:3004/',
+  
+  baseURL: process.env.REACT_APP_API_BASE_URL ,
   withCredentials: true,
 });
 
