@@ -22,7 +22,7 @@ const requestPasswordResetCtrl = async (req, res) => {
 
     const token = genjwt({ userid: user.id, steg_email: user.steg_email, unittype }, "10m");
 
-    const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+    const resetLink = `${process.env.client_url}/reset-password?token=${token}`;
     await sendmail(
         steg_email,
         'Password Reset',
