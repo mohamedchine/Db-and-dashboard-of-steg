@@ -25,6 +25,7 @@ const { generalLimiter } = require('./middleware/rateLimiter');
 
 
 const app = express();
+app.set('trust proxy', 1);
 
 // Security middleware - Helmet for security headers
 app.use(securityHeaders);
