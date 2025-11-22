@@ -25,13 +25,13 @@ const activitylogRouter = require('./routes/centraldashboard/activityLogsRoutes.
 const app = express();
 db.execute('select 1 ').then(async()=>{ //select is just to check if the connection is good
     console.log('connected to db');
-    app.use( //let localhost 3000 send receive request && send and receive cookies
-      //browser policy dont allow request to different domain(http://localhost:3000) , so we gotta allow it by using cors 
-        cors({
-          origin: process.env.client_url, 
-          credentials: true, 
-        })
-      );
+    // app.use( //let localhost 3000 send receive request && send and receive cookies
+    //   //browser policy dont allow request to different domain(http://localhost:3000) , so we gotta allow it by using cors 
+    //     cors({
+    //       origin: process.env.client_url, 
+    //       credentials: true, 
+    //     })
+    //   );
    
     app.use(cookieParser());
     app.use(express.json());
