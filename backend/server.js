@@ -65,7 +65,7 @@ db.execute('select 1 ').then(async()=>{ //select is just to check if the connect
     app.use('/activitylogs',activitylogRouter);
     // app.use('/modificationrequests' ,modificationRouter);
     //prevent cold start in deployment
-    app.get('warmup',(req,res)=>{
+    app.get('/warmup',(req,res)=>{
       res.status(200).json('ur alive bro');
     });
  
