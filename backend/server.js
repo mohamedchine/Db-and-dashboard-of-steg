@@ -64,10 +64,16 @@ db.execute('select 1 ').then(async()=>{ //select is just to check if the connect
     app.use('/chef',chefRouter);
     app.use('/activitylogs',activitylogRouter);
     // app.use('/modificationrequests' ,modificationRouter);
-    //prevent cold start in deployment
-    app.get('/warmup',(req,res)=>{
-      res.status(200).json('ur alive bro');
+    //prevent cold start for bouth server and database
+    app.get('/warmup', async (req, res) => {
+      try {
+        await db.execute('SELECT 1');
+        res.status(200).json('alive and db awake');
+      } catch (err) {
+        res.status(500).json('db error');
+      }
     });
+    
  
     app.all('*',(req,res)=>{
         res.status(404).json({message : 'not found'})
