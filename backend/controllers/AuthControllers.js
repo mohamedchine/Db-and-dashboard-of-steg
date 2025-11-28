@@ -55,10 +55,7 @@ const registerCtrl = async(req,res)=>{
     await sendmail(steg_email , 'Email Verification' , 'click  <a href ='+ verificationLink+' > here   </a> to verify your email ') ;  
     return res.status(201).json({message : "Registration successfuly ! we've sent a verification link to your email"});
     }catch(error){
-        console.error('Email sending failed:', error);
-        return res.status(201).json({
-            message: "Registration successful! However, we couldn't send the verification email. Please try logging in to resend the verification link."
-        });
+        return res.status(400).json({message : error.message});
     }   
 }
 
