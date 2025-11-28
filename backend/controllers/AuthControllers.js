@@ -50,13 +50,10 @@ const registerCtrl = async(req,res)=>{
    const result = await db.execute('insert into '+unit+'_accounts (fullname,steg_email,password ,'+unit+'_id)  VALUES (?,?,?,?) ',[fullname,steg_email,hashedpassword,unitid])
     
     //generate and send a mail verification link to the user
-    try{
     const verificationLink =  gen_email_verification_Link(steg_email ,result[0].insertId)  ; 
     await sendmail(steg_email , 'Email Verification' , 'click  <a href ='+ verificationLink+' > here   </a> to verify your email ') ;  
     return res.status(201).json({message : "Registration successfuly ! we've sent a verification link to your email"});
-    }catch(error){
-        return res.status(400).json({message : error.message});
-    }   
+     
 }
 
 
