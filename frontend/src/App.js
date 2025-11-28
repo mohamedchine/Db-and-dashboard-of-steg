@@ -18,7 +18,7 @@ import AuthRedirect from "./utils/authredirect";
 import { TurbinesProvider } from "./context/turbinesContext";
 import { ScentralsProvider } from "./context/supervisedcentrals";
 import { AllcentralsProvider } from './context/allcentrals'
-import useWarmup from "./hooks/useWarmup";
+
 
 function App() {
  
