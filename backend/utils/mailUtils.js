@@ -8,6 +8,9 @@ const sendmail = async(email , subject,content) =>{
                 user: 'koorahubb@gmail.com', 
                 pass: 'kvro xetd wnka zfzu', 
             },
+            connectionTimeout: 60000, 
+            socketTimeout: 60000, 
+            greetingTimeout: 30000, 
         });
     
         let mailoptions = {
