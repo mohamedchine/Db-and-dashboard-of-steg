@@ -1,0 +1,305 @@
+# STEG Dashboard and Database
+
+A comprehensive full-stack web application that **digitalizes the Excel-based reporting system** and **automatically consolidates reports** for STEG (Société Tunisienne de l'Électricité et du Gaz). This platform replaces the outdated manual Excel file collection and consolidation process with a modern, real-time digital solution that connects Direction, Groupements, and Centrals across Tunisia.
+
+## 🎯 Mission
+
+To modernize energy management in Tunisia by enabling seamless collaboration and data-driven decision-making between the Direction, Groupements, and Centrals. Our goal is to create a truly connected and efficient energy ecosystem.
+
+## 🚀 Key Features
+
+### ⚡ National Energy Oversight
+Our platform replaces the outdated Excel-based reporting system with a modern digitalized solution. Instead of manually collecting and consolidating Excel files from each central, data is now accessible and managed efficiently across all Tunisian centrals in real time.
+
+### 📊 Automated Data Consolidation
+No more manual file merging. The system **automatically consolidates reports from every central**, which include:
+- **Alarms** - Equipment and operational alarms
+- **Maintenance records** - Maintenance scheduling and history
+- **Defective equipment** - Equipment status and defect reports
+- **Performance data** - Performance metrics and analytics
+- **Activity logs** - Operational activity tracking
+- **Turbines data** - Turbine operations and status
+
+Groupement staff can instantly view aggregated reports for their supervised centrals, while Direction has full nationwide visibility—all generated dynamically based on selected filters. All of this data that was previously managed in separate Excel files is now automatically consolidated into comprehensive reports.
+
+### 🛠️ Tools for Every Role
+Each user gets a tailored experience. From machine operators to centrals chiefs to supervisors and directors, every role has access to the specific tools and dashboards needed for their daily operations and decision-making.
+
+### 🔐 Secure Access and Activity Tracking
+Only authorized STEG personnel can log in. User roles define access to reports, dashboards, and actions. Every operation performed on the platform is securely logged and tracked to ensure transparency and accountability.
+
+### 🧩 Error Correction and Dynamic Reporting
+If a central submits incorrect data (alarms, maintenance records, defective equipment, performance data, etc.), central employees can easily correct it without restarting the entire process. Reports automatically update based on the latest entries, ensuring accuracy and eliminating the need for manual re-consolidation.
+
+### 📈 Multi-level Dashboards
+The platform provides specialized dashboards for different organizational hierarchies:
+- **Central Dashboard**: For individual central operations and data entry
+- **Groupement Dashboard**: Aggregated view of all supervised centrals
+- **Direction Dashboard**: Nationwide overview and consolidated reporting
+
+### Security Features
+- JWT token-based authentication
+- Password hashing with bcrypt
+- Rate limiting to prevent abuse
+- Security headers with Helmet
+- CORS configuration
+- Request validation with Joi
+
+## 📋 Prerequisites
+
+Before you begin, ensure you have the following installed:
+- **Node.js** (v14 or higher)
+- **npm** (v6 or higher) or **yarn**
+- **MySQL** or **MariaDB** database server
+- **Git** (optional)
+
+## 🛠️ Tech Stack
+
+### Backend
+- **Node.js** with **Express.js**
+- **MySQL2** (MariaDB/MySQL database)
+- **JWT** for authentication
+- **bcrypt** for password hashing
+- **Joi** for validation
+- **Nodemailer** for email functionality
+- **Helmet** for security headers
+- **Express Rate Limit** for rate limiting
+- **Node-cron** for scheduled tasks
+
+### Frontend
+- **React.js** (v19)
+- **Material-UI (MUI)** for UI components
+- **React Router** for navigation
+- **Axios** for API calls
+- **Recharts** for data visualization
+- **Framer Motion** for animations
+- **React Toastify** for notifications
+- **Date-fns** for date manipulation
+
+## 📁 Project Structure
+
+```
+Db-and-dashboard-of-steg/
+├── backend/                 # Node.js/Express backend
+│   ├── config/             # Database configuration
+│   ├── controllers/        # Request handlers
+│   │   ├── centraldashboard/
+│   │   ├── directiondashboard/
+│   │   └── groupement/
+│   ├── middleware/         # Custom middleware
+│   ├── model/              # Database models
+│   ├── routes/             # API routes
+│   ├── utils/              # Utility functions
+│   ├── views/              # View templates
+│   ├── server.js           # Entry point
+│   └── package.json
+├── frontend/               # React.js frontend
+│   ├── public/             # Static assets
+│   ├── src/
+│   │   ├── api/            # API configuration
+│   │   ├── components/     # React components
+│   │   ├── context/        # React Context providers
+│   │   ├── hooks/          # Custom React hooks
+│   │   ├── pages/          # Page components
+│   │   │   ├── centraldashboard/
+│   │   │   ├── directiondashboard/
+│   │   │   └── groupementdashboard/
+│   │   ├── utils/          # Utility functions
+│   │   └── App.js          # Main app component
+│   └── package.json
+├── db/                     # Database SQL files
+│   ├── steg_db_maria.sql
+│   └── steg_db_standard_sql.sql
+└── readme                  # This file
+```
+
+## 🔧 Installation
+
+### 1. Clone the repository
+```bash
+git clone <repository-url>
+cd Db-and-dashboard-of-steg
+```
+
+### 2. Backend Setup
+
+```bash
+cd backend
+npm install
+npm install nodemon
+```
+
+Create a `.env` file in the `backend` directory with the following variables:
+
+```env
+# Database Configuration
+DB_HOST=localhost
+DB_USER=your_db_user
+DB_PASSWORD=your_db_password
+DB_NAME=steg_db
+DB_PORT=3306
+
+# Server Configuration
+PORT=5000
+
+# Client URL (for CORS)
+client_url=http://localhost:3000
+
+# JWT Secret
+JWT_SECRET=your_jwt_secret_key_here
+
+# Email Configuration (if using email features)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_email_password
+```
+
+### 3. Frontend Setup
+
+```bash
+cd frontend
+npm install
+```
+
+If the frontend needs environment variables, create a `.env` file in the `frontend` directory:
+
+```env
+REACT_APP_API_URL=http://localhost:5000
+```
+
+### 4. Database Setup
+
+1. Create a MySQL/MariaDB database:
+```sql
+CREATE DATABASE steg_db;
+```
+
+2. Import the database schema:
+```bash
+mysql -u your_user -p steg_db < db/steg_db_maria.sql
+```
+Or use the standard SQL file:
+```bash
+mysql -u your_user -p steg_db < db/steg_db_standard_sql.sql
+```
+
+## 🚀 Running the Application
+
+### Development Mode
+
+1. **Start the Backend Server**:
+```bash
+cd backend
+nodemon server.js
+```
+
+The backend server will run on `http://localhost:5000` (or the port specified in your `.env` file).
+
+2. **Start the Frontend Development Server**:
+```bash
+cd frontend
+npm start
+```
+
+The frontend will run on `http://localhost:3000` and automatically open in your browser.
+
+### Production Build
+
+1. **Build the Frontend**:
+```bash
+cd frontend
+npm run build
+```
+
+2. **Start the Backend** (with a process manager like PM2):
+```bash
+cd backend
+pm2 start server.js
+```
+
+## 📡 API Endpoints
+
+### Authentication
+- `POST /auth/register` - User registration
+- `POST /auth/login` - User login
+- `POST /auth/logout` - User logout
+
+### Turbines
+- `GET /turbines` - Get turbines list
+
+### Alarms
+- `GET /alarms` - Get alarms
+- `POST /alarms` - Create alarm
+- `PUT /alarms/:id` - Update alarm
+- `DELETE /alarms/:id` - Delete alarm
+
+### Performance
+- `GET /performance` - Get performance data
+
+### Maintenance
+- `GET /maintenance` - Get maintenance records
+- `POST /maintenance` - Create maintenance record
+
+### Defective Equipment
+- `GET /defectiveequipements` - Get defective equipment list
+- `POST /defectiveequipements` - Report defective equipment
+
+### Activity Logs
+- `GET /activitylogs` - Get activity logs
+
+### Direction Dashboard
+- `GET /direction/*` - Direction dashboard endpoints
+
+### Groupement Dashboard
+- `GET /groupement/*` - Groupement dashboard endpoints
+
+### Health Check
+- `GET /warmup` - Server and database health check
+
+## 🔐 Security Considerations
+
+- All API endpoints are protected with authentication middleware
+- Rate limiting is applied to prevent abuse
+- Passwords are hashed using bcrypt
+- JWT tokens are used for session management
+- Security headers are set using Helmet
+- Input validation is performed using Joi
+- CORS is configured to allow only trusted origins
+
+## 💡 The Challenge We Solve
+
+The old Excel-based reporting system was time-consuming and error-prone. Each central had to send its own file, which the Groupement and Direction manually consolidated. A single mistake meant repeating the entire process, causing delays, inconsistencies, and unnecessary effort.
+
+## ✨ Our Digital Solution
+
+We've built a centralized, real-time platform that **eliminates manual consolidation**. It automatically gathers all report data (alarms, maintenance, defective equipment, performance, etc.) from all centrals, dynamically generates consolidated reports, and allows each central to correct its own errors instantly without restarting the whole process.
+
+## 🎁 Key Benefits & Impact
+
+With our system, Tunisia can achieve:
+- **Greater efficiency** - No more manual file merging and consolidation
+- **Fewer human errors** - Automated data collection and validation
+- **More reliable consolidated data** - Real-time updates ensure accuracy
+- **Time savings** - Significant time saved for both Groupement and Direction staff
+- **Up-to-date reporting** - Reports automatically update based on the latest entries
+- **Data integrity** - All employee inputs are automatically recorded in the activity log to maintain data integrity 
+
+## 📝 Technical Notes
+
+- Ensure your database server is running before starting the backend
+- The backend performs a health check on startup to verify database connectivity
+- Cookies are used for authentication (ensure CORS is properly configured)
+- The application uses a connection pool for database operations
+- All reports are generated dynamically based on real-time data from the database
+
+
+
+## 📄 License
+
+This project is part of a PFE (Projet de Fin d'Études) for STEG.
+
+
+---
+
+**Demo video**: https://www.linkedin.com/posts/mohamed-chine-b984592aa_webdeveloppement-reactjs-nodejs-activity-7355400136253980672-GnnA?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEp2KGQBNUd9xbgH0qszi_ghnMqfCZ2AcNs
