@@ -36,7 +36,7 @@ const Login = () => {
                 navigate("/"+loggedUser.unittype+"/dashboard", { replace: true });//take him to the protected link like the link he was asked for 
             }, 3000);
         } catch (e) {
-            
+            toast.error(e.response?.data?.message || "An error occurred during login");
         }
         setloadinggg(false);
     };
