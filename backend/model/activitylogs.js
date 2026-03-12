@@ -96,7 +96,7 @@ const getallactivitylogsforcentral = async (centralid, page = 1, limit = 10) => 
       ORDER BY created_at DESC 
       LIMIT ? OFFSET ?
     `;
-    const [activities] = await db.execute(dataQuery, [centralid, centralid, centralid, centralid, limit, offset]);
+    const [activities] = await db.execute(dataQuery, [centralid, centralid, centralid, centralid, String(limit), String(offset)]);
 
     const parsedActivities = activities.map(activity => ({
       ...activity,

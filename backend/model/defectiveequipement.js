@@ -1,5 +1,5 @@
 const db = require("../config/db");
-const formatToMySQLDate = require('../model/maintenance').formatToMySQLDate;
+const {formatToMySQLDate} = require('../utils/dateUtils');
 const addDefectiveEquipment = async ({ 
   turbine_id, 
   kks, 

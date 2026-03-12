@@ -1,5 +1,5 @@
 const db = require("../config/db");
-const formatToMySQLDate= require("./defectiveequipement").formatToMySQLDate;
+const {formatToMySQLDate} = require("../utils/dateUtils");
 const addalarm = async ({ turbine_id, central_id, alarm_code, description, happened_at, resolved_at }) => {
   const happenedVal = happened_at ? formatToMySQLDate(happened_at) : formatToMySQLDate(new Date());
   const resolvedVal = resolved_at ? formatToMySQLDate(resolved_at) : null;
