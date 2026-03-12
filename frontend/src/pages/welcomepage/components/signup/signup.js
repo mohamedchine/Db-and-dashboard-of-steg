@@ -68,7 +68,7 @@ const Signup = () => {
                  toast.success(response.data.message);
             }catch(e){
                 
-                toast.error( e.response.data.message);
+                toast.error(e.response.data.message);
             }
             setloading(false)
     }
