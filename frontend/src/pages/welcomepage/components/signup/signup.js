@@ -28,9 +28,13 @@ const Signup = () => {
     //show or hide the select {unit}
     const handlesomeanimation = (e)=>{
         setunitid(null);  //change it to null when we change the unit type
-        if(e.target.value=="unit-default" || e.target.value=="direction"){
+        if(e.target.value=="unit-default"){
             setshowspecify(false)
             setunit("");
+        }
+        else if(e.target.value=="direction"){
+            setshowspecify(false)
+            setunit(e.target.value);
         }
         else{
             setunit(e.target.value);
@@ -58,6 +62,7 @@ const Signup = () => {
                 unit: unit,
                 unitid: unitid
             }
+            console.log({unit,unitid});  
            
             try{
                 const response  = await axs.post("/auth/register",user,  {

@@ -8,7 +8,7 @@ const { findUserByEmail , findUserByIdAndUnittype} = require('../utils/dbUtils')
 
 
 const registerCtrl = async(req,res)=>{
-    
+     req.body.unit=='direction'?req.body.unitid=1:null; 
     //data validation
     const {error} = validateRegister(req.body);
     if(error){
@@ -83,6 +83,7 @@ const verifyAccountCtrl = async (req, res) => {
     }
 
     const { email, id } = payload;
+    
     const accountTypes = ['central', 'groupement','direction'];
     for (const type of accountTypes) {
         // Check if the account is already verified
@@ -91,43 +92,44 @@ const verifyAccountCtrl = async (req, res) => {
             [email, id]
             
         );
-        if (checkResult.length>0 && checkResult[0].is_verified==1
-        ) {
-            return res.status(200).send(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Already Verified</title>
-                    <script>
-                        alert("Account is already verified. You can login now.");
-                    </script>
-                </head>
-                <body>
-                    
-                </body>
-                </html>
-            `);
+        if (checkResult.length > 0) {
+            console.log(checkResult[0]);
+            if (checkResult[0].is_verified == 1) {
+                return res.status(200).send(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Already Verified</title>
+                        <script>
+                            alert("Account is already verified. You can login now.");
+                        </script>
+                    </head>
+                    <body>
+                        
+                    </body>
+                    </html>
+                `);
+            }
+            // update the is_verified status
+            await db.execute(
+                `UPDATE ${type}_accounts SET is_verified = 1 WHERE steg_email = ? AND id = ?`,
+                [email, id]
+            );
+            return res.status(201).send(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Verification</title>
+                        <script>
+                            alert("Account verified successfully 🎉 , now you can login");
+                        </script>
+                    </head>
+                    <body>
+                        
+                    </body>
+                    </html>
+                `);
         }
-
-        // update the is_verified status
-         await db.execute(
-            `UPDATE ${type}_accounts SET is_verified = 1 WHERE steg_email = ? AND id = ?`,
-            [email, id]
-        );
-         return res.status(201).send(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Verification</title>
-                    <script>
-                        alert("Account verified successfully 🎉 , now you can login");
-                    </script>
-                </head>
-                <body>
-                    
-                </body>
-                </html>
-            `);
     }
 
 

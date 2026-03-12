@@ -45,8 +45,8 @@ const validateRegister = (obj) => {
             .valid('central', 'groupement','direction')
             .required()
             .messages({
-                'any.required': 'You must specify a unit (central or groupement )',
-                'any.only': 'You must specify a unit (central or groupement) '
+                'any.required': 'You must specify a unit (central or groupement or direction)',
+                'any.only': 'You must specify a unit (central or groupement or direction) '
             }),
 
             unitid: joi.number()
