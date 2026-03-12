@@ -1,7 +1,22 @@
 const db = require("../config/db");
 const {findalarmbyid} = require('../model/alarms');
 const {findDefectiveEquipmentById} = require('./defectiveequipement')
+// Helper: convert JS Date or ISO string to MySQL DATETIME format 'YYYY-MM-DD HH:MM:SS'
+const formatToMySQLDate = (dateInput) => {
+  if (!dateInput) return null;
+  const d = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+  if (!(d instanceof Date) || isNaN(d.getTime())) return null;
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  const hh = String(d.getHours()).padStart(2, '0');
+  const min = String(d.getMinutes()).padStart(2, '0');
+  const ss = String(d.getSeconds()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+};
 const addMaintenance = async ({ body, params }) => {
+    const startVal = body.start ? formatToMySQLDate(body.start) : formatToMySQLDate(new Date());
+    const endVal = body.end ? formatToMySQLDate(body.end) : null;
     const [result] = await db.execute(
       `INSERT INTO maintenance 
        (central_id, kks, ot_number, description, type, 
@@ -15,8 +30,8 @@ const addMaintenance = async ({ body, params }) => {
         body.type,
         body.related_item_type,
         body.related_item_id,
-        body.start || new Date().toISOString().slice(0, 19).replace('T', ' '),
-        body.end || null
+        startVal,
+        endVal
       ]
     );
   
@@ -166,12 +181,13 @@ const getDoneMaintenance = async (centralId, turbine_id = null) => {
 
 
 const updateMaintenanceEndDate = async (id, endDate) => {
+  const formattedEnd = endDate ? formatToMySQLDate(endDate) : null;
   await db.execute(
     "UPDATE maintenance SET end = ? WHERE id = ?",
-    [endDate || null, id]
+    [formattedEnd, id]
   );
-   const updatedmaintenance =   findMaintenanceById(id);
-   return updatedmaintenance;
+  const updatedmaintenance = await findMaintenanceById(id);
+  return updatedmaintenance;
 };
 
 const findmaintenancebyalarmid = async (alarmid) => {
@@ -301,5 +317,5 @@ const getMaintenanceByPeriodAndCentralId = async(centralId, start, end) => {
   }
 };
 
-module.exports = { findMaintenanceByDefectiveEquipmentId ,addMaintenance,findMaintenanceById ,findmaintenancebyalarmid,deleteMaintenance , getUndoneMaintenance,updateMaintenanceEndDate ,getDoneMaintenance,getMaintenanceByPeriodAndCentralId};
+module.exports = { findMaintenanceByDefectiveEquipmentId ,addMaintenance,findMaintenanceById ,findmaintenancebyalarmid,deleteMaintenance , getUndoneMaintenance,updateMaintenanceEndDate ,getDoneMaintenance,getMaintenanceByPeriodAndCentralId,formatToMySQLDate};
 

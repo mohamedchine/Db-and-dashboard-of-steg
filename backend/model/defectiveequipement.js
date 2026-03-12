@@ -1,5 +1,5 @@
 const db = require("../config/db");
-
+const formatToMySQLDate = require('../model/maintenance').formatToMySQLDate;
 const addDefectiveEquipment = async ({ 
   turbine_id, 
   kks, 
@@ -17,8 +17,8 @@ const addDefectiveEquipment = async ({
       turbine_id,
       kks,
       description,
-      reported_at || new Date(),//in utc
-      fixed_at || null,
+      reported_at ? formatToMySQLDate(reported_at) : formatToMySQLDate(new Date()),
+      fixed_at ? formatToMySQLDate(fixed_at) : null,
       !fixed_at  ? "Not Fixed" : "Fixed"
     ]
   );

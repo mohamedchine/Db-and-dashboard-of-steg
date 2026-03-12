@@ -1,5 +1,8 @@
 const db = require("../config/db");
+const formatToMySQLDate= require("./defectiveequipement").formatToMySQLDate;
 const addalarm = async ({ turbine_id, central_id, alarm_code, description, happened_at, resolved_at }) => {
+  const happenedVal = happened_at ? formatToMySQLDate(happened_at) : formatToMySQLDate(new Date());
+  const resolvedVal = resolved_at ? formatToMySQLDate(resolved_at) : null;
   const [result] = await db.execute(
     "INSERT INTO alarms (turbine_id, central_id, alarm_code, description, status, happened_at, resolved_at) VALUES (?, ?, ?, ?, ?, ?, ?)", // 7 parameters
     [
@@ -8,9 +11,8 @@ const addalarm = async ({ turbine_id, central_id, alarm_code, description, happe
       alarm_code,
       description,
       resolved_at ? 'Resolved' : 'Active',
-      happened_at || new Date(),
-      resolved_at || null
-      // Removed extra comma here
+      happenedVal,
+      resolvedVal
     ]
   );
 

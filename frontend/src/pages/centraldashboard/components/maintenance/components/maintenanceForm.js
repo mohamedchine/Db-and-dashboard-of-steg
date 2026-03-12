@@ -41,6 +41,7 @@ const AddMaintenanceTaskForm = ({ type, related_item_type, related_item_id ,hand
 
 
       try {
+        
         const response = await axs.post(`/maintenance/add/${user.central_id}`, maintenanceData);
         setAlarms(prev => prev.filter(alarm => alarm.id !== related_item_id));
         handleCloseMaintenance();
