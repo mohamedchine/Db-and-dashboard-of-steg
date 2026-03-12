@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import useAuth from '../../context/useAuth';
-import axs from '../../api/customizedaxios'
 import LogoutIcon from '@mui/icons-material/Logout';
 import {
   Drawer,

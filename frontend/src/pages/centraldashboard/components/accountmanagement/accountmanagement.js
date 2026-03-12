@@ -9,16 +9,9 @@ import {
   Paper,
   Typography,
   Chip,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Button,
   Box,
-  Pagination,
   CircularProgress,
-  Tooltip,
   Divider
 } from "@mui/material";
 import useGetAccounts from './hooks/getaccountshook';
@@ -26,9 +19,10 @@ import useToggleAccountStatus from './hooks/togglestatus';
 
 const AccountManagement = () => {
   const { getaccounts, loading, accounts,setaccounts } = useGetAccounts();
-  const { toggleStatus, loadingB } = useToggleAccountStatus();
+  const { toggleStatus } = useToggleAccountStatus();
   useEffect(() => {
     getaccounts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleAccountStatus = async(id, isActive) => {

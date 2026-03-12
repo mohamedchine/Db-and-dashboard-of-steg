@@ -11,7 +11,6 @@ import {
   DialogContent,
   IconButton,
   TableHead,
-  TableCell,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -19,7 +18,6 @@ import {
   StyledTableContainer,
   StyledTableCell,
   StyledBodyCell,
-  StatusLabel,
   DeleteButton,
 } from './AlarmTable.styles';
 

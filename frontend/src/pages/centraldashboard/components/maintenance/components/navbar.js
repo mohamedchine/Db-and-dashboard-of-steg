@@ -8,7 +8,6 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  Button,
 } from '@mui/material';
 
 import { TurbinesContext } from '../../../../../context/turbinesContext';

@@ -46,6 +46,7 @@ const fetchPendingequipement = async (centralId, turbineId) => {
 };
 
 
-export default {
+const equipementApis = {
     fetchnotffixedequipements,fetchffixedequipements,    fetchPendingequipement
   };
+export default equipementApis;

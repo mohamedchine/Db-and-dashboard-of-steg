@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./requestresetpassword.css";
 import axs from "../../../../api/customizedaxios";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const RequestResetPassword = () => {

@@ -30,7 +30,7 @@ const AlarmForm = ({turbineId}) => {
   const handleSubmit = async(e) => {
     e.preventDefault();
    
-    if(turbineId =='all'){
+    if(turbineId ==='all'){
       toast.error("please select a turbine from the top");
       return ;
     } 

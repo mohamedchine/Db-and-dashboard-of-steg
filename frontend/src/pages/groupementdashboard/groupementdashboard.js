@@ -23,7 +23,6 @@ import Incidents from './Incidents';
 import Performance from './Performance';
 import axs from '../../api/customizedaxios';
 import { toast } from 'react-toastify';
-import ResetDateRange from './components/ResetDateRange';
 const drawerWidth = 240;
 
 const GroupementDashboard = () => {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axs from "../../../../api/customizedaxios";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import "./resetpassword.css"
@@ -14,6 +14,7 @@ const Resetpassword = () => {
     if (!token) {
       navigate("/notfound");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [password, setpassword] = useState("");
@@ -22,7 +23,7 @@ const Resetpassword = () => {
 
   const handleRequestReset = async () => {
  
-    if (password != confirmpassword) {
+    if (password !== confirmpassword) {
       toast.error("Passwords do not match");
       return;
     }

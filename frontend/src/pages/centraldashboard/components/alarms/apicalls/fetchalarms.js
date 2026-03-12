@@ -46,6 +46,7 @@ const fetchPendingAlarms = async (centralId, turbineId) => {
 };
 
 
-export default {
+const alarmApis = {
     fetchUnresolvedAlarms,fetchResolvedAlarms,    fetchPendingAlarms
   };
+export default alarmApis;

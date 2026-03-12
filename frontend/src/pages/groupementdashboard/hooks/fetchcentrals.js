@@ -23,6 +23,7 @@ const useFetchCentrals = () => {
     };
 
     fetchCentrals();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { loading };

@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 const ResetDateRange = ({ onReset, children }) => {
   useEffect(() => {
     onReset();
-  
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); 
 
   return children;

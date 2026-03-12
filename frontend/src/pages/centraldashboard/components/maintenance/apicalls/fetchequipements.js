@@ -36,6 +36,7 @@ const fetchdone = async (centralId, turbineId) => {
 
 
 
-export default {
+const maintenanceApis = {
     fetchongoing,fetchdone
   };
+export default maintenanceApis;

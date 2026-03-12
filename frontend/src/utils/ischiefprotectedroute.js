@@ -39,6 +39,7 @@ const IsChiefProtectedRoute = ({ children }) => {
         };
 
         checkAuthorization();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cameFromSidebar]);
 
     if (loading || !user?.is_chief) return null;

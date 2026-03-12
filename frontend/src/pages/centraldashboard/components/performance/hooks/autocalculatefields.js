@@ -11,6 +11,7 @@ const useAutoCalculations = (formData, setFormData) => {
       ...prev,
       net_active_energy_production: netActive.toString(),
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData.gross_energy_production, formData.auxiliaries_consumption]);
 
   // Average Hourly Power = Net / Production Hours
@@ -22,6 +23,7 @@ const useAutoCalculations = (formData, setFormData) => {
       ...prev,
       average_hourly_power: averageHourlyPower.toString(),
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData.net_active_energy_production, formData.production_hours]);
 
   // Specific Consumption = Fuel / Net
@@ -33,6 +35,7 @@ const useAutoCalculations = (formData, setFormData) => {
       ...prev,
       specific_consumption: specificConsumption.toString(),
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData.fuel_consumption, formData.net_active_energy_production]);
 
   // Daily Availability Rate = (Daily Availability / 24) * 100
@@ -43,6 +46,7 @@ const useAutoCalculations = (formData, setFormData) => {
       ...prev,
       daily_availability_rate: dailyAvailabilityRate.toString(),
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData.daily_availability]);
 
   // Autonomy at PMC = Gasoil Stock / Fuel Consumption
@@ -54,6 +58,7 @@ const useAutoCalculations = (formData, setFormData) => {
       ...prev,
       autonomy_at_pmc: autonomy.toString(),
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData.pumpable_gasoil_stock, formData.fuel_consumption]);
 
   return null; 

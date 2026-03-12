@@ -17,4 +17,5 @@ const formatDate = (dateString) => {
       hour12: false 
     });
   };
-  export default {formatDate,formatTime};
+  const formatdatetime = {formatDate,formatTime};
+  export default formatdatetime;

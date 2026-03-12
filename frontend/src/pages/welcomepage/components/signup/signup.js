@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./signup.css";
 import axs from "../../../../api/customizedaxios";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const Signup = () => {
         var unittypes = ["central" ,"groupement","direction"];
@@ -16,7 +16,7 @@ const Signup = () => {
         const [loading ,setloading] = useState(false);   
 // to put the centralid in the specify 
     const handleonchangespecify = (e)=>{
-        if(e.target.value=="default"){
+        if(e.target.value==="default"){
             setunitid(null);
         }
         else{
@@ -28,11 +28,11 @@ const Signup = () => {
     //show or hide the select {unit}
     const handlesomeanimation = (e)=>{
         setunitid(null);  //change it to null when we change the unit type
-        if(e.target.value=="unit-default"){
+        if(e.target.value==="unit-default"){
             setshowspecify(false)
             setunit("");
         }
-        else if(e.target.value=="direction"){
+        else if(e.target.value==="direction"){
             setshowspecify(false)
             setunit(e.target.value);
         }
@@ -93,13 +93,13 @@ const Signup = () => {
              </select>
              {showspecify && <select className="specify unit" onChange={(e)=> {handleonchangespecify(e)}} >
                <option value="default">select {unit}</option>
-                 {unit=="central" && centrals.map((central) => (
+                 {unit==="central" && centrals.map((central) => (
                         <option value={central.central_id} >
                             {central.name}
                         </option>
                     ))}
                     
-                 {unit=="groupement" && groups.map((group) => (
+                 {unit==="groupement" && groups.map((group) => (
                         <option value={group.groupement_id} >
                             {group.name}
                         </option>

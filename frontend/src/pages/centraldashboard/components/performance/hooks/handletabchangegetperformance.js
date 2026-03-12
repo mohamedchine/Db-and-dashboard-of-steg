@@ -91,6 +91,7 @@ const usePerformanceData = (selectedDate, selectedTurbine,  getperformance, setF
         };
 
         fetchPerformanceData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedDate, selectedTurbine]);
 };
 
