@@ -64,7 +64,6 @@ const addactivitylog = async (activityobject) => {
 const getallactivitylogsforcentral = async (centralid, page = 1, limit = 10) => {
   try {
     const offset = (page - 1) * limit;
-
     // Common WHERE clause used in both queries
     const whereClause = `
       (

@@ -3,6 +3,7 @@ import transformActivities from './formatdatautils';
 import axs from '../../../../api/customizedaxios'
 import {TurbinesContext} from '../../../../context/turbinesContext';
 import React, { useState, useEffect, useContext } from "react"
+import { toast } from "react-toastify"
 import {
   Table,
   TableBody,
@@ -89,11 +90,10 @@ const ActivityLog = () => {
     try {
       setLoading(true)
       const response = await axs.get(`/activitylogs/${centralId}?page=${pageNum}`);
-      console.log(response.data.data);
       setActivities(transformActivities(response.data.data,turbines));
       setTotalPages(response.data.total);
       } catch(e){
-        console.log(e);
+        toast.error("Failed to fetch activity logs");
       }
       finally {
       setLoading(false)

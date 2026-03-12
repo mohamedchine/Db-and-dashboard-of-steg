@@ -1,5 +1,5 @@
 const axios = require('axios');
-
+const { genjwt } = require('./jwtUtils');
 const sendmail = async (userEmail, subject, htmlTemplate) => {
   try {
     await axios.post('https://api.brevo.com/v3/smtp/email', {
@@ -27,4 +27,3 @@ const gen_email_verification_Link = (email , id)=>{
 }
 
 module.exports = {sendmail,gen_email_verification_Link}
-
