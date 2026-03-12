@@ -23,7 +23,7 @@ const verifyToken = async(req,res,next)=>{
         res.clearCookie('Accesstoken', {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "Strict",
+            sameSite: "none",
         
           });
           
@@ -39,7 +39,7 @@ const verifyToken = async(req,res,next)=>{
         res.clearCookie('Accesstoken', {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "Strict",
+            sameSite: "none",
 
           });
           return res.status(401).json({ message: `u have been kicked from our ${unittype} by the hr` });
