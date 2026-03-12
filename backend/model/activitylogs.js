@@ -64,18 +64,18 @@ const addactivitylog = async (activityobject) => {
 const getallactivitylogsforcentral = async (centralid, page = 1, limit = 10) => {
   try {
     const offset = (page - 1) * limit;
-    // Common WHERE clause used in both queries
+
+    // Use JSON_UNQUOTE to convert JSON values to plain strings before comparing,
+    // since central_id may be stored as a JSON number or JSON string depending on the source
     const whereClause = `
       (
-        (action IN ('add', 'update') AND (
-          JSON_EXTRACT(target_table_new_value, '$.central_id') = ? OR 
-          JSON_EXTRACT(target_table_new_value, '$.central_id') = CAST(? AS CHAR)
-        )) 
+        (action IN ('add', 'update') AND 
+          JSON_UNQUOTE(JSON_EXTRACT(target_table_new_value, '$.central_id')) = ?
+        ) 
         OR 
-        (action = 'delete' AND (
-          JSON_EXTRACT(target_table_old_value, '$.central_id') = ? OR 
-          JSON_EXTRACT(target_table_old_value, '$.central_id') = CAST(? AS CHAR)
-        ))
+        (action = 'delete' AND 
+          JSON_UNQUOTE(JSON_EXTRACT(target_table_old_value, '$.central_id')) = ?
+        )
       )
     `;
 
@@ -85,7 +85,7 @@ const getallactivitylogsforcentral = async (centralid, page = 1, limit = 10) => 
       FROM activity_logs 
       WHERE ${whereClause}
     `;
-    const [countResult] = await db.execute(countQuery, [centralid, centralid, centralid, centralid]);
+    const [countResult] = await db.execute(countQuery, [String(centralid), String(centralid)]);
     const total = countResult[0].total;
     const totalPages = Math.ceil(total / limit);
 
@@ -96,8 +96,7 @@ const getallactivitylogsforcentral = async (centralid, page = 1, limit = 10) => 
       ORDER BY created_at DESC 
       LIMIT ? OFFSET ?
     `;
-    const [activities] = await db.execute(dataQuery, [centralid, centralid, centralid, centralid, String(limit), String(offset)]);
-
+    const [activities] = await db.execute(dataQuery, [String(centralid), String(centralid), String(limit), String(offset)]);
     const parsedActivities = activities.map(activity => ({
       ...activity,
       target_table_old_value: activity.target_table_old_value ? JSON.parse(activity.target_table_old_value) : null,
