@@ -5,6 +5,12 @@ import App from './App';
 import { UserProvider } from './context/usercontext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Ensure BrowserRouter is imported
 
+// Recharts Text can reference a global isNumber in production bundles; supply a safe fallback.
+const globalScope = typeof window !== 'undefined' ? window : (typeof global !== 'undefined' ? global : {});
+if (typeof globalScope.isNumber !== 'function') {
+  globalScope.isNumber = (value) => typeof value === 'number' && !Number.isNaN(value);
+}
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
