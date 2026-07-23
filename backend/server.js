@@ -22,8 +22,6 @@ const { generalLimiter } = require('./middleware/rateLimiter');
 
 
 
-
-
 const app = express();
 app.set('trust proxy', 1);
 
@@ -68,9 +66,12 @@ db.execute('select 1 ').then(async()=>{ //select is just to check if the connect
     app.all('*',(req,res)=>{
         res.status(404).json({message : 'not found'})
     })
-    const port=process.env.PORT ; 
+    const port = process.env.PORT || 3000; 
     app.listen(port , ()=>{
         console.log('server is running on port '+port);
     })
 
-}).catch((e)=>console.log(e.message))
+}).catch((e)=>{
+    console.error('Database connection failed:', e.message);
+    process.exit(1);
+});
