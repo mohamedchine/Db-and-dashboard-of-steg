@@ -17,7 +17,7 @@
 - [The Challenge We Solve](#-the-challenge-we-solve)
 - [Key Benefits & Impact](#-key-benefits--impact)
 - [Technical Notes](#-technical-notes)
-
+- [Demo Video](#-demo-video)
 ---
 
 ## 🎯 Mission
@@ -364,5 +364,6 @@ With our system, Tunisia can achieve:
 This project is part of a **PFE (Projet de Fin d'Études)** for STEG.
 
 ---
+## 🎬 Demo Video
 
-**🎬 Demo video:** [Watch on LinkedIn](https://www.linkedin.com/posts/mohamed-chine-b984592aa_webdeveloppement-reactjs-nodejs-activity-7355400136253980672-GnnA?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEp2KGQBNUd9xbgH0qszi_ghnMqfCZ2AcNs)
+[Watch on LinkedIn](https://www.linkedin.com/posts/mohamed-chine-b984592aa_webdeveloppement-reactjs-nodejs-activity-7355400136253980672-GnnA?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEp2KGQBNUd9xbgH0qszi_ghnMqfCZ2AcNs)
