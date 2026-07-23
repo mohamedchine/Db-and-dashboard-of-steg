@@ -885,4 +885,3 @@ ALTER TABLE `request_modification`
 ALTER TABLE `turbine`
   ADD CONSTRAINT `turbine_ibfk_1` FOREIGN KEY (`central_id`) REFERENCES `central` (`central_id`);
 COMMIT;
-
